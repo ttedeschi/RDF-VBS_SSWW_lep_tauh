@@ -1,4 +1,4 @@
-/// Header file with functions needed to execute the Python version
+/// Header file with functions needed to execute the Python version of
 /// postselection step of the analysis. The header is declared to the
 /// ROOT C++ interpreter prior to the start of the analysis via the
 /// `ROOT.gInterpreter.Declare()` function.
@@ -24,6 +24,50 @@ const float ETA_CUT_MU = 1;
 const float ISO_CUT_MU = 1;
 const float ETA_CUT_ELE = 1;
 const float ISO_CUT_ELE = 1;
+
+//values for cuts and constant 
+const size_t ONLYELE=1;
+const size_t ONLYMU=0;
+
+const float PT_CUT_MU=  35;
+const float ETA_CUT_MU= 2.4;
+const float ISO_CUT_MU= 0.15;
+
+const size_t PT_CUT_ELE=  35;
+const float ETA_CUT_ELE= 2.4;
+const float ISO_CUT_ELE= 0.08;
+
+const float REL_ISO_CUT_LEP_VETO_ELE=   0.2;
+const float PT_CUT_LEP_VETO_ELE=        15;
+const float ETA_CUT_LEP_VETO_ELE=       2.4;
+const float REL_ISO_CUT_LEP_VETO_MU=    0.4;
+const float PT_CUT_LEP_VETO_MU=         10;
+const float ETA_CUT_LEP_VETO_MU=        2.4;
+
+const float DR_OVERLAP_CONE_TAU=        0.5;
+const float DR_OVERLAP_CONE_OTHER=      0.4;
+
+const float PT_CUT_JET= 30;
+const float ETA_CUT_JET=5;
+
+const float DELTAETA_JJ_CUT=2.5;
+
+const float BTAG_PT_CUT =   30;
+const float BTAG_ETA_CUT=   5;
+const string BTAG_ALGO   =   'DeepFlv';
+const string BTAG_WP     =   'M';
+const size_t ID_TAU_RECO_DEEPTAU_VSJET_LOOSE_ELE = 16; //byDeepTau2017v2p1VSjet ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight
+const size_t ID_TAU_RECO_DEEPTAU_VSJET_LOOSE_MU = 8; //byDeepTau2017v2p1VSjet ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight
+const size_t ID_TAU_RECO_DEEPTAU_VSJET=  64; //byDeepTau2017v2p1VSjet ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight
+const size_t ID_TAU_RECO_DEEPTAU_VSELE=  4;  //byDeepTau2017v2p1VSe ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight
+const size_t ID_TAU_RECO_DEEPTAU_VSMU=   8;  //byDeepTau2017v2p1VSmu ID working points (deepTau2017v2p1): bitmask 1 = VLoose, 2 = Loose, 4 = Medium, 8 = Tight
+const size_t ID_TAU_RECO_MVA=            8; //IsolationMVArun2v1DBoldDMwLT ID working point (2017v1): bitmask 1 = VVLoose, 2 = VLoose, 4 = Loose, 8 = Medium, 16 = Tight, 32 = VTight, 64 = VVTight
+const size_t ID_TAU_ANTIMU=              1; //Anti-muon discriminator V3: : bitmask 1 = Loose, 2 = Tight
+const size_t ID_TAU_ANTIELE=             2; //Anti-electron MVA discriminator V6 (2015): bitmask 1 = VLoose, 2 = Loose, 4 = Medium, 8 = Tight, 16 = VTight
+const float PT_CUT_TAU=30;
+const float ETA_CUT_TAU=2.3;
+const float M_JJ_CUT=   500;
+const float MET_CUT=    40;
 
 RVec<size_t> GoodJets(rvec_i jetId, rvec_f eta, rvec_f pt, rvec_i puId)
 {
@@ -59,9 +103,11 @@ RVec<size_t> SelectVBSJets_invmass(rvec_f pt, rvec_f eta, rvec_f phi, rvec_f mas
     } 
     idx.emplace_back(best_i1);
     idx.emplace_back(best_i2);
+
+    return idx;
 }
 
-def SelectLepton(rvec_f lepton_pt, rvec_f lepton_eta, rvec_f lepton_phi, rvec_i lepton_pdgId, rvec_i lepton_tightId, rvec_i lepton_looseId,
+RVec<int> SelectLepton(rvec_f lepton_pt, rvec_f lepton_eta, rvec_f lepton_phi, rvec_i lepton_pdgId, rvec_i lepton_tightId, rvec_i lepton_looseId,
                  rvec_f lepton_jetRelIso, rvec_f lepton_pfRelIso04_all, 
                  rvec_f lepton_mvaFall17V2Iso_WPL, rvec_f lepton_mvaFall17V2Iso_WP90, 
                  rvec_f jet_pt, rvec_f jet_eta, rvec_f jet_phi, rvec_i VBSJets_idx)
@@ -113,18 +159,66 @@ def SelectLepton(rvec_f lepton_pt, rvec_f lepton_eta, rvec_f lepton_phi, rvec_i 
     }
     //select leading tight/loose-not-tight lepton
     RVec<int> idx(2);
-    if (Tleptons_idx.size() == 0){
+    if (Tleptons_idx.size() > 0){
         idx[0] = Tleptons_idx[0];
-        idx[1] = -1;
+        idx[1] = 0;
     }
-    else if (LnTleptons_idx.size() == 0){
-        idx[0] = -1;
-        idx[1] = Tleptons_idx[0];
+    else if (LnTleptons_idx.size() > 0){
+        idx[0] = LnTleptons_idx[0];
+        idx[1] = 1;
     }
     else{
         idx[0] = -1;
         idx[1] = -1;  
     }
+    
+    return idx;
+}
+
+
+RVec<int> SelectAndVetoTaus(rvec_f Tau_eta, rvec_f Tau_phi,\ 
+                            rvec_f Tau_idDeepTau2017v2p1VSjet, rvec_f Tau_idDeepTau2017v2p1VSe, rvec_f Tau_idDeepTau2017v2p1VSmu, rvec_f Tau_idDecayModeNewDMs,\ 
+                            rvec_f Lepton_eta, rvec_f Lepton_phi, rvec_i Lepton_pdgId, rvec_i Lepton_idx, rvec_f Jet_eta, rvec_f Jet_phi, rvec_i Jet_idx)
+{
+    //setting jet-related quantities if isolation from them is needed
+    float jet1eta = Jet_eta[Jet_idx[0]];
+    float jet2eta = Jet_eta[Jet_idx[1]];
+    float jet1phi = Jet_phi[Jet_idx[0]];
+    float jet2phi = Jet_phi[Jet_idx[1]];
+    float isocone = DR_OVERLAP_CONE_OTHER;
+
+    size_t nTau=0;
+    RVec<int> idx(2);
+    
+    if (Tau_eta.size()==0){
+        idx[0] = -1;
+        idx[1] = -1;
+        return idx;
+    } 
+    
+    for (size_t i = 0; i < Tau_eta.size(); i++) {
+        if (abs(Lepton_pdgId[Lepton_idx[0]])==11) float cutloose_vsjet = ID_TAU_RECO_DEEPTAU_VSJET_LOOSE_ELE;
+        else if (abs(Lepton_pdgId[Lepton_idx[0]])==13) float cutloose_vsjet = ID_TAU_RECO_DEEPTAU_VSJET_LOOSE_MU;
+
+        if ((Tau_idDeepTau2017v2p1VSjet[i]>=cutloose_vsjet && Tau_idDeepTau2017v2p1VSe[i]>=ID_TAU_RECO_DEEPTAU_VSELE && Tau_idDeepTau2017v2p1VSmu[i]>=ID_TAU_RECO_DEEPTAU_VSMU && Tau_idDecayModeNewDMs[i])\ 
+            && deltaR(Tau_eta[i], Tau_phi[i], Lepton_eta[Lepton_idx[0]], Lepton_phi[Lepton_idx[0]])>DR_OVERLAP_CONE_TAU\ 
+            && deltaR(Tau_eta[i], Tau_phi[i], jet1eta, jet1phi)>isocone\ 
+            && deltaR(Tau_eta[i], Tau_phi[i], jet2eta, jet2phi)>isocone && Tau_pt[i]>=PT_CUT_TAU\ 
+            && abs(Tau_eta[i])<=ETA_CUT_TAU){
+            
+            nTau++;
+
+            if(Tau_idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET){
+                idx[0] = i;
+                idx[1] = 0;
+            } 
+            else:{
+                idx[0] = i;
+                idx[1] = 1;
+            }
+        }
+    
+    if(nTau!=1) idx[1] = -1;                                                                                               
     
     return idx;
 }
