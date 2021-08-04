@@ -17,15 +17,12 @@ using RNode = ROOT::RDF::RNode;
 using rvec_f = const RVec<float> &;
 using rvec_i = const RVec<int> &;
 
-const float thr = 50; 
-const float DELTAETA_JJ_CUT = 0.4;
-const float DR_OVERLAP_CONE_OTHER = 1;
-const float ETA_CUT_MU = 1;
-const float ISO_CUT_MU = 1;
-const float ETA_CUT_ELE = 1;
-const float ISO_CUT_ELE = 1;
 
 //values for cuts and constant 
+
+
+const float thr = 50; 
+
 const size_t ONLYELE=1;
 const size_t ONLYMU=0;
 
