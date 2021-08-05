@@ -11,6 +11,7 @@
 #include "TLatex.h"
 #include "Math/Vector4D.h"
 #include "TStyle.h"
+#include <map>
 
 using namespace ROOT::VecOps;
 using RNode = ROOT::RDF::RNode;
@@ -65,6 +66,13 @@ const float PT_CUT_TAU=30;
 const float ETA_CUT_TAU=2.3;
 const float M_JJ_CUT=   500;
 const float MET_CUT=    40;
+
+
+std::map<string, std::map<string, float> > WP_btagger = {
+    { "CSVv2", {"L": 0.5803,"M": 0.8838,"T": 0.9693}},
+    { "DeepCSV", {"L": 0.1522,"M": 0.4941,"T": 0.8001}},
+    { "DeepFlv", {"L": 0.0521,"M": 0.3033,"T": 0.7489}},
+};
 
 RVec<size_t> GoodJets(rvec_i jetId, rvec_f eta, rvec_f pt, rvec_i puId)
 {
@@ -218,4 +226,13 @@ RVec<int> SelectAndVetoTaus(rvec_f Tau_eta, rvec_f Tau_phi,\
     if(nTau!=1) idx[1] = -1;                                                                                               
     
     return idx;
+}
+
+bool BVeto(rvec_f Jet_pt, rvec_f Jet_eta, rvec_i GoodJet_idx)
+{
+    bool veto = False;
+    for (size_t i = 0; i < GoodJet_idx.size(); i++) {
+        if (Jet_btagDeepFlavB[i]>=WP_btagger[BTAG_ALGO][BTAG_WP])*(Jet_pt[i]>BTAG_PT_CUT)*(abs(Jet_eta[i])<BTAG_ETA_CUT):
+            return true;
+    return false;
 }

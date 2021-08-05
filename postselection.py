@@ -41,9 +41,19 @@ df_atleast2GoodJets = df_atleast2Jets.Define("GoodJets_idx",
 df_VBSjets = df_atleast2GoodJets.Define("Jet_idx", "SelectVBSjets_invmass(Jet_pt, Jet_eta, Jet_phi, Jet_mass, Jet_jetId, Jet_puId, GoodJets_idx)")
 
 ##### e/mu + tau process
-df_atleast1lepton = df_atleast2GoodJets.Define("Lepton_idx", 
+df_selectLepton = df_atleast2GoodJets.Define("Lepton_idx", 
                                                "SelectLepton(lepton_pt, lepton_eta, lepton_phi,lepton_pdgId, lepton_tightId, lepton_looseId, \
                                                 lepton_jetRelIso, lepton_pfRelIso04_all,\
                                                 mvaFall17V2Iso_WPL, mvaFall17V2Iso_WP90, \
                                                 jet_pt, jet_eta, jet_phi, VBSJets_idx)")
+
+df_atLeast1Lepton = df_selectLepton.Filter("Lepton_idx[1] != -1", "At least 1 at least loose lepton")
+
+df_selectTau = df_atleast1Lepton.Define("Lepton_idx", "SelectAndVetoTaus(Tau_eta, Tau_phi,\
+                                         Tau_idDeepTau2017v2p1VSjet, rvec_f Tau_idDeepTau2017v2p1VSe, rvec_f Tau_idDeepTau2017v2p1VSmu, rvec_f Tau_idDecayModeNewDMs,\
+                                         Lepton_eta, rvec_f Lepton_phi, rvec_i Lepton_pdgId, rvec_i Lepton_idx, rvec_f Jet_eta, rvec_f Jet_phi, rvec_i Jet_idx)")
+
+df_1tau = df_selectTau.Filter("Lepton_idx[1] != -1", "Exactly 1 at least loose Tau")
+
+
 
