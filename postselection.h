@@ -21,9 +21,6 @@ using rvec_i = const RVec<int> &;
 
 //values for cuts and constant 
 
-
-const float thr = 50; 
-
 const size_t ONLYELE=1;
 const size_t ONLYMU=0;
 
@@ -90,7 +87,7 @@ float deltaR(float eta1, float phi1, float eta2, float phi2){
 RVec<size_t> GoodJets(rvec_i jetId, rvec_f eta, rvec_f pt, rvec_i puId){
    RVec<int> idx;
    for (size_t i = 0; i < pt.size(); i++) {
-      if (jetId[i] >= 2 && abs(eta[i]) < 5. && pt[i] > thr && (pt[i] > 50. || (pt[i] <= 50. && puId[i] >= 7))) idx.emplace_back(i);
+      if (jetId[i] >= 2 && abs(eta[i]) < 5. && pt[i] > PT_CUT_JET && (pt[i] > 50. || (pt[i] <= 50. && puId[i] >= 7))) idx.emplace_back(i);
    }
    return idx;
 }
@@ -103,7 +100,7 @@ bool atleast2GoodJets(rvec_i GoodJets_idx){
 
 RVec<size_t> SelectVBSJets_invmass(rvec_f pt, rvec_f eta, rvec_f phi, rvec_f mass, rvec_i jetId, rvec_i puId, rvec_i GoodJets_idx)
 {
-    RVec<size_t> idx(2);
+    RVec<size_t> idx;
     // Find first lepton pair with invariant mass closest to Z mass
     auto idx_cmb = Combinations(GoodJets_idx, 2);
     auto best_mass = -1;
@@ -111,29 +108,36 @@ RVec<size_t> SelectVBSJets_invmass(rvec_f pt, rvec_f eta, rvec_f phi, rvec_f mas
     for (size_t i = 0; i < idx_cmb[0].size(); i++) {
         const auto i1 = idx_cmb[0][i];
         const auto i2 = idx_cmb[1][i];
-        if (abs(eta[i1] - eta[i2]) >= DELTAETA_JJ_CUT) {
-            ROOT::Math::PtEtaPhiMVector p1(pt[i1], eta[i1], phi[i1], mass[i1]);
-            ROOT::Math::PtEtaPhiMVector p2(pt[i2], eta[i2], phi[i2], mass[i2]);
+        //std::cout<<i1<<i2<<endl;
+        if (abs(eta[GoodJets_idx[i1]] - eta[GoodJets_idx[i2]]) >= DELTAETA_JJ_CUT) {
+            ROOT::Math::PtEtaPhiMVector p1(pt[GoodJets_idx[i1]], eta[GoodJets_idx[i1]], phi[GoodJets_idx[i1]], mass[GoodJets_idx[i1]]);
+            ROOT::Math::PtEtaPhiMVector p2(pt[GoodJets_idx[i2]], eta[GoodJets_idx[i2]], phi[GoodJets_idx[i2]], mass[GoodJets_idx[i2]]);
             const auto this_mass = (p1 + p2).M();
             if (this_mass > best_mass) {
                 best_mass = this_mass;
-                best_i1 = i1;
-                best_i2 = i2;
+                best_i1 = GoodJets_idx[i1];
+                best_i2 = GoodJets_idx[i2];
             }
         }
     } 
     idx.emplace_back(best_i1);
     idx.emplace_back(best_i2);
-
     return idx;
 }
 
+float GetInvMass(rvec_f pt, rvec_f eta, rvec_f phi, rvec_f mass, rvec_i VBSJets_idx)
+{
+    ROOT::Math::PtEtaPhiMVector p1(pt[VBSJets_idx[0]], eta[VBSJets_idx[0]], phi[VBSJets_idx[0]], mass[VBSJets_idx[0]]);
+    ROOT::Math::PtEtaPhiMVector p2(pt[VBSJets_idx[1]], eta[VBSJets_idx[1]], phi[VBSJets_idx[1]], mass[VBSJets_idx[1]]);
+    return (p1 + p2).M();
+}
+
 float GetLeading(rvec_f Jet_pt, rvec_i VBSJet_idx){
-    return Jet_pt[0];
+    return Jet_pt[VBSJet_idx[0]];
 }
 
 float GetSubLeading(rvec_f Jet_pt, rvec_i VBSJet_idx){
-    return Jet_pt[1];
+    return Jet_pt[VBSJet_idx[1]];
 }
 
 
@@ -260,5 +264,4 @@ bool BVeto(rvec_f Jet_pt, rvec_f Jet_eta, rvec_f Jet_btagDeepFlavB, rvec_i GoodJ
     }
     return false;
 }
-
 
