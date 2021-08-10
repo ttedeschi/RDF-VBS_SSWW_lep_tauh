@@ -34,7 +34,7 @@ df_goodvertex = df.Filter("Flag_goodVertices && Flag_globalSuperTightHalo2016Fil
 df_atleast2Jets = df_goodvertex.Filter("nJet>2", "At least two jets")
 df_GoodJets = df_atleast2Jets.Define("GoodJets_idx", "GoodJets(Jet_jetId, Jet_eta, Jet_pt, Jet_puId)")
 df_atleast2GoodJets = df_GoodJets.Filter("atleast2GoodJets(GoodJets_idx)", "At least two good jets")
-df_VBSjets = df_atleast2GoodJets.Define("VBSJet_idx", "SelectVBSJets_invmass(Jet_pt, Jet_eta, Jet_phi, Jet_mass, Jet_jetId, Jet_puId, GoodJets_idx)")
+df_VBSjets = df_atleast2GoodJets.Define("VBSJet_idx", "SelectVBSJets_invmass(Jet_pt, Jet_eta, Jet_phi, Jet_mass, GoodJets_idx)")
 
 ##### e/mu + tau process
 df_selectLepton = df_atleast2GoodJets.Define("Lepton_idx", 

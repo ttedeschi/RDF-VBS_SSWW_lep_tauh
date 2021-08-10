@@ -98,7 +98,7 @@ bool atleast2GoodJets(rvec_i GoodJets_idx){
 }
 
 
-RVec<size_t> SelectVBSJets_invmass(rvec_f pt, rvec_f eta, rvec_f phi, rvec_f mass, rvec_i jetId, rvec_i puId, rvec_i GoodJets_idx)
+RVec<size_t> SelectVBSJets_invmass(rvec_f pt, rvec_f eta, rvec_f phi, rvec_f mass, rvec_i GoodJets_idx)
 {
     RVec<size_t> idx;
     // Find first lepton pair with invariant mass closest to Z mass
