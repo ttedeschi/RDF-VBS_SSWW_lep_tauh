@@ -17,6 +17,7 @@ using namespace ROOT::VecOps;
 using RNode = ROOT::RDF::RNode;
 using rvec_f = const RVec<float> &;
 using rvec_i = const RVec<int> &;
+using rvec_b = const RVec<bool> &;
 
 
 //values for cuts and constant 
@@ -84,6 +85,39 @@ float deltaR(float eta1, float phi1, float eta2, float phi2){
     return hypot(eta1 - eta2, deltaPhi(phi1, phi2)); 
 }
 
+
+bool LepVetoEle(rvec_i Electron_idx, rvec_f Electron_pt, rvec_f Electron_eta, rvec_b Iso_WPL, rvec_i jetRelIso, rvec_f Muon_pt, rvec_f Muon_eta, rvec_i Iso04_all, rvec_b Muon_looseId )
+{
+    bool IsEleVetoPassed = true;
+    bool IsMuVetoPassed = true;
+    for (size_t i = 0; i < Electron_pt.size(); i++) {
+        if(i != Electron_idx[0] && Iso_WPL[i] && Electron_pt[i] > PT_CUT_LEP_VETO_ELE && abs(Electron_eta[i]) < ETA_CUT_LEP_VETO_ELE && !(abs(Electron_eta[i])>1.4442 && abs(Electron_eta[i])<1.566) && jetRelIso[i] < REL_ISO_CUT_LEP_VETO_ELE) IsEleVetoPassed = false;
+    }
+    if(IsEleVetoPassed == true){
+        for (size_t i = 0; i < Muon_pt.size(); i++) {
+            if(Muon_looseId[i] && Muon_pt[i] > PT_CUT_LEP_VETO_MU && abs(Muon_eta[i]) < ETA_CUT_LEP_VETO_MU && Iso04_all[i] < REL_ISO_CUT_LEP_VETO_MU) IsMuVetoPassed = false;
+        }
+    }
+    return IsEleVetoPassed && IsMuVetoPassed;
+}
+
+
+
+bool LepVetoMu(rvec_i Muon_idx, rvec_f Electron_pt, rvec_f Electron_eta, rvec_b Electron_mvaFall17V2Iso_WPL, rvec_i Electron_jetRelIso, rvec_f Muon_pt, rvec_f Muon_eta, rvec_i Muon_pfRelIso04_all, rvec_b Muon_looseId)
+{
+    bool IsEleVetoPassed = true;
+    bool IsMuVetoPassed = true;
+    for (size_t i = 0; i < Electron_pt.size(); i++) {
+        if(Electron_mvaFall17V2Iso_WPL[i] && Electron_pt[i] > PT_CUT_LEP_VETO_ELE && abs(Electron_eta[i]) < ETA_CUT_LEP_VETO_ELE && !(abs(Electron_eta[i])>1.4442 && abs(Electron_eta[i])<1.566) && Electron_jetRelIso[i] < REL_ISO_CUT_LEP_VETO_ELE) IsEleVetoPassed = false;
+    }
+    if(IsEleVetoPassed == true){
+        for (size_t i = 0; i < Muon_pt.size(); i++) {
+            if(i != Muon_idx[0] && Muon_looseId[i] && Muon_pt[i] > PT_CUT_LEP_VETO_MU && abs(Muon_eta[i]) < ETA_CUT_LEP_VETO_MU && Muon_pfRelIso04_all[i] < REL_ISO_CUT_LEP_VETO_MU) IsMuVetoPassed = false;
+        }
+    }
+    return IsEleVetoPassed && IsMuVetoPassed;
+}
+
 RVec<size_t> GoodJets(rvec_i jetId, rvec_f eta, rvec_f pt, rvec_i puId){
    RVec<int> idx;
    for (size_t i = 0; i < pt.size(); i++) {
@@ -140,61 +174,17 @@ float GetSubLeading(rvec_f Jet_pt, rvec_i VBSJet_idx){
     return Jet_pt[VBSJet_idx[1]];
 }
 
-/*
-//RVec<int> SelectLepton(rvec_f jet_eta, rvec_f jet_phi, rvec_f lepton_pt, rvec_f lepton_eta, rvec_f lepton_phi, rvec_i VBSJets_idx){
-RVec<int> SelectLepton(rvec_f lepton_pt, rvec_f lepton_eta, rvec_f lepton_phi, rvec_i lepton_pdgId, rvec_i lepton_tightId, rvec_i lepton_looseId,rvec_f lepton_jetRelIso, rvec_f Iso04_all, rvec_f lepton_mvaFall17V2Iso_WPL, rvec_f lepton_mvaFall17V2Iso_WP90, rvec_f jet_eta, rvec_f jet_phi, rvec_i VBSJets_idx){
-    //setting jet-related quantities if isolation from them is needed
-    const auto jet1_idx = VBSJets_idx[0];
-    const auto jet2_idx = VBSJets_idx[1];
-    //const auto jet1eta = lepton_pt[0]
-    const auto jet1eta = jet_eta[jet1_idx];
-    const auto jet2eta = jet_eta[jet2_idx];
-    const auto jet1phi = jet_phi[jet1_idx];
-    const auto jet2phi = jet_phi[jet2_idx];
-    
-    const float isocone = DR_OVERLAP_CONE_OTHER;
-
-    RVec<size_t> Tleptons_idx;
-    RVec<size_t> LnTleptons_idx;
-    
-    bool IsLooseID, IsTightID, IsTightIso, IsLooseIso, IsInEtaRegion, IsInPtRegion;
-    
-    for (size_t i = 0; i < lepton_pt.size(); i++) {
-        //setting loose and tight, eta, and pt criteria for leptons depending on lepton flavour
-        int lepflav = abs(lepton_pdgId[i]);
-
-        if (lepflav == 11){
-            IsLooseID = (bool)lepton_mvaFall17V2Iso_WPL[i];
-            IsTightID = (bool)lepton_mvaFall17V2Iso_WP90[i];
-            IsTightIso = lepton_jetRelIso[i]<ISO_CUT_ELE && lepton_jetRelIso[i]>=0.;
-            IsLooseIso = lepton_jetRelIso[i]<1. && lepton_jetRelIso[i]>=0.;
-            IsInEtaRegion = abs(lepton_eta[i])<ETA_CUT_ELE && !(abs(lepton_eta[i])>1.4442 && abs(lepton_eta[i])<1.566);
-            IsInPtRegion = lepton_pt[i] > PT_CUT_ELE;
-        }
-        
-        else if (lepflav == 13){
-            IsTightID = lepton_tightId[i];
-            IsLooseID = lepton_looseId[i];
-            IsTightIso = Iso04_all[i]<ISO_CUT_MU && Iso04_all[i]>=0.;
-            IsLooseIso = Iso04_all[i]<1. && Iso04_all[i]>=0.;
-            IsInEtaRegion = abs(lepton_eta[i]) < ETA_CUT_MU;
-            IsInPtRegion = lepton_pt[i] > PT_CUT_MU;
-        }
-
-        //find tight and loose-not-tight leptons filtering with jet-lep isolation criteria
-        if (IsInEtaRegion && IsInPtRegion){
-            if(IsLooseID && IsLooseIso){
-                if(deltaR(lepton_eta[i], lepton_phi[i], jet1eta,  jet1phi) > isocone && deltaR(lepton_eta[i], lepton_phi[i], jet2eta,  jet2phi) > isocone){
-                    if(IsTightID && IsTightIso) Tleptons_idx.emplace_back(i);
-                    else LnTleptons_idx.emplace_back(i);
-                }
-            }
-        }
-    }
+float GetLepton(rvec_i Electron_pt, rvec_i Electron_idx, rvec_i Muon_pt, rvec_i Muon_idx, int GoodLeptonFamily){
+    if (GoodLeptonFamily == 0) return Electron_pt[Electron_idx[0]];
+    else return Muon_pt[Muon_idx[0]];
 }
-*/
 
-RVec<int> SelectElectron(rvec_f lepton_pt, rvec_f lepton_eta, rvec_f lepton_phi, rvec_f lepton_jetRelIso, rvec_f lepton_mvaFall17V2Iso_WPL, rvec_f lepton_mvaFall17V2Iso_WP90, rvec_f jet_eta, rvec_f jet_phi, rvec_i VBSJets_idx){
+float GetTau(rvec_f pt, rvec_i idx){
+    return pt[idx[0]];
+}
+
+
+RVec<int> SelectElectron(rvec_f lepton_pt, rvec_f lepton_eta, rvec_f lepton_phi, rvec_f lepton_jetRelIso, rvec_b lepton_mvaFall17V2Iso_WPL, rvec_f lepton_mvaFall17V2Iso_WP90, rvec_f jet_eta, rvec_f jet_phi, rvec_i VBSJets_idx){
     //setting jet-related quantities if isolation from them is needed
     const auto jet1_idx = VBSJets_idx[0];
     const auto jet2_idx = VBSJets_idx[1];
@@ -213,8 +203,8 @@ RVec<int> SelectElectron(rvec_f lepton_pt, rvec_f lepton_eta, rvec_f lepton_phi,
     
     for (size_t i = 0; i < lepton_pt.size(); i++) {
         //setting loose and tight, eta, and pt criteria for leptons depending on lepton flavour
-        IsLooseID = (bool)lepton_mvaFall17V2Iso_WPL[i];
-        IsTightID = (bool)lepton_mvaFall17V2Iso_WP90[i];
+        IsLooseID = lepton_mvaFall17V2Iso_WPL[i];
+        IsTightID = lepton_mvaFall17V2Iso_WP90[i];
         IsTightIso = lepton_jetRelIso[i]<ISO_CUT_ELE && lepton_jetRelIso[i]>=0.;
         IsLooseIso = lepton_jetRelIso[i]<1. && lepton_jetRelIso[i]>=0.;
         IsInEtaRegion = abs(lepton_eta[i])<ETA_CUT_ELE && !(abs(lepton_eta[i])>1.4442 && abs(lepton_eta[i])<1.566);
@@ -249,7 +239,8 @@ RVec<int> SelectElectron(rvec_f lepton_pt, rvec_f lepton_eta, rvec_f lepton_phi,
     return idx;
 }
 
-RVec<int> SelectMuon(rvec_f lepton_pt, rvec_f lepton_eta, rvec_f lepton_phi, rvec_i lepton_tightId, rvec_i lepton_looseId, rvec_f lepton_jetRelIso, rvec_f Iso04_all, rvec_f jet_eta, rvec_f jet_phi, rvec_i VBSJets_idx){
+
+RVec<int> SelectMuon(rvec_f lepton_pt, rvec_f lepton_eta, rvec_f lepton_phi, rvec_b lepton_tightId, rvec_b lepton_looseId, rvec_f Iso04_all, rvec_f jet_eta, rvec_f jet_phi, rvec_i VBSJets_idx){
     //setting jet-related quantities if isolation from them is needed
     const auto jet1_idx = VBSJets_idx[0];
     const auto jet2_idx = VBSJets_idx[1];
@@ -304,17 +295,22 @@ RVec<int> SelectMuon(rvec_f lepton_pt, rvec_f lepton_eta, rvec_f lepton_phi, rve
     return idx;
 }
 
-int DetermineGoodLepton(bool HLT_IsoMu27, bool HLT_Mu50, bool HLT_Ele35_WPTight_Gsf, bool HLT_Ele32_WPTight_Gsf_L1DoubleEG, bool HLT_Photon200, bool HLT_PFHT250, bool HLT_PFHT350, rvec_i Electron_idx, rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_mvaFall17V2Iso_WPL, rvec_f Electron_jetRelIso, rvec_i Muon_idx, rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_pfRelIso04_all){
+
+int DetermineGoodLepton(bool HLT_IsoMu27, bool HLT_Mu50, bool HLT_Ele35_WPTight_Gsf, bool HLT_Ele32_WPTight_Gsf_L1DoubleEG, bool HLT_Photon200, bool HLT_PFHT250, bool HLT_PFHT350, rvec_i Electron_idx, rvec_f Electron_pt, rvec_f Electron_eta, rvec_b Electron_mvaFall17V2Iso_WPL, rvec_f Electron_jetRelIso, rvec_i Muon_idx, rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_pfRelIso04_all, rvec_b Muon_looseId){
     bool passMu = false;
     bool passEle = false;
     bool passHT = false;
+    int GoodLeptonFamily;
     
     if(HLT_IsoMu27 || HLT_Mu50) passMu = true;
     if(HLT_Ele35_WPTight_Gsf || HLT_Ele32_WPTight_Gsf_L1DoubleEG || HLT_Photon200) passEle = true;
     if(HLT_PFHT250 || HLT_PFHT350) passHT = true;
     
-    if(Electron_idx[1] != -1) bool ele_lepton_veto = LepVetoEle(Electron_idx, Electron_pt, Electron_eta, Electron_mvaFall17V2Iso_WPL, jetRelIso, Muon_pt, Muon_eta, Muon_pfRelIso04_all);
-    if(Muon_idx[1] != -1)bool ele_lepton_veto = LepVetoMu(Muon_idx, Electron_pt, Electron_eta, Electron_mvaFall17V2Iso_WPL, jetRelIso, Muon_pt, Muon_eta, Muon_pfRelIso04_all);
+    bool ele_lepton_veto = false;
+    bool mu_lepton_veto = false;
+    
+    if(Electron_idx[1] != -1) ele_lepton_veto = LepVetoEle(Electron_idx, Electron_pt, Electron_eta, Electron_mvaFall17V2Iso_WPL, Electron_jetRelIso, Muon_pt, Muon_eta, Muon_pfRelIso04_all, Muon_looseId);
+    if(Muon_idx[1] != -1) mu_lepton_veto = LepVetoMu(Muon_idx, Electron_pt, Electron_eta, Electron_mvaFall17V2Iso_WPL, Electron_jetRelIso, Muon_pt, Muon_eta, Muon_pfRelIso04_all, Muon_looseId);
 
     bool SingleEle=false;
     bool SingleMu=false;
@@ -365,16 +361,18 @@ int DetermineGoodLepton(bool HLT_IsoMu27, bool HLT_Mu50, bool HLT_Ele35_WPTight_
             }
 
             else if(ele_lepton_veto && mu_lepton_veto){
-                if(Electron_pt[Electron_idx[0]] > Muon_pt[Muon_idx[0]])
+                if(Electron_pt[Electron_idx[0]] > Muon_pt[Muon_idx[0]]){
                     GoodLeptonFamily = 0;
                     //lepton_TightRegion[0] = copy.deepcopy(ele_TightRegion)
-                    SingleEle = true
-                    SingleMu = false
-                else:
+                    SingleEle = true;
+                    SingleMu = false;
+                }
+                else{
                     GoodLeptonFamily = 1;
                     //lepton_TightRegion[0] = copy.deepcopy(mu_TightRegion)
-                    SingleEle = false
-                    SingleMu = true
+                    SingleEle = false;
+                    SingleMu = true;
+                }
             }
             else GoodLeptonFamily = -1;
         }
@@ -385,13 +383,15 @@ int DetermineGoodLepton(bool HLT_IsoMu27, bool HLT_Mu50, bool HLT_Ele35_WPTight_
     return GoodLeptonFamily;
 }
 
-RVec<int> SelectAndVetoTaus(rvec_f Tau_pt, rvec_f Tau_eta, rvec_f Tau_phi, rvec_f Tau_idDeepTau2017v2p1VSjet, rvec_f Tau_idDeepTau2017v2p1VSe, rvec_f Tau_idDeepTau2017v2p1VSmu, rvec_f Tau_idDecayModeNewDMs, rvec_f Lepton_eta, rvec_f Lepton_phi, rvec_i Lepton_pdgId, rvec_i Lepton_idx, rvec_f Jet_eta, rvec_f Jet_phi, rvec_i Jet_idx)
+
+RVec<int> SelectAndVetoTaus(rvec_f Tau_pt, rvec_f Tau_eta, rvec_f Tau_phi, RVec<UChar_t> &Tau_idDeepTau2017v2p1VSjet, RVec<UChar_t> &Tau_idDeepTau2017v2p1VSe, RVec<UChar_t> &Tau_idDeepTau2017v2p1VSmu,rvec_b Tau_idDecayModeNewDMs, int GoodLeptonFamily, rvec_i Electron_idx, rvec_f Electron_eta, rvec_f Electron_phi, rvec_i Muon_idx, rvec_f Muon_eta, rvec_f Muon_phi, rvec_f Jet_eta, rvec_f Jet_phi, rvec_i VBSJet_idx)
 {
     //setting jet-related quantities if isolation from them is needed
-    float jet1eta = Jet_eta[Jet_idx[0]];
-    float jet2eta = Jet_eta[Jet_idx[1]];
-    float jet1phi = Jet_phi[Jet_idx[0]];
-    float jet2phi = Jet_phi[Jet_idx[1]];
+    
+    float jet1eta = Jet_eta[VBSJet_idx[0]];
+    float jet2eta = Jet_eta[VBSJet_idx[1]];
+    float jet1phi = Jet_phi[VBSJet_idx[0]];
+    float jet2phi = Jet_phi[VBSJet_idx[1]];
     float isocone = DR_OVERLAP_CONE_OTHER;
 
     size_t nTau=0;
@@ -404,27 +404,41 @@ RVec<int> SelectAndVetoTaus(rvec_f Tau_pt, rvec_f Tau_eta, rvec_f Tau_phi, rvec_
     } 
     float cutloose_vsjet;
     for (size_t i = 0; i < Tau_eta.size(); i++) {
-        if (abs(Lepton_pdgId[Lepton_idx[0]])==11) cutloose_vsjet = ID_TAU_RECO_DEEPTAU_VSJET_LOOSE_ELE;
-        else if (abs(Lepton_pdgId[Lepton_idx[0]])==13) cutloose_vsjet = ID_TAU_RECO_DEEPTAU_VSJET_LOOSE_MU;
+        
+        if (GoodLeptonFamily == 0) {
+            cutloose_vsjet = ID_TAU_RECO_DEEPTAU_VSJET_LOOSE_ELE;
+            if ((Tau_idDeepTau2017v2p1VSjet[i]>=cutloose_vsjet && Tau_idDeepTau2017v2p1VSe[i]>=ID_TAU_RECO_DEEPTAU_VSELE && Tau_idDeepTau2017v2p1VSmu[i]>=ID_TAU_RECO_DEEPTAU_VSMU && Tau_idDecayModeNewDMs[i]) && deltaR(Tau_eta[i], Tau_phi[i], Electron_eta[Electron_idx[0]], Electron_phi[Electron_idx[0]])>DR_OVERLAP_CONE_TAU && deltaR(Tau_eta[i], Tau_phi[i], jet1eta, jet1phi)>isocone && deltaR(Tau_eta[i], Tau_phi[i], jet2eta, jet2phi)>isocone && Tau_pt[i]>=PT_CUT_TAU && abs(Tau_eta[i])<=ETA_CUT_TAU){
+                nTau++;
+                if(Tau_idDeepTau2017v2p1VSjet[i]>=ID_TAU_RECO_DEEPTAU_VSJET){
+                    idx[0] = i;
+                    idx[1] = 0;
+                } 
+                else{
+                    idx[0] = i;
+                    idx[1] = 1;
+                }
+            }   
+        }
 
-        if ((Tau_idDeepTau2017v2p1VSjet[i]>=cutloose_vsjet && Tau_idDeepTau2017v2p1VSe[i]>=ID_TAU_RECO_DEEPTAU_VSELE && Tau_idDeepTau2017v2p1VSmu[i]>=ID_TAU_RECO_DEEPTAU_VSMU && Tau_idDecayModeNewDMs[i]) && deltaR(Tau_eta[i], Tau_phi[i], Lepton_eta[Lepton_idx[0]], Lepton_phi[Lepton_idx[0]])>DR_OVERLAP_CONE_TAU && deltaR(Tau_eta[i], Tau_phi[i], jet1eta, jet1phi)>isocone && deltaR(Tau_eta[i], Tau_phi[i], jet2eta, jet2phi)>isocone && Tau_pt[i]>=PT_CUT_TAU && abs(Tau_eta[i])<=ETA_CUT_TAU){
-            
-            nTau++;
-
-            if(Tau_idDeepTau2017v2p1VSjet[i]>=ID_TAU_RECO_DEEPTAU_VSJET){
-                idx[0] = i;
-                idx[1] = 0;
-            } 
-            else{
-                idx[0] = i;
-                idx[1] = 1;
+        else if (GoodLeptonFamily == 1) {
+            cutloose_vsjet = ID_TAU_RECO_DEEPTAU_VSJET_LOOSE_MU;
+            if ((Tau_idDeepTau2017v2p1VSjet[i]>=cutloose_vsjet && Tau_idDeepTau2017v2p1VSe[i]>=ID_TAU_RECO_DEEPTAU_VSELE && Tau_idDeepTau2017v2p1VSmu[i]>=ID_TAU_RECO_DEEPTAU_VSMU && Tau_idDecayModeNewDMs[i]) && deltaR(Tau_eta[i], Tau_phi[i], Muon_eta[Muon_idx[0]], Muon_phi[Muon_idx[0]])>DR_OVERLAP_CONE_TAU && deltaR(Tau_eta[i], Tau_phi[i], jet1eta, jet1phi)>isocone && deltaR(Tau_eta[i], Tau_phi[i], jet2eta, jet2phi)>isocone && Tau_pt[i]>=PT_CUT_TAU && abs(Tau_eta[i])<=ETA_CUT_TAU){
+                nTau++;
+                if(Tau_idDeepTau2017v2p1VSjet[i]>=ID_TAU_RECO_DEEPTAU_VSJET){
+                    idx[0] = i;
+                    idx[1] = 0;
+                } 
+                else{
+                    idx[0] = i;
+                    idx[1] = 1;
+                }
             }
         }
     }
     if(nTau!=1) idx[1] = -1;                                                                                               
-    
     return idx;
 }
+
 
 bool BVeto(rvec_f Jet_pt, rvec_f Jet_eta, rvec_f Jet_btagDeepFlavB, rvec_i GoodJet_idx)
 {
@@ -435,34 +449,3 @@ bool BVeto(rvec_f Jet_pt, rvec_f Jet_eta, rvec_f Jet_btagDeepFlavB, rvec_i GoodJ
     }
     return false;
 }
-
-bool LepVetoEle(rvec_i Electron_idx, rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_mvaFall17V2Iso_WPL, rvec_f jetRelIso, rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_pfRelIso04_all)
-{
-    bool IsEleVetoPassed = true;
-    bool IsMuVetoPassed = true;
-    for (size_t i = 0; i < Electron_pt.size(); i++) {
-        if(i != Electron_idx[0] && Electron_mvaFall17V2Iso_WPL && Electron_pt > PT_CUT_LEP_VETO_ELE && abs(Electron_eta) < ETA_CUT_LEP_VETO_ELE && !(abs(Electron_eta)>1.4442 && abs(Electron_eta)<1.566) && Electron_jetRelIso < REL_ISO_CUT_LEP_VETO_ELE) IsEleVetoPassed = false;
-    }
-    if(IsEleVetoPassed == true){
-        for (size_t i = 0; i < Muon_pt.size(); i++) {
-            if(Muon_looseId && Muon_pt > PT_CUT_LEP_VETO_MU && abs(Muon_eta) < ETA_CUT_LEP_VETO_MU && Muon_pfRelIso04_all < REL_ISO_CUT_LEP_VETO_MU) IsMuVetoPassed = false;
-        }
-    }
-    return IsEleVetoPassed and IsMuVetoPassed;
-}
-
-bool LepVetoMu(rvec_i Muon_idx, rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_mvaFall17V2Iso_WPL, rvec_f jetRelIso, rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_pfRelIso04_all)
-{
-    bool IsEleVetoPassed = true;
-    bool IsMuVetoPassed = true;
-    for (size_t i = 0; i < Electron_pt.size(); i++) {
-        if(Electron_mvaFall17V2Iso_WPL && Electron_pt > PT_CUT_LEP_VETO_ELE && abs(Electron_eta) < ETA_CUT_LEP_VETO_ELE && !(abs(Electron_eta)>1.4442 && abs(Electron_eta)<1.566) && Electron_jetRelIso < REL_ISO_CUT_LEP_VETO_ELE) IsEleVetoPassed = false;
-    }
-    if(IsEleVetoPassed == true){
-        for (size_t i = 0; i < Muon_pt.size(); i++) {
-            if(i != Muon_idx[0] && Muon_looseId && Muon_pt > PT_CUT_LEP_VETO_MU && abs(Muon_eta) < ETA_CUT_LEP_VETO_MU && Muon_pfRelIso04_all < REL_ISO_CUT_LEP_VETO_MU) IsMuVetoPassed = false;
-        }
-    }
-    return IsEleVetoPassed and IsMuVetoPassed;
-}
-
