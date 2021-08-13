@@ -174,12 +174,12 @@ float GetSubLeading(rvec_f Jet_pt, rvec_i VBSJet_idx){
     return Jet_pt[VBSJet_idx[1]];
 }
 
-float GetLepton(rvec_i Electron_pt, rvec_i Electron_idx, rvec_i Muon_pt, rvec_i Muon_idx, int GoodLeptonFamily){
+auto GetLepton(rvec_i Electron_pt, rvec_i Electron_idx, rvec_i Muon_pt, rvec_i Muon_idx, int GoodLeptonFamily){
     if (GoodLeptonFamily == 0) return Electron_pt[Electron_idx[0]];
     else return Muon_pt[Muon_idx[0]];
 }
 
-float GetTau(rvec_f pt, rvec_i idx){
+auto GetTau(rvec_f pt, rvec_i idx){
     return pt[idx[0]];
 }
 
@@ -439,6 +439,17 @@ RVec<int> SelectAndVetoTaus(rvec_f Tau_pt, rvec_f Tau_eta, rvec_f Tau_phi, RVec<
     return idx;
 }
 
+bool SameCharge(int GoodLeptonFamily, rvec_i Electron_idx, rvec_i Electron_charge, rvec_i Muon_idx, rvec_i Muon_charge, rvec_i Tau_idx, rvec_i Tau_charge){
+    if(GoodLeptonFamily == 0){
+        if(Electron_charge[Electron_idx[0]] == Tau_charge[Tau_idx[0]]) return true;
+        else return false;
+    }
+    else if(GoodLeptonFamily == 1){
+        if(Muon_charge[Muon_idx[0]] == Tau_charge[Tau_idx[0]]) return true;
+        else return false;
+    }
+    return false;
+}
 
 bool BVeto(rvec_f Jet_pt, rvec_f Jet_eta, rvec_f Jet_btagDeepFlavB, rvec_i GoodJet_idx)
 {
@@ -449,3 +460,18 @@ bool BVeto(rvec_f Jet_pt, rvec_f Jet_eta, rvec_f Jet_btagDeepFlavB, rvec_i GoodJ
     }
     return false;
 }
+
+float GetLog2(float x){
+    if(x > 0.) return log2(x);
+    else return 0;
+}
+
+float deltaTheta(float pt1, float eta1, float phi1, float mass1, float pt2, float eta2, float phi2, float mass2){
+    ROOT::Math::PtEtaPhiMVector p1(pt1, eta1, phi1, mass1);
+    ROOT::Math::PtEtaPhiMVector p2(pt2, eta2, phi2, mass2);
+    return cos((p1 - p2).Theta());
+}
+
+
+
+
