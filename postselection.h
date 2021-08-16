@@ -179,6 +179,11 @@ auto GetLepton(rvec_i Electron_pt, rvec_i Electron_idx, rvec_i Muon_pt, rvec_i M
     else return Muon_pt[Muon_idx[0]];
 }
 
+auto GetLeptonTightFlag(rvec_i Electron_idx, rvec_i Muon_idx, int GoodLeptonFamily){
+    if (GoodLeptonFamily == 0) return Electron_idx[1];
+    else return Muon_idx[1];
+}
+
 auto GetTau(rvec_f pt, rvec_i idx){
     return pt[idx[0]];
 }
@@ -225,11 +230,11 @@ RVec<int> SelectElectron(rvec_f lepton_pt, rvec_f lepton_eta, rvec_f lepton_phi,
     //select leading tight/loose-not-tight lepton
     if (Tleptons_idx.size() > 0){
         idx[0] = Tleptons_idx[0];
-        idx[1] = 0;
+        idx[1] = 1;
     }
     else if (LnTleptons_idx.size() > 0){
         idx[0] = LnTleptons_idx[0];
-        idx[1] = 1;
+        idx[1] = 0;
     }
     else{
         idx[0] = -1;
@@ -472,6 +477,44 @@ float deltaTheta(float pt1, float eta1, float phi1, float mass1, float pt2, floa
     return cos((p1 - p2).Theta());
 }
 
+float Zeppenfeld(float lep_eta, float ljet_eta, float sljet_eta){
+    float zepp_lepjj = lep_eta - 0.5*(ljet_eta+sljet_eta);
+    return zepp_lepjj;
+}
 
+float M1T(float Lepton_pt, float Lepton_eta, float Lepton_phi, float Lepton_mass, float SelectedTau_pt, float SelectedTau_eta, float SelectedTau_phi, float SelectedTau_mass, float MET_pt, float MET_phi){
+    ROOT::Math::PtEtaPhiMVector lep_p4(Lepton_pt, Lepton_eta, Lepton_phi, Lepton_mass);
+    ROOT::Math::PtEtaPhiMVector tau_p4(SelectedTau_pt, SelectedTau_eta, SelectedTau_phi, SelectedTau_mass); //*taucorr
+    auto leptau_p4 = lep_p4 + tau_p4;
+    auto leptau_pt2 = leptau_p4.Perp2();
+    auto leptau_px = leptau_p4.Px();
+    auto leptau_py = leptau_p4.Py();
+    auto leptau_mass2 = leptau_p4.M2();
+    auto leptau_et = sqrt(leptau_mass2 + leptau_pt2);
+    auto MET_px = MET_pt*cos(MET_phi);
+    auto MET_py = MET_pt*sin(MET_phi);
+    auto sys_et2 = pow(leptau_et + MET_pt,2.);
+    auto sys_pt2 = pow(leptau_px + MET_px, 2.) + pow(leptau_py + MET_py, 2.);
+    auto M1T2 = sys_et2 - sys_pt2;
+    auto sign_M1T2 = M1T2/abs(M1T2);
 
+    return sign_M1T2*sqrt(sign_M1T2*M1T2);
+}
 
+float Mo1(float Lepton_pt, float Lepton_eta, float Lepton_phi, float Lepton_mass, float SelectedTau_pt, float SelectedTau_eta, float SelectedTau_phi, float SelectedTau_mass, float MET_pt, float MET_phi){
+    ROOT::Math::PtEtaPhiMVector lep_p4(Lepton_pt, Lepton_eta, Lepton_phi, Lepton_mass);
+    ROOT::Math::PtEtaPhiMVector tau_p4(SelectedTau_pt, SelectedTau_eta, SelectedTau_phi, SelectedTau_mass); //*taucorr
+    auto leptau_p4 = lep_p4 + tau_p4;
+    auto lep_pt = Lepton_pt;
+    auto tau_pt = SelectedTau_pt; //*taucorr
+    auto leptau_px = leptau_p4.Px();
+    auto leptau_py = leptau_p4.Py();
+    auto MET_px = MET_pt*cos(MET_phi);
+    auto MET_py = MET_pt*sin(MET_phi);
+    auto sys_eo2 = pow(lep_pt + tau_pt + MET_pt, 2.);
+    auto sys_pt2 = pow(leptau_px + MET_px, 2.) + pow(leptau_py + MET_py, 2.);
+    auto Mo12 = sys_eo2 - sys_pt2;
+    auto sign_Mo12 = Mo12/abs(Mo12);
+
+    return sign_Mo12*sqrt(sign_Mo12*Mo12);
+}
