@@ -608,6 +608,13 @@ float SFFakeRatio_tau_calc_vsjet4(float pT, float eta){
     return FR/(1-FR);
 }
 
+float GetEventSFFake(float lepton_SFFake, float tau_SFFake, int lepton_LnTRegion, int tau_LnTRegion){
+    if(lepton_LnTRegion==1 && tau_LnTRegion==0) return lepton_SFFake;
+    else if (lepton_LnTRegion==0 && tau_LnTRegion==1) return tau_SFFake;
+    else if (lepton_LnTRegion==1 && tau_LnTRegion==1) return lepton_SFFake*tau_SFFake;
+    else if (lepton_LnTRegion==0 && tau_LnTRegion==0) return 0.;
+}
+
 /*
 float Lepton_IDIso_SF(float Lepton_pt, float Lepton_eta, int Lepton_pdgId){
     if(abs(Lepton_pdgId)==13){
