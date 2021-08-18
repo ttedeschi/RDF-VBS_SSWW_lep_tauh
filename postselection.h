@@ -8,6 +8,8 @@
 #include "ROOT/RVec.hxx"
 #include "TCanvas.h"
 #include "TH1D.h"
+#include "TFile.h"
+#include "TH2D.h"
 #include "TLatex.h"
 #include "Math/Vector4D.h"
 #include "TStyle.h"
@@ -431,11 +433,11 @@ RVec<int> SelectAndVetoTaus(rvec_f Tau_pt, rvec_f Tau_eta, rvec_f Tau_phi, RVec<
                 nTau++;
                 if(Tau_idDeepTau2017v2p1VSjet[i]>=ID_TAU_RECO_DEEPTAU_VSJET){
                     idx[0] = i;
-                    idx[1] = 0;
+                    idx[1] = 1;
                 } 
                 else{
                     idx[0] = i;
-                    idx[1] = 1;
+                    idx[1] = 0;
                 }
             }
         }
@@ -518,3 +520,170 @@ float Mo1(float Lepton_pt, float Lepton_eta, float Lepton_phi, float Lepton_mass
 
     return sign_Mo12*sqrt(sign_Mo12*Mo12);
 }
+
+
+float SFFakeRatio_lep_calc_vsjet2(float pT, float eta, int pdgId){
+    
+    TFile inFile("FR_vsjet2_vsmuT_ZZ.root"); 
+    TH2F *histo;
+    if (abs(pdgId) == 11) histo = (TH2F*)inFile.Get("hFRDataeledif");
+    else if (abs(pdgId) == 13) histo = (TH2F*)inFile.Get("hFRDatamudif");
+
+    auto binx = histo->GetXaxis()->FindBin(pT);
+    auto biny = histo->GetYaxis()->FindBin(eta);
+    auto nxbins = histo->GetXaxis()->GetNbins();
+    auto nybins = histo->GetYaxis()->GetNbins();
+        
+    if(binx > nxbins) binx = nxbins;
+    else if (binx <= 0) binx = 1;
+    if (biny > nybins) biny = nybins;
+    else if (biny <= 0) biny = 1;
+
+    auto FR = histo->GetBinContent(binx, biny);
+
+    return FR/(1-FR);
+}
+        
+float SFFakeRatio_lep_calc_vsjet4(float pT, float eta, int pdgId){
+    
+    TFile inFile("FR_vsjet4_vsmuT_ZZ.root"); 
+    TH2F *histo;
+    if (abs(pdgId) == 11) histo = (TH2F*)inFile.Get("hFRDataeledif");
+    else if (abs(pdgId) == 13) histo = (TH2F*)inFile.Get("hFRDatamudif");
+
+    auto binx = histo->GetXaxis()->FindBin(pT);
+    auto biny = histo->GetYaxis()->FindBin(eta);
+    auto nxbins = histo->GetXaxis()->GetNbins();
+    auto nybins = histo->GetYaxis()->GetNbins();
+        
+    if(binx > nxbins) binx = nxbins;
+    else if (binx <= 0) binx = 1;
+    if (biny > nybins) biny = nybins;
+    else if (biny <= 0) biny = 1;
+
+    auto FR = histo->GetBinContent(binx, biny);
+
+    return FR/(1-FR);
+}
+
+        
+float SFFakeRatio_tau_calc_vsjet2(float pT, float eta){
+    TFile inFile("FR_vsjet2_vsmuT_ZZ.root"); 
+
+    TH2F *histo = (TH2F*)inFile.Get("hFRDatataudif");
+
+    auto binx = histo->GetXaxis()->FindBin(pT);
+    auto biny = histo->GetYaxis()->FindBin(eta);
+    auto nxbins = histo->GetXaxis()->GetNbins();
+    auto nybins = histo->GetYaxis()->GetNbins();
+        
+    if(binx > nxbins) binx = nxbins;
+    else if (binx <= 0) binx = 1;
+    if (biny > nybins) biny = nybins;
+    else if (biny <= 0) biny = 1;
+
+    auto FR = histo->GetBinContent(binx, biny);
+
+    return FR/(1-FR);
+}
+        
+float SFFakeRatio_tau_calc_vsjet4(float pT, float eta){
+
+    TFile inFile("FR_vsjet4_vsmuT_ZZ.root"); 
+
+    TH2F *histo = (TH2F*)inFile.Get("hFRDatataudif");
+
+    auto binx = histo->GetXaxis()->FindBin(pT);
+    auto biny = histo->GetYaxis()->FindBin(eta);
+    auto nxbins = histo->GetXaxis()->GetNbins();
+    auto nybins = histo->GetYaxis()->GetNbins();
+        
+    if(binx > nxbins) binx = nxbins;
+    else if (binx <= 0) binx = 1;
+    if (biny > nybins) biny = nybins;
+    else if (biny <= 0) biny = 1;
+
+    auto FR = histo->GetBinContent(binx, biny);
+
+    return FR/(1-FR);
+}
+
+/*
+float Lepton_IDIso_SF(float Lepton_pt, float Lepton_eta, int Lepton_pdgId){
+    if(abs(Lepton_pdgId)==13){
+        f_muon_id = ROOT.TFile.Open("Muon_RunBCDEF_SF_ID_2017.root", "READ")
+        f_muon_iso = ROOT.TFile.Open("Muon_RunBCDEF_SF_ISO_2017.root", "READ")
+        h_muon_id = ROOT.TH2D(f_muon_id.Get("NUM_TightID_DEN_genTracks_pt_abseta"))
+        h_muon_iso = ROOT.TH2D(f_muon_iso.Get("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta"))
+      
+        float pt = Lepton_pt;
+        float abseta = abs(Lepton_eta);
+        int binx_id = h_muon_id.GetXaxis().FindBin(pt);
+        int biny_id = h_muon_id.GetYaxis().FindBin(abseta);
+        int nxbins_id = h_muon_id.GetXaxis().GetNbins();
+        int nybins_id = h_muon_id.GetYaxis().GetNbins();
+
+        if (binx_id > nxbins_id) binx_id = copy.deepcopy(nxbins_id);
+        else if (binx_id <= 0) binx_id = 1;
+
+        if (biny_id > nybins_id) biny_id = copy.deepcopy(nybins_id);
+        else if (biny_id <= 0) biny_id = 1;
+
+        binx_iso = h_muon_iso.GetXaxis().FindBin(pt)
+        biny_iso = h_muon_iso.GetYaxis().FindBin(abseta)
+        nxbins_iso = h_muon_iso.GetXaxis().GetNbins()
+        nybins_iso = h_muon_iso.GetYaxis().GetNbins()
+        
+        if (binx_iso > nxbins_iso) binx_iso = copy.deepcopy(nxbins_iso);
+        else if(binx_iso <= 0) binx_iso = 1;
+        if (biny_iso > nybins_iso) biny_iso = copy.deepcopy(nybins_iso);
+        else if (biny_iso <= 0) biny_iso = 1;
+        
+        SF_muon_id = copy.deepcopy(h_muon_id.GetBinContent(binx_id, biny_id));
+        SF_muon_iso = copy.deepcopy(h_muon_iso.GetBinContent(binx_iso, biny_iso));
+
+        f_muon_id.Close();
+        f_muon_iso.Close();
+
+        return SF_muon_id*SF_muon_iso
+    }
+    else if (abs(Lepton_pdgId)==11){
+        TFile f_electron_id("Electron_MVA90_2017.root", "READ");
+        TH2F *h_electron_id = (TH2F*)f_electron_id.Get("EGamma_SF2D");
+
+        if(Lepton_pt < 20.) TFile f_electron_reco("EGM2D_2017_passingRECO_lowEt.root", "READ");
+        else if (lepton.pt >= 20.) TFile f_electron_reco("EGM2D_2017_passingRECO_highEt.root", "READ");
+        TH2F *h_electron_reco = (TH2F*)f_electron_reco.Get("EGamma_SF2D");
+
+        auto pt = Lepton_pt;
+        auto eta = Lepton_eta;
+        auto biny_id = h_electron_id->GetXaxis()->FindBin(pt);
+        auto binx_id = h_electron_id->GetYaxis()->FindBin(eta);
+        auto nxbins_id = h_electron_id->GetXaxis()->GetNbins();
+        auto nybins_id = h_electron_id->GetYaxis()->GetNbins();
+        if (binx_id > nxbins_id) binx_id = nxbins_id;
+        else if (binx_id <= 0) binx_id = 1;
+        if (biny_id > nybins_id) biny_id = nybins_id;
+        else if (biny_id <= 0) biny_id = 1;
+
+        auto biny_reco = h_electron_reco->GetXaxis()->FindBin(pt);
+        auto binx_reco = h_electron_reco->GetYaxis()->FindBin(eta);
+        auto nxbins_reco = h_electron_reco->GetXaxis()->GetNbins();
+        auto nybins_reco = h_electron_reco->GetYaxis()->GetNbins();
+        if (binx_reco > nxbins_reco) binx_reco = *nxbins_reco;
+        else if (binx_reco <= 0) binx_reco = 1;
+        if (biny_reco > nybins_reco) biny_reco = *nybins_reco;
+        else if (biny_reco <= 0) biny_reco = 1;
+
+        auto SF_electron_id = h_electron_id.GetBinContent(binx_id, biny_id);
+        auto SF_electron_reco = h_electron_reco.GetBinContent(binx_reco, biny_reco);
+
+        f_electron_id.Close();
+        f_electron_reco.Close();
+
+        return SF_electron_id*SF_electron_reco;
+    }
+
+    else return -1.;
+}
+*/
