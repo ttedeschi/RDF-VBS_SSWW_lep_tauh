@@ -176,17 +176,17 @@ float GetSubLeading(rvec_f Jet_pt, rvec_i VBSJet_idx){
     return Jet_pt[VBSJet_idx[1]];
 }
 
-auto GetLepton(rvec_i Electron_pt, rvec_i Electron_idx, rvec_i Muon_pt, rvec_i Muon_idx, int GoodLeptonFamily){
+float GetLepton(rvec_i Electron_pt, rvec_i Electron_idx, rvec_i Muon_pt, rvec_i Muon_idx, int GoodLeptonFamily){
     if (GoodLeptonFamily == 0) return Electron_pt[Electron_idx[0]];
     else return Muon_pt[Muon_idx[0]];
 }
 
-auto GetLeptonTightFlag(rvec_i Electron_idx, rvec_i Muon_idx, int GoodLeptonFamily){
+float GetLeptonTightFlag(rvec_i Electron_idx, rvec_i Muon_idx, int GoodLeptonFamily){
     if (GoodLeptonFamily == 0) return Electron_idx[1];
     else return Muon_idx[1];
 }
 
-auto GetTau(rvec_f pt, rvec_i idx){
+float GetTau(rvec_f pt, rvec_i idx){
     return pt[idx[0]];
 }
 
@@ -613,6 +613,76 @@ float GetEventSFFake(float lepton_SFFake, float tau_SFFake, int lepton_LnTRegion
     else if (lepton_LnTRegion==0 && tau_LnTRegion==1) return tau_SFFake;
     else if (lepton_LnTRegion==1 && tau_LnTRegion==1) return lepton_SFFake*tau_SFFake;
     else if (lepton_LnTRegion==0 && tau_LnTRegion==0) return 0.;
+}
+
+RVec<int> SelectVBSQGenJet(rvec_i GenPart_pdgId, rvec_i GenPart_genPartIdxMother, rvec_f GenPart_pt, rvec_f GenPart_eta, rvec_i GenJet_partonFlavour, rvec_f GenJet_pt, rvec_f GenJet_eta){
+
+    RVec<int> GenPart_idx;
+    for (int i = 0; i < GenPart_pdgId.size(); i++) {
+        if(GenPart_genPartIdxMother[i]==0 and abs(GenPart_pdgId[i])>0 and abs(GenPart_pdgId[i])<10) GenPart_idx.emplace_back(i);
+    }
+    
+    int GenPart_idx1 = GenPart_idx[0];
+    int GenPart_idx2 = GenPart_idx[1];
+    
+    int qflav1 = GenPart_pdgId[GenPart_idx1];
+    int qflav2 = GenPart_pdgId[GenPart_idx2];
+    
+    RVec<int> GenJet_idx;
+
+    for (int i = 0; i < GenJet_partonFlavour.size(); i++) {
+        if(abs(GenJet_partonFlavour[i])>0 && abs(GenJet_partonFlavour[i])<10 && (GenJet_partonFlavour[i]==qflav1 || GenJet_partonFlavour[i]==qflav2)) GenJet_idx.emplace_back(i);
+    }
+    
+    float discrim1 = 1000000.;
+    float discrim2 = 1000000.;
+    int idx_genjet1 = -1;
+    int idx_genjet2 = -1;
+    float tmpdiscr1;
+    float tmpdiscr2;
+           
+    for (int i = 0; i < GenJet_idx.size(); i++) {
+        tmpdiscr1 = abs(GenJet_eta[GenJet_idx[i]] -  GenPart_eta[GenPart_idx1]) + abs(GenJet_pt[GenJet_idx[i]] -  GenPart_pt[GenPart_idx1]);
+        tmpdiscr2 = abs(GenJet_eta[GenJet_idx[i]] -  GenPart_eta[GenPart_idx1]) + abs(GenJet_pt[GenJet_idx[i]] -  GenPart_pt[GenPart_idx1]);
+        if(tmpdiscr1 < discrim1){
+            discrim1 = tmpdiscr1;
+            idx_genjet1 = GenJet_idx[i];
+        }
+        if(tmpdiscr2 < discrim2){
+            discrim2 = tmpdiscr2;
+            idx_genjet2 = GenJet_idx[i];
+        }
+    }
+        
+    RVec<int> finalgenjets_idx(2);
+           
+    if(GenJet_pt[idx_genjet1] > GenJet_pt[idx_genjet2]){ 
+           finalgenjets_idx[0] = idx_genjet1;
+           finalgenjets_idx[1] = idx_genjet2;
+    }
+    else{ 
+           finalgenjets_idx[0] = idx_genjet2;
+           finalgenjets_idx[1] = idx_genjet1;
+    }
+    return finalgenjets_idx;
+}
+
+//RVec<int> SelectVBSQGenJet(rvec_i GenJet_partonFlavour){
+//    RVec<int> idx;
+//    for (int i = 0; i < GenJet_partonFlavour.size(); i++) {
+//        if(abs(GenJet_partonFlavour[i])>0 && abs(GenJet_partonFlavour[i])<10) idx.emplace_back(i);
+//    }
+//    return idx;
+//}
+
+bool atleast2Jets(rvec_i GenJet_idx){
+    if(GenJet_idx.size() < 2) return false;
+    else return true;
+}
+
+int IsGenMatched(int i, int j){
+    if(i == j) return 1;
+    else return 0;
 }
 
 /*
