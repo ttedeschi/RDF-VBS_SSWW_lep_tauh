@@ -4,10 +4,16 @@ This analysis is performed with the RDataFrame tool.
 
 ## How to access analysis facility
 - Go to [https://jhub.90.147.75.109.myip.cloud.infn.it/](https://jhub.90.147.75.109.myip.cloud.infn.it/)
-- Login with your Dodas credential
+- Login with your Dodas credentials (to get them, register at https://dodas-iam.cloud.cnaf.infn.it/start-registration)
 - Choose a JupyterLab image and set memory and CPU
-- Once the deployed, open a new terminal and type ``` oidc-token infncloud > ~/.token ```
-- To test that you can reach the HTCondor deployment: ```condor_q```
+- Once deployed, open a new terminal and type 
+  ``` 
+  oidc-token infncloud > ~/.token 
+  ```
+- To test that you can reach the HTCondor deployment: 
+  ```
+  condor_q
+  ```
 
 ## Usage of RDataFrame distributed on Dask, on top of HTCondor
 - Open a a new Python3 notebook
@@ -43,3 +49,6 @@ This analysis is performed with the RDataFrame tool.
                 npartitions=<number of partitions>,
                 daskclient=client)
   ```
+  
+## The analysis
+Post selection steps of the analysis can be found [here](postselectionDaskHTC.ipynb)
