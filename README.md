@@ -5,7 +5,7 @@ This analysis is performed with the RDataFrame tool.
 ## How to access analysis facility
 - Go to [https://jhub.90.147.75.109.myip.cloud.infn.it/](https://jhub.90.147.75.109.myip.cloud.infn.it/)
 - Login with your Dodas credentials (to get them, register at https://dodas-iam.cloud.cnaf.infn.it/start-registration)
-- Choose a JupyterLab image and set memory and CPU
+- Choose the JupyterLab image (in order to be able to use distribution on Dask on top of HTCondor, choose ```dodasts/jlab-htc-dask:v0.1.3-dask``` image) and set memory and CPU
 - Once deployed, open a new terminal and type 
   ``` 
   oidc-token infncloud > ~/.token 
