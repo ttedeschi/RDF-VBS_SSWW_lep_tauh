@@ -49,6 +49,9 @@ This analysis is performed with the RDataFrame tool.
                 npartitions=<number of partitions>,
                 daskclient=client)
   ```
-  
+
+## Minimal example
+[Here](MinimalExample.ipynb) you can find a simple notebook where a very simple distributed RDataFrame analysis is run on a small OpenData sample using a Dask deployment on HTCondor.
+
 ## The analysis
 Post selection steps of the analysis can be found [here](postselectionDaskHTC.ipynb)
