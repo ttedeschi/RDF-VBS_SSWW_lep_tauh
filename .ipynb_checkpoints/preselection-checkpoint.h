@@ -112,3 +112,12 @@ float MET_HLT_Filter(Int_t Year, Bool_t Flag_goodVertices, Bool_t Flag_HBHENoise
 //    }
 //    return good_MET && good_HLT;
 //}
+
+float GetEventHT(rvec_f Jet_pt, rvec_f Jet_eta, rvec_f Jet_phi, rvec_f Jet_mass){
+    ROOT::Math::PtEtaPhiMVector eventSum;
+    for (size_t i = 0; i < Jet_pt.size(); i++) {
+        ROOT::Math::PtEtaPhiMVector p(Jet_pt[i], Jet_eta[i], Jet_phi[i], Jet_mass[i]);
+        eventSum = eventSum + p;    
+    }
+    return eventSum.Pt();
+}
