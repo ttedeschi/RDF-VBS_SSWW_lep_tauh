@@ -7,9 +7,10 @@
 #include "ROOT/RDataFrame.hxx"
 #include "ROOT/RVec.hxx"
 #include "TCanvas.h"
-//#include "TH1D.h"
+#include "TH1D.h"
 #include "TFile.h"
-//#include "TH2D.h"
+#include "TH2D.h"
+#include "TH2F.h"
 #include "TLatex.h"
 #include "Math/Vector4D.h"
 #include "TStyle.h"
@@ -20,13 +21,15 @@
 #include <algorithm>
 #include <TH1.h>
 #include <TH2.h>
-
+#include <TH2F.h>
 
 using namespace ROOT::VecOps;
 using RNode = ROOT::RDF::RNode;
 using rvec_f = const RVec<float> &;
 using rvec_i = const RVec<int> &;
 using rvec_b = const RVec<bool> &;
+
+
 
 RVec<float> MHT_pt_phi(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_phi, rvec_f Electron_mass, rvec_f Electron_miniPFRelIso_all, rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_phi, rvec_f Muon_mass, rvec_f Muon_miniPFRelIso_all, rvec_f Jet_pt, rvec_f Jet_eta, rvec_f Jet_phi, rvec_f Jet_mass, rvec_i Jet_muonIdx1, rvec_i Jet_muonIdx2, rvec_i Jet_electronIdx1, rvec_i Jet_electronIdx2, int nJet){
     
@@ -283,7 +286,7 @@ class LeptonEfficiencyCorrector {
   const std::vector<float> & run();
 
 private:
-  std::vector<TH2F*> effmaps_;
+  std::vector<TH2F *> effmaps_;
   std::vector<float> ret_;
   int nLep_;
   float *Lep_eta_, *Lep_pt_;
@@ -350,7 +353,7 @@ const std::vector<float> & LeptonEfficiencyCorrector::run() {
   return ret_;
 }
 
-RVec<float> LepSF(rvec_f Electron_pt, rvec_f Electron_eta, rvec_i Electron_pdgId, rvec_f Muon_pt, rvec_f Muon_eta, rvec_i Muon_pdgId, Int_t Year){
+RVec<RVec<float>> LepSF(rvec_f Electron_pt, rvec_f Electron_eta, rvec_i Electron_pdgId, rvec_f Muon_pt, rvec_f Muon_eta, rvec_i Muon_pdgId, Int_t Year){
     
     std::vector<std::string> mu_f, mu_h, el_f, el_h;
     string path = "leptonSF/";
@@ -415,7 +418,7 @@ RVec<float> LepSF(rvec_f Electron_pt, rvec_f Electron_eta, rvec_i Electron_pdgId
     //LeptonEfficiencyCorrector worker_el;
     
     LeptonEfficiencyCorrector worker_mu(mu_f, mu_h);
-    LeptonEfficiencyCorrector worker_el(el_f, el_h)
+    LeptonEfficiencyCorrector worker_el(el_f, el_h);
     
     //worker_mu = LeptonEfficiencyCorrector(mu_f, mu_h);
     //worker_el = LeptonEfficiencyCorrector(el_f, el_h);
