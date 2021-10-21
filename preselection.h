@@ -7,9 +7,9 @@
 #include "ROOT/RDataFrame.hxx"
 #include "ROOT/RVec.hxx"
 #include "TCanvas.h"
-#include "TH1D.h"
+//#include "TH1D.h"
 #include "TFile.h"
-#include "TH2D.h"
+//#include "TH2D.h"
 #include "TLatex.h"
 #include "Math/Vector4D.h"
 #include "TStyle.h"
@@ -20,6 +20,7 @@
 #include <algorithm>
 #include <TH1.h>
 #include <TH2.h>
+
 
 using namespace ROOT::VecOps;
 using RNode = ROOT::RDF::RNode;
@@ -349,10 +350,26 @@ const std::vector<float> & LeptonEfficiencyCorrector::run() {
   return ret_;
 }
 
-RVec<float> LepSF(rvec_f Electron_pt, rvec_f Electron_eta, rvec_i Electron_pdgId, rvec_f Muon_pt, rvec_f Muon_eta, rvec_i Muon_pdgId,){
+RVec<float> LepSF(rvec_f Electron_pt, rvec_f Electron_eta, rvec_i Electron_pdgId, rvec_f Muon_pt, rvec_f Muon_eta, rvec_i Muon_pdgId, Int_t Year){
     
     std::vector<std::string> mu_f, mu_h, el_f, el_h;
-    string path = "leptonSF/"
+    string path = "leptonSF/";
+    string muonSelectionTag, electronSelectionTag; 
+
+    if (Year == 2016){
+        muonSelectionTag = "TightWP_2016";
+        electronSelectionTag = "NoIsoMVA90_2016";
+    }
+    
+    if (Year == 2017){
+        muonSelectionTag = "TightWP_2017";
+        electronSelectionTag = "IsoMVA90_2017";
+    }
+    
+    if (Year == 2018){
+        muonSelectionTag = "TightWP_2018";
+        electronSelectionTag = "IsoMVA90_2018";
+    }
     
     if (muonSelectionTag == "TightWP_2016"){
         mu_f.push_back(path + "Mu_RunBCDEFGH_SF_ID_2016_syst.root");
@@ -360,32 +377,48 @@ RVec<float> LepSF(rvec_f Electron_pt, rvec_f Electron_eta, rvec_i Electron_pdgId
     }
 
     if (electronSelectionTag == "NoIsoMVA90_2016"){
-        el_f.push_back(path + "EGM2D_RECO_SF_2016.root").push_back(path + "2016LegacyReReco_ElectronMVA90noiso_Fall17V2.root");
-        el_h.push_back("EGamma_SF2D").push_back("EGamma_SF2D");
+        el_f.push_back(path + "EGM2D_RECO_SF_2016.root");
+        el_f.push_back(path + "2016LegacyReReco_ElectronMVA90noiso_Fall17V2.root");
+        el_h.push_back("EGamma_SF2D");
+        el_h.push_back("EGamma_SF2D");
     }
 
     if (muonSelectionTag == "TightWP_2017"){
-        mu_f.push_back(path + "Muon_RunBCDEF_SF_ID_2017.root").push_back(path + "Muon_RunBCDEF_SF_ISO_2017.root");
-        mu_h.push_back("NUM_TightID_DEN_genTracks_pt_abseta").push_back("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta");
+        mu_f.push_back(path + "Muon_RunBCDEF_SF_ID_2017.root");
+        mu_f.push_back(path + "Muon_RunBCDEF_SF_ISO_2017.root");
+        mu_h.push_back("NUM_TightID_DEN_genTracks_pt_abseta");
+        mu_h.push_back("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta");
     }
 
     if (electronSelectionTag == "IsoMVA90_2017"){
-        el_f.push_back(path + "EGM2D_2017_passingRECO_highEt.root").push_back(path + "Electron_MVA90_2017.root");
-        el_h.push_back("EGamma_SF2D").push_back("EGamma_SF2D");
+        el_f.push_back(path + "EGM2D_2017_passingRECO_highEt.root");
+        el_f.push_back(path + "Electron_MVA90_2017.root");
+        el_h.push_back("EGamma_SF2D");
+        el_h.push_back("EGamma_SF2D");
     }
 
     if (muonSelectionTag == "TightWP_2018"){
-        mu_f.push_back(path + "Muon_RunABCD_SF_ID_2018.root").push_back(path + "Muon_RunBCDEF_SF_ISO_2017.root");
-        mu_h.push_back("NUM_TightID_DEN_TrackerMuons_pt_abseta").push_back("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta");
+        mu_f.push_back(path + "Muon_RunABCD_SF_ID_2018.root");
+        mu_f.push_back(path + "Muon_RunBCDEF_SF_ISO_2017.root");
+        mu_h.push_back("NUM_TightID_DEN_TrackerMuons_pt_abseta");
+        mu_h.push_back("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta");
     }
 
     if (electronSelectionTag == "IsoMVA90_2018"){
-        el_f.push_back(path + "EGM2D_passingRECO_2018All.root").push_back(path + "2018_ElectronMVA90Iso.root");
-        el_h.push_back("EGamma_SF2D").push_back("EGamma_SF2D");
+        el_f.push_back(path + "EGM2D_passingRECO_2018All.root");
+        el_f.push_back(path + "2018_ElectronMVA90Iso.root");
+        el_h.push_back("EGamma_SF2D");
+        el_h.push_back("EGamma_SF2D");
     }
             
-    worker_mu = LeptonEfficiencyCorrector(self.mu_f, self.mu_h)
-    worker_el = LeptonEfficiencyCorrector(self.el_f, self.el_h)
+    //LeptonEfficiencyCorrector worker_mu;
+    //LeptonEfficiencyCorrector worker_el;
+    
+    LeptonEfficiencyCorrector worker_mu(mu_f, mu_h);
+    LeptonEfficiencyCorrector worker_el(el_f, el_h)
+    
+    //worker_mu = LeptonEfficiencyCorrector(mu_f, mu_h);
+    //worker_el = LeptonEfficiencyCorrector(el_f, el_h);
     
     RVec<float> sf_mu(Muon_pt.size());
     RVec<float> sferr_mu(Muon_pt.size()); 
@@ -400,24 +433,24 @@ RVec<float> LepSF(rvec_f Electron_pt, rvec_f Electron_eta, rvec_i Electron_pdgId
         
     RVec<RVec<float>> result;
     
-    result.push_back(sf_mu);
-    result.push_back(sf_el);
+    result.emplace_back(sf_mu);
+    result.emplace_back(sf_el);
     
-    RVec<float> Muon_effSF_errUp(Muon_pt.size())
+    RVec<float> Muon_effSF_errUp(Muon_pt.size());
     for (size_t j = 0; j < Muon_pt.size(); j++) Muon_effSF_errUp[j] = sferr_mu[j] + sf_mu[j];
-    result.push_back(Muon_effSF_errUp);
+    result.emplace_back(Muon_effSF_errUp);
     
-    RVec<float> Electron_effSF_errUp(Electron_pt.size())
+    RVec<float> Electron_effSF_errUp(Electron_pt.size());
     for (size_t j = 0; j < Electron_pt.size(); j++) Electron_effSF_errUp[j] = sferr_el[j] + sf_el[j];
-    result.push_back(Electron_effSF_errUp);
+    result.emplace_back(Electron_effSF_errUp);
     
-    RVec<float> Muon_effSF_errDown(Muon_pt.size())
+    RVec<float> Muon_effSF_errDown(Muon_pt.size());
     for (size_t j = 0; j < Muon_pt.size(); j++) Muon_effSF_errDown[j] = sferr_mu[j] - sf_mu[j];
-    result.push_back(Muon_effSF_errDown);
+    result.emplace_back(Muon_effSF_errDown);
     
-    RVec<float> Electron_effSF_errDown(Electron_pt.size())
+    RVec<float> Electron_effSF_errDown(Electron_pt.size());
     for (size_t j = 0; j < Electron_pt.size(); j++) Electron_effSF_errUp[j] = sferr_el[j] - sf_el[j];
-    result.push_back(Electron_effSF_errDown);
+    result.emplace_back(Electron_effSF_errDown);
     
     return result;
 }
