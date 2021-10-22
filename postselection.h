@@ -764,7 +764,7 @@ float Lepton_IDIso_SF(float Lepton_pt, float Lepton_eta, int Lepton_pdgId){
     else return -1.;
 }
 */
-
+/*
 RVec<RVec<float>> getTauSFvsPT(float SelectedTau_pt, int SelectedTau_genPartFlav, )
     RVec<float> vsJet, vsEle, vsMu;
 
@@ -1124,3 +1124,4 @@ class TauFESTool:
         elif unc=='All':
           return 1.0, 1.0, 1.0
         return 1.0
+*/
