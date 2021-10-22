@@ -764,31 +764,61 @@ float Lepton_IDIso_SF(float Lepton_pt, float Lepton_eta, int Lepton_pdgId){
     else return -1.;
 }
 */
-/*
-RVec<RVec<float>> getTauSFvsPT(float SelectedTau_pt, int SelectedTau_genPartFlav, )
-    RVec<float> vsJet, vsEle, vsMu;
 
-        if id in ['DeepTau2017v2p1VSjet']:
-        file = ensureTFile(os.path.join(path,"TauID_SF_pt_%s_%s.root"%(id,year)),verbose=verbose)
-        self.func         = { }
-        self.func[None]   = file.Get("%s_cent"%(wp))
-        self.func['Up']   = file.Get("%s_up"%(wp))
-        self.func['Down'] = file.Get("%s_down"%(wp))
-        file.Close()
-        if genmatch==5:
-          return self.func['Down'].Eval(pt), self.func[None].Eval(pt), self.func['Up'].Eval(pt)
-        else:
-          return 1.0, 1.0, 1.0
+RVec<RVec<float>> getTauSF(float SelectedTau_pt, float SelectedTau_eta, int SelectedTau_genPartFlav){
+    RVec<float> vsJet, vsEle, vsMu;
+    string id =  "DeepTau2017v2p1VSjet";
+    string path = "TauID_SF_pt_%s_%s.root"%(id,year)
+    file = 
+    if (SelectedTau_genPartFlav==5){
+        vsJet.emplace_back(file.Get("%s_down"%(wp)).Eval(pt));
+        vsJet.emplace_back(file.Get("%s_cent"%(wp)).Eval(pt));
+        vsJet.emplace_back(file.Get("%s_up"%(wp)).Eval(pt));
+    }
+    else{
+        vsJet.emplace_back(1.0);
+        vsJet.emplace_back(1.0);
+        vsJet.emplace_back(1.0);
+    }
     
-   if id in ['DeepTau2017v2p1VSmu','DeepTau2017v2p1VSe']:
-        eta = abs(eta)
-        if genmatch in self.genmatches:
-          bin = self.hist.GetXaxis().FindBin(eta)
-          sf  = self.hist.GetBinContent(bin)
-          err = self.hist.GetBinError(bin)
-          return sf-err, sf, sf+err
-        else:
-          return 1.0, 1.0, 1.0
+    file.Close()
+    
+    int bin;
+    float sf, err;
+    
+    id = "DeepTau2017v2p1VSe";
+    "TauID_SF_eta_%s_%s.root"%(id,year)
+    float eta = abs(SelectedTau_eta);
+    if (SelectedTau_genPartFlav == 1 || SelectedTau_genPartFlav == 3){
+        bin = hist.GetXaxis().FindBin(eta);
+        sf  = hist.GetBinContent(bin);
+        err = hist.GetBinError(bin);
+        vsEle.emplace_back(sf-err);
+        vsEle.emplace_back(sf);
+        vsEle.emplace_back(sf+err);
+    }
+    else{
+        vsEle.emplace_back(1.0);
+        vsEle.emplace_back(1.0);
+        vsEle.emplace_back(1.0);
+    }
+
+    id = "DeepTau2017v2p1VSmu";
+    "TauID_SF_eta_%s_%s.root"%(id,year)
+    float eta = abs(SelectedTau_eta);
+    if (SelectedTau_genPartFlav == 1 || SelectedTau_genPartFlav == 3){
+        bin = hist.GetXaxis().FindBin(eta);
+        sf  = hist.GetBinContent(bin);
+        err = hist.GetBinError(bin);
+        vsMu.emplace_back(sf-err);
+        vsMu.emplace_back(sf);
+        vsMu.emplace_back(sf+err);
+    }
+    else{
+        vsMu.emplace_back(1.0);
+        vsMu.emplace_back(1.0);
+        vsMu.emplace_back(1.0);
+    }
     
     RVec<RVec<float>> result
     result.emplace_back(vsJet);
@@ -796,6 +826,7 @@ RVec<RVec<float>> getTauSFvsPT(float SelectedTau_pt, int SelectedTau_genPartFlav
     result.emplace_back(vsMu);
 
     return result;
+}
     
     'DeepTau2017v2p1VSjet' 'DeepTau2017v2p1VSmu','DeepTau2017v2p1VSe'
 
