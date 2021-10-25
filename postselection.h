@@ -848,6 +848,136 @@ RVec<RVec<float>> getTauSF(float SelectedTau_pt, float SelectedTau_eta, int Sele
     return result;
 }
 
+
+/*
+tesTool = TauESTool(act_camp, 'DeepTau2017v2p1VSjet')
+tes_Down, tes, tes_Up = tesTool.getTES(GoodTau.eta, GoodTau.decayMode, GoodTau.genPartFlav, unc='All')
+class TauESTool:
+    def __init__(self, year, id='DeepTau2017v2p1VSjet', path=datapath):
+        """Choose the IDs and WPs for SFs."""
+        assert year in campaigns, "You must choose a year from %s."%(', '.join(campaigns))
+        file_lowpt  = ensureTFile(os.path.join(path,"TauES_dm_%s_%s.root"%(id,year)))
+        file_highpt = ensureTFile(os.path.join(path,"TauES_dm_%s_%s_ptgt100.root"%(id,year)))
+        self.hist_lowpt  = extractTH1(file_lowpt,'tes')
+        self.hist_highpt = extractTH1(file_highpt,'tes')
+        self.hist_lowpt.SetDirectory(0)
+        self.hist_highpt.SetDirectory(0)
+        self.pt_low  = 34  # average pT in Z -> tautau measurement (incl. in DM)
+        self.pt_high = 170 # average pT in W* -> taunu measurement (incl. in DM)
+        self.DMs     = [0,1,10] if "oldDM" in id else [0,1,10,11]
+        file_lowpt.Close()
+        file_highpt.Close()
+    
+    def getTES(self, pt, dm, genmatch=5, unc=None):
+        """Get tau ES vs. tau DM."""
+        if genmatch==5 and dm in self.DMs:
+          bin = self.hist_lowpt.GetXaxis().FindBin(dm)
+          tes = self.hist_lowpt.GetBinContent(bin)
+          if unc!=None:
+            if pt>=self.pt_high: # high pT
+              bin_high = self.hist_highpt.GetXaxis().FindBin(dm)
+              err      = self.hist_highpt.GetBinError(bin_high)
+            elif pt>self.pt_low: # linearly interpolate between low and high pT
+              bin_high = self.hist_highpt.GetXaxis().FindBin(dm)
+              err_high = self.hist_highpt.GetBinError(bin_high)
+              err_low  = self.hist_lowpt.GetBinError(bin)
+              err      = err_low + (err_high-err_low)/(self.pt_high-self.pt_low)*(pt-self.pt_low)
+            else: # low pT
+              err      = self.hist_lowpt.GetBinError(bin)
+            if unc=='Up':
+              tes += err
+            elif unc=='Down':
+              tes -= err
+            elif unc=='All':
+              return tes-err, tes, tes+err
+          return tes
+        elif unc=='All':
+          return 1.0, 1.0, 1.0
+        return 1.0
+    
+    def getTES_highpt(self, dm, genmatch=5, unc=None):
+        """Get tau ES vs. tau DM for pt > 100 GeV"""
+        if genmatch==5 and dm in self.DMs:
+          bin = self.hist_highpt.GetXaxis().FindBin(dm)
+          tes = self.hist_highpt.GetBinContent(bin)
+          if unc=='Up':
+            tes += self.hist_highpt.GetBinError(bin)
+          elif unc=='Down':
+            tes -= self.hist_highpt.GetBinError(bin)
+          elif unc=='All':
+            return tes-self.hist_highpt.GetBinError(bin), tes, tes+self.hist_highpt.GetBinError(bin)
+          return tes
+        elif unc=='All':
+          return 1.0, 1.0, 1.0
+        return 1.0
+
+
+fesTool = TauFESTool(act_camp, 'DeepTau2017v2p1VSe')
+fes_Down, fes, fes_Up = fesTool.getFES(GoodTau.eta, GoodTau.decayMode, GoodTau.genPartFlav, unc='All')
+              
+class TauFESTool:
+    
+    def __init__(self, year, id='DeepTau2017v2p1VSe', path=datapath):
+        """Choose the IDs and WPs for SFs."""
+        assert year in campaigns, "You must choose a year from %s."%(', '.join(campaigns))
+        file  = ensureTFile(os.path.join(path,"TauFES_eta-dm_%s_%s.root"%(id,year)))
+        graph = file.Get('fes')
+        FESs  = { 'barrel':  { }, 'endcap': { } }
+        DMs   = [0,1]
+        i     = 0
+        for region in ['barrel','endcap']:
+          for dm in DMs:
+            y    = graph.GetY()[i]
+            yup  = graph.GetErrorYhigh(i)
+            ylow = graph.GetErrorYlow(i)
+            FESs[region][dm] = (y-ylow,y,y+yup)
+            i += 1
+        file.Close()
+        self.FESs       = FESs
+        self.DMs        = [0,1]
+        self.genmatches = [1,3]
+    
+    def getFES(self, eta, dm, genmatch=1, unc=None):
+        """Get electron -> tau FES vs. tau DM."""
+        if dm in self.DMs and genmatch in self.genmatches:
+          region = 'barrel' if abs(eta)<1.5 else 'endcap'
+          fes    = self.FESs[region][dm]
+          if unc=='Up':
+            fes = fes[2]
+          elif unc=='Down':
+            fes = fes[0]
+          elif unc!='All':
+            fes = fes[1]
+          return fes
+        elif unc=='All':
+          return 1.0, 1.0, 1.0
+        return 1.0
+*/
+
+RVec<float> getFES(int SelectedTau_decayMode, int SelectedTau_genPartFlav){
+    string year = "2017";
+    string id = "DeepTau2017v2p1VSe";
+    TString path = TString("tauSF/TauFES_eta-dm_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
+    RVec<float> result(3);
+    if((SelectedTau_decayMode == 0 || SelectedTau_decayMode == 1) && (SelectedTau_genPartFlav == 1 || SelectedTau_genPartFlav == 3)){ 
+        TFile *infile = new TFile(path);
+        TGraphAsymmErrors * graph = (TGraphAsymmErrors *) infile->Get("fes");
+        float y = graph->GetY()[SelectedTau_decayMode];
+        float yup  = graph->GetErrorYhigh(SelectedTau_decayMode);
+        float ylow = graph->GetErrorYlow(SelectedTau_decayMode);
+        result[0] = y-ylow;
+        result[1] = y;
+        result[2] = y + yup;
+    }
+    else{
+        result[0] = 1.;
+        result[1] = 1.;
+        result[2] = 1.;
+    }
+    return result;
+}
+
+
 float efficiency(int flv, float eta, float pt, string year){
     TString path = TString("Btag_eff_") + TString(year) + TString(".root");
     TFile *infile = new TFile(path);
