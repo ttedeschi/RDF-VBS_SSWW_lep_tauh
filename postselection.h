@@ -180,7 +180,7 @@ float GetSubLeading(rvec_f Jet_pt, rvec_i VBSJet_idx){
     return Jet_pt[VBSJet_idx[1]];
 }
 
-float GetLepton(rvec_i Electron_pt, rvec_i Electron_idx, rvec_i Muon_pt, rvec_i Muon_idx, int GoodLeptonFamily){
+float GetLepton(rvec_f Electron_pt, rvec_i Electron_idx, rvec_f Muon_pt, rvec_i Muon_idx, int GoodLeptonFamily){
     if (GoodLeptonFamily == 0) return Electron_pt[Electron_idx[0]];
     else return Muon_pt[Muon_idx[0]];
 }
@@ -193,7 +193,6 @@ float GetLeptonTightFlag(rvec_i Electron_idx, rvec_i Muon_idx, int GoodLeptonFam
 float GetTau(rvec_f pt, rvec_i idx){
     return pt[idx[0]];
 }
-
 
 RVec<int> SelectElectron(rvec_f lepton_pt, rvec_f lepton_eta, rvec_f lepton_phi, rvec_f lepton_jetRelIso, rvec_b lepton_mvaFall17V2Iso_WPL, rvec_f lepton_mvaFall17V2Iso_WP90, rvec_f jet_eta, rvec_f jet_phi, rvec_i VBSJets_idx){
     //setting jet-related quantities if isolation from them is needed
@@ -769,21 +768,21 @@ float Lepton_IDIso_SF(float Lepton_pt, float Lepton_eta, int Lepton_pdgId){
 }
 */
 
-RVec<RVec<float>> getTauSF(float SelectedTau_pt, float SelectedTau_eta, int SelectedTau_genPartFlav, int Year){
+RVec<RVec<float>> getTauSF(float SelectedTau_pt, float SelectedTau_eta, int SelectedTau_genPartFlav){
     RVec<float> vsJet, vsEle, vsMu;
     string id;
-    std::string year = std::to_string(Year);
+    std::string year = std::to_string(2017);
     
     // vs Jet
     id =  "DeepTau2017v2p1VSjet";
-    TString path = TString("tauSF/TauID_SF_pt_") + id + TString("_") + year + TString(".root");
+    TString path = TString("tauSF/TauID_SF_pt_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
     TFile *f = new TFile(path);
     //TFile *f = new TFile();
     double_t pt = SelectedTau_pt;
     if (SelectedTau_genPartFlav==5){
-        TString path_down = TString(vsJetwp + TString("_down"));
-        TString path_cent = TString(vsJetwp + TString("_cent"));
-        TString path_up = TString(vsJetwp + TString("_up"));
+        TString path_down = TString(TString(vsJetwp) + TString("_down"));
+        TString path_cent = TString(TString(vsJetwp) + TString("_cent"));
+        TString path_up = TString(TString(vsJetwp) + TString("_up"));
         TF1 * h_down = (TF1*)f->Get(path_down);
         TF1 * h_cent =  (TF1*)f->Get(path_cent);
         TF1 * h_up =  (TF1*)f->Get(path_up);
@@ -803,7 +802,7 @@ RVec<RVec<float>> getTauSF(float SelectedTau_pt, float SelectedTau_eta, int Sele
     
     // vs ele
     id = "DeepTau2017v2p1VSe";
-    TString path_ele = TString("tauSF/TauID_SF_eta_") + id + TString("_") + year + TString(".root");
+    TString path_ele = TString("tauSF/TauID_SF_eta_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
     TFile *f_ele = new TFile(path_ele);
     TString histoname_ele = TString(vsElewp);
     TH1F * hist = (TH1F *) f_ele->Get(histoname_ele);
@@ -823,7 +822,7 @@ RVec<RVec<float>> getTauSF(float SelectedTau_pt, float SelectedTau_eta, int Sele
 
     //vs Mu
     id = "DeepTau2017v2p1VSmu";
-    TString path_mu = TString("tauSF/TauID_SF_eta_") + id + TString("_") + year + TString(".root");
+    TString path_mu = TString("tauSF/TauID_SF_eta_") + TString(id) + TString("_") + TString(year)  + TString("ReReco")+ TString(".root");
     TFile *f_mu = new TFile(path_mu);
     TString histoname_mu = TString(vsMuwp);
     TH1F * hist_mu = (TH1F *) f_mu->Get(histoname_mu);
@@ -849,8 +848,8 @@ RVec<RVec<float>> getTauSF(float SelectedTau_pt, float SelectedTau_eta, int Sele
     return result;
 }
 
-float efficiency(int flv, float eta, float pt, int year){
-    TString path = TString("Btag_eff_") + to_string(year) + TString(".root");
+float efficiency(int flv, float eta, float pt, string year){
+    TString path = TString("Btag_eff_") + TString(year) + TString(".root");
     TFile *infile = new TFile(path);
     TH2F * h;
     if(flv == 5){
@@ -864,7 +863,7 @@ float efficiency(int flv, float eta, float pt, int year){
     }
     else{
         //h = (TH2F *) infile->Get("h2_BTaggingEff_udsg");
-        TEfficiency *eff = (TEfficiency *) infile->Get("h2_BTaggingEff_udsgc");
+        TEfficiency *eff = (TEfficiency *) infile->Get("h2_BTaggingEff_udsg");
         h = (TH2F *) eff->CreateHistogram();
     }
     
@@ -874,11 +873,12 @@ float efficiency(int flv, float eta, float pt, int year){
     return h->GetBinContent(binx,biny);
 }
     
-RVec<float> btagcalc(rvec_i GoodJets_idx, rvec_f Jet_pt, rvec_f Jet_eta, rvec_i Jet_partonFlavour, rvec_f Jet_btagDeepFlavB, rvec_f Jet_btagSF_deepjet_M_up, rvec_f Jet_btagSF_deepjet_M_down, rvec_f Jet_btagSF_deepjet_M, rvec_f Jet_btagDeepB, int year){
+RVec<float> btagcalc(rvec_i GoodJets_idx, rvec_f Jet_pt, rvec_f Jet_eta, rvec_i Jet_partonFlavour, rvec_f Jet_btagDeepFlavB, rvec_f Jet_btagSF_deepjet_M_up, rvec_f Jet_btagSF_deepjet_M_down, rvec_f Jet_btagSF_deepjet_M, rvec_f Jet_btagDeepB){
 
     string tagger = "DeepFlv"; 
     string WP = "M";
     float threshold;
+    string year = "2017";
     
     float p_MC = 1.;
     float p_data = 1.;
@@ -981,8 +981,6 @@ RVec<float> btagcalc(rvec_i GoodJets_idx, rvec_f Jet_pt, rvec_f Jet_eta, rvec_i 
     result[2] = p_data_btagDown/p_MC;
     result[3] = p_data_mistagUp/p_MC;
     result[4] = p_data_mistagDown/p_MC;
-    
-    cout<<p_data/p_MC<<endl;
     
     return result;
 }
