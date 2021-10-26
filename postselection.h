@@ -894,65 +894,47 @@ class TauESTool:
         elif unc=='All':
           return 1.0, 1.0, 1.0
         return 1.0
-    
-    def getTES_highpt(self, dm, genmatch=5, unc=None):
-        """Get tau ES vs. tau DM for pt > 100 GeV"""
-        if genmatch==5 and dm in self.DMs:
-          bin = self.hist_highpt.GetXaxis().FindBin(dm)
-          tes = self.hist_highpt.GetBinContent(bin)
-          if unc=='Up':
-            tes += self.hist_highpt.GetBinError(bin)
-          elif unc=='Down':
-            tes -= self.hist_highpt.GetBinError(bin)
-          elif unc=='All':
-            return tes-self.hist_highpt.GetBinError(bin), tes, tes+self.hist_highpt.GetBinError(bin)
-          return tes
-        elif unc=='All':
-          return 1.0, 1.0, 1.0
-        return 1.0
-
-
-fesTool = TauFESTool(act_camp, 'DeepTau2017v2p1VSe')
-fes_Down, fes, fes_Up = fesTool.getFES(GoodTau.eta, GoodTau.decayMode, GoodTau.genPartFlav, unc='All')
-              
-class TauFESTool:
-    
-    def __init__(self, year, id='DeepTau2017v2p1VSe', path=datapath):
-        """Choose the IDs and WPs for SFs."""
-        assert year in campaigns, "You must choose a year from %s."%(', '.join(campaigns))
-        file  = ensureTFile(os.path.join(path,"TauFES_eta-dm_%s_%s.root"%(id,year)))
-        graph = file.Get('fes')
-        FESs  = { 'barrel':  { }, 'endcap': { } }
-        DMs   = [0,1]
-        i     = 0
-        for region in ['barrel','endcap']:
-          for dm in DMs:
-            y    = graph.GetY()[i]
-            yup  = graph.GetErrorYhigh(i)
-            ylow = graph.GetErrorYlow(i)
-            FESs[region][dm] = (y-ylow,y,y+yup)
-            i += 1
-        file.Close()
-        self.FESs       = FESs
-        self.DMs        = [0,1]
-        self.genmatches = [1,3]
-    
-    def getFES(self, eta, dm, genmatch=1, unc=None):
-        """Get electron -> tau FES vs. tau DM."""
-        if dm in self.DMs and genmatch in self.genmatches:
-          region = 'barrel' if abs(eta)<1.5 else 'endcap'
-          fes    = self.FESs[region][dm]
-          if unc=='Up':
-            fes = fes[2]
-          elif unc=='Down':
-            fes = fes[0]
-          elif unc!='All':
-            fes = fes[1]
-          return fes
-        elif unc=='All':
-          return 1.0, 1.0, 1.0
-        return 1.0
 */
+
+RVec<float> getTES(float SelectedTau_pt, int SelectedTau_decayMode, int SelectedTau_genPartFlav){
+    string year = "2017";
+    string id = "DeepTau2017v2p1VSjet";
+    float pt_low  = 34;
+    float pt_high = 170;
+    TString path_low = TString("tauSF/TauES_dm_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
+    TString path_high = TString("tauSF/TauES_dm_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString("_ptgt100.root");
+    RVec<float> result(3);
+    if((SelectedTau_decayMode == 0 || SelectedTau_decayMode == 1 || SelectedTau_decayMode == 10 || SelectedTau_decayMode == 11) && SelectedTau_genPartFlav == 5){ 
+        TFile *infile_low = new TFile(path_low);
+        TFile *infile_high = new TFile(path_high);
+        TH1F * hist_low = (TH1F *) infile_low->Get("tes");
+        TH1F * hist_high = (TH1F *) infile_high->Get("tes");
+        int bin = hist_low->GetXaxis()->FindBin(SelectedTau_decayMode);
+        float tes = hist_low->GetBinContent(bin);
+        float err;
+        if (SelectedTau_pt > pt_high){
+            int bin_high = hist_high->GetXaxis()->FindBin(SelectedTau_decayMode);
+            float err = hist_high->GetBinError(bin_high);
+        }
+        else if (SelectedTau_pt > pt_low){
+            int bin_high = hist_high->GetXaxis()->FindBin(SelectedTau_decayMode);
+            float err_high = hist_high->GetBinError(bin_high);
+            float err_low  = hist_low->GetBinError(bin);
+            float err      = err_low + (err_high-err_low)/(pt_high-pt_low)*(SelectedTau_pt-pt_low);
+        }
+        else err = hist_low->GetBinError(bin);
+        
+        result[0] = tes-err;
+        result[1] = tes;
+        result[2] = tes+err;
+    }
+    else{
+        result[0] = 1.;
+        result[1] = 1.;
+        result[2] = 1.;
+    }
+    return result;
+}
 
 RVec<float> getFES(int SelectedTau_decayMode, int SelectedTau_genPartFlav){
     string year = "2017";
