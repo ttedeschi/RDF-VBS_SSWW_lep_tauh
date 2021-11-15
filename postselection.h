@@ -22,6 +22,8 @@ using rvec_i = const RVec<int> &;
 using rvec_b = const RVec<bool> &;
 
 
+const string remote_storage = "https://ttedesch.web.cern.ch/ttedesch/nanoAOD-tools/python/postprocessing/";
+
 //values for cuts and constant 
 
 const size_t ONLYELE=1;
@@ -740,7 +742,7 @@ float Lepton_IDIso_SF(float Lepton_pt, float Lepton_eta, int Lepton_pdgId){
         auto biny_id = h_electron_id->GetXaxis()->FindBin(pt);
         auto binx_id = h_electron_id->GetYaxis()->FindBin(eta);
         auto nxbins_id = h_electron_id->GetXaxis()->GetNbins();
-        auto nybins_id = h_electron_id->GetYaxis()->GetNbins();
+        auto nybins_id = h_electron_id->GetYaxis()->GetNbins(); 
         if (binx_id > nxbins_id) binx_id = nxbins_id;
         else if (binx_id <= 0) binx_id = 1;
         if (biny_id > nybins_id) biny_id = nybins_id;
@@ -772,11 +774,11 @@ RVec<RVec<float>> getTauSF(float SelectedTau_pt, float SelectedTau_eta, int Sele
     RVec<float> vsJet, vsEle, vsMu;
     string id;
     std::string year = std::to_string(2017);
-    
     // vs Jet
     id =  "DeepTau2017v2p1VSjet";
-    TString path = TString("tauSF/TauID_SF_pt_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
-    TFile *f = new TFile(path);
+    TString path = TString(remote_storage) + TString("data/tauSF/TauID_SF_pt_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
+    //TFile *f = new TFile(path);
+    TFile *f = TFile::Open(path);
     //TFile *f = new TFile();
     double_t pt = SelectedTau_pt;
     if (SelectedTau_genPartFlav==5){
@@ -802,8 +804,9 @@ RVec<RVec<float>> getTauSF(float SelectedTau_pt, float SelectedTau_eta, int Sele
     
     // vs ele
     id = "DeepTau2017v2p1VSe";
-    TString path_ele = TString("tauSF/TauID_SF_eta_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
-    TFile *f_ele = new TFile(path_ele);
+    TString path_ele =  TString(remote_storage) + TString("data/tauSF/TauID_SF_eta_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
+    //TFile *f_ele = new TFile(path_ele);
+    TFile *f_ele = TFile::Open(path_ele);
     TString histoname_ele = TString(vsElewp);
     TH1F * hist = (TH1F *) f_ele->Get(histoname_ele);
     if (SelectedTau_genPartFlav == 1 || SelectedTau_genPartFlav == 3){
@@ -822,8 +825,9 @@ RVec<RVec<float>> getTauSF(float SelectedTau_pt, float SelectedTau_eta, int Sele
 
     //vs Mu
     id = "DeepTau2017v2p1VSmu";
-    TString path_mu = TString("tauSF/TauID_SF_eta_") + TString(id) + TString("_") + TString(year)  + TString("ReReco")+ TString(".root");
-    TFile *f_mu = new TFile(path_mu);
+    TString path_mu =  TString(remote_storage) + TString("data/tauSF/TauID_SF_eta_") + TString(id) + TString("_") + TString(year)  + TString("ReReco")+ TString(".root");
+    //TFile *f_mu = new TFile(path_mu);
+    TFile *f_mu = TFile::Open(path_mu);
     TString histoname_mu = TString(vsMuwp);
     TH1F * hist_mu = (TH1F *) f_mu->Get(histoname_mu);
     if (SelectedTau_genPartFlav == 2 || SelectedTau_genPartFlav == 4){
@@ -899,14 +903,17 @@ class TauESTool:
 RVec<float> getTES(float SelectedTau_pt, int SelectedTau_decayMode, int SelectedTau_genPartFlav){
     string year = "2017";
     string id = "DeepTau2017v2p1VSjet";
+    
     float pt_low  = 34;
     float pt_high = 170;
-    TString path_low = TString("tauSF/TauES_dm_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
-    TString path_high = TString("tauSF/TauES_dm_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString("_ptgt100.root");
+    TString path_low = TString(remote_storage) + TString("data/tauSF/TauES_dm_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
+    TString path_high = TString(remote_storage) + TString("data/tauSF/TauES_dm_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString("_ptgt100.root");
     RVec<float> result(3);
     if((SelectedTau_decayMode == 0 || SelectedTau_decayMode == 1 || SelectedTau_decayMode == 10 || SelectedTau_decayMode == 11) && SelectedTau_genPartFlav == 5){ 
-        TFile *infile_low = new TFile(path_low);
-        TFile *infile_high = new TFile(path_high);
+        //TFile *infile_low = new TFile(path_low);
+        //TFile *infile_high = new TFile(path_high);
+        TFile *infile_low = TFile::Open(path_low);
+        TFile *infile_high = TFile::Open(path_high);
         TH1F * hist_low = (TH1F *) infile_low->Get("tes");
         TH1F * hist_high = (TH1F *) infile_high->Get("tes");
         int bin = hist_low->GetXaxis()->FindBin(SelectedTau_decayMode);
@@ -939,10 +946,12 @@ RVec<float> getTES(float SelectedTau_pt, int SelectedTau_decayMode, int Selected
 RVec<float> getFES(int SelectedTau_decayMode, int SelectedTau_genPartFlav){
     string year = "2017";
     string id = "DeepTau2017v2p1VSe";
-    TString path = TString("tauSF/TauFES_eta-dm_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
+    
+    TString path = TString(remote_storage) + TString("data/tauSF/TauFES_eta-dm_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
     RVec<float> result(3);
     if((SelectedTau_decayMode == 0 || SelectedTau_decayMode == 1) && (SelectedTau_genPartFlav == 1 || SelectedTau_genPartFlav == 3)){ 
-        TFile *infile = new TFile(path);
+        //TFile *infile = new TFile(path);
+        TFile *infile = TFile::Open(path);
         TGraphAsymmErrors * graph = (TGraphAsymmErrors *) infile->Get("fes");
         float y = graph->GetY()[SelectedTau_decayMode];
         float yup  = graph->GetErrorYhigh(SelectedTau_decayMode);
@@ -961,8 +970,10 @@ RVec<float> getFES(int SelectedTau_decayMode, int SelectedTau_genPartFlav){
 
 
 float efficiency(int flv, float eta, float pt, string year){
-    TString path = TString("Btag_eff_") + TString(year) + TString(".root");
-    TFile *infile = new TFile(path);
+
+    TString path = TString(remote_storage) + TString("Btag_eff_") + TString(year) + TString(".root");
+    //TFile *infile = new TFile(path);
+    TFile *infile = TFile::Open(path);
     TH2F * h;
     if(flv == 5){
         //TH2F * h = (TH2F *) infile->Get("h2_BTaggingEff_b")->CreateHistogram();
