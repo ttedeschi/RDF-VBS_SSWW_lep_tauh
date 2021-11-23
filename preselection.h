@@ -352,75 +352,86 @@ const std::vector<float> & LeptonEfficiencyCorrector::run() {
   return ret_;
 }
 
+string path = "https://ttedesch.web.cern.ch/ttedesch/nanoAOD-tools/python/postprocessing/data/leptonSF/";
+
+std::vector<std::string> mu_f_2016{path + "Mu_RunBCDEFGH_SF_ID_2016_syst.root"};
+std::vector<std::string> el_f_2016{path + "EGM2D_RECO_SF_2016.root", path + "2016LegacyReReco_ElectronMVA90noiso_Fall17V2.root"};
+std::vector<std::string> mu_h_2016{"NUM_TightID_DEN_genTracks_eta_pt"};
+std::vector<std::string> el_h_2016{"EGamma_SF2D", "EGamma_SF2D"};
+std::vector<std::string> mu_f_2017{path + "Muon_RunBCDEF_SF_ID_2017.root", path + "Muon_RunBCDEF_SF_ISO_2017.root"};
+std::vector<std::string> el_f_2017{path + "EGM2D_2017_passingRECO_highEt.root", path + "Electron_MVA90_2017.root"};
+std::vector<std::string> mu_h_2017{"NUM_TightID_DEN_genTracks_pt_abseta", "NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta"};
+std::vector<std::string> el_h_2017{"EGamma_SF2D", "EGamma_SF2D"};
+std::vector<std::string> mu_f_2018{path + "Muon_RunBCDEF_SF_ID_2018.root", path + "Muon_RunBCDEF_SF_ISO_2018.root"};
+std::vector<std::string> el_f_2018{path + "EGM2D_passingRECO_2018All.root", path + "2018_ElectronMVA90Iso.root"};
+std::vector<std::string> mu_h_2018{"NUM_TightID_DEN_TrackerMuons_pt_abseta", "NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta"};
+std::vector<std::string> el_h_2018{"EGamma_SF2D", "EGamma_SF2D"};
+
+/*
+{} 
+mu_h_2016, el_f_2016, el_h_2016;
+std::vector<std::string> mu_f_2017, mu_h_2017, el_f_2017, el_h_2017;
+std::vector<std::string> mu_f_2018, mu_h_2018, el_f_2018, el_h_2018;
+
+
+
+mu_f_2016.push_back(path + "Mu_RunBCDEFGH_SF_ID_2016_syst.root");
+mu_h_2016.push_back("NUM_TightID_DEN_genTracks_eta_pt");
+
+el_f_2016.push_back(path + "EGM2D_RECO_SF_2016.root");
+el_f_2016.push_back(path + "2016LegacyReReco_ElectronMVA90noiso_Fall17V2.root");
+el_h_2016.push_back("EGamma_SF2D");
+el_h_2016.push_back("EGamma_SF2D");
+
+mu_f_2017.push_back(path + "Muon_RunBCDEF_SF_ID_2017.root");
+mu_f_2017.push_back(path + "Muon_RunBCDEF_SF_ISO_2017.root");
+mu_h_2017.push_back("NUM_TightID_DEN_genTracks_pt_abseta");
+mu_h_2017.push_back("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta");
+
+el_f_2017.push_back(path + "EGM2D_2017_passingRECO_highEt.root");
+el_f_2017.push_back(path + "Electron_MVA90_2017.root");
+el_h_2017.push_back("EGamma_SF2D");
+el_h_2017.push_back("EGamma_SF2D");
+
+mu_f_2018.push_back(path + "Muon_RunABCD_SF_ID_2018.root");
+mu_f_2018.push_back(path + "Muon_RunABCD_SF_ISO_2018.root");
+mu_h_2018.push_back("NUM_TightID_DEN_TrackerMuons_pt_abseta");
+mu_h_2018.push_back("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta");
+
+el_f_2018.push_back(path + "EGM2D_passingRECO_2018All.root");
+el_f_2018.push_back(path + "2018_ElectronMVA90Iso.root");
+el_h_2018.push_back("EGamma_SF2D");
+el_h_2018.push_back("EGamma_SF2D");
+
+*/
+//LeptonEfficiencyCorrector worker_mu;
+//LeptonEfficiencyCorrector worker_el;
+
+LeptonEfficiencyCorrector worker_mu_2016(mu_f_2016, mu_h_2016);
+LeptonEfficiencyCorrector worker_el_2016(el_f_2016, el_h_2016);
+LeptonEfficiencyCorrector worker_mu_2017(mu_f_2017, mu_h_2017);
+LeptonEfficiencyCorrector worker_el_2017(el_f_2017, el_h_2017);
+LeptonEfficiencyCorrector worker_mu_2018(mu_f_2018, mu_h_2018);
+LeptonEfficiencyCorrector worker_el_2018(el_f_2018, el_h_2018);
+
+
 RVec<RVec<float>> LepSF(rvec_f Electron_pt, rvec_f Electron_eta, rvec_i Electron_pdgId, rvec_f Muon_pt, rvec_f Muon_eta, rvec_i Muon_pdgId, Int_t Year){
     
-    std::vector<std::string> mu_f, mu_h, el_f, el_h;
-    string path = "https://ttedesch.web.cern.ch/ttedesch/nanoAOD-tools/python/postprocessing/data/leptonSF/";
-    string muonSelectionTag, electronSelectionTag; 
+    LeptonEfficiencyCorrector worker_mu, worker_el;
 
-    if (Year == 2016){
-        muonSelectionTag = "TightWP_2016";
-        electronSelectionTag = "NoIsoMVA90_2016";
+    if (Year == 2016) {
+        worker_mu = worker_mu_2016;
+        worker_el = worker_mu_2016;
     }
-    
     if (Year == 2017){
-        muonSelectionTag = "TightWP_2017";
-        electronSelectionTag = "IsoMVA90_2017";
+        worker_mu = worker_mu_2017;
+        worker_el = worker_mu_2017;
     }
     
     if (Year == 2018){
-        muonSelectionTag = "TightWP_2018";
-        electronSelectionTag = "IsoMVA90_2018";
+        worker_mu = worker_mu_2018;
+        worker_el = worker_mu_2018;
     }
-    
-    if (muonSelectionTag == "TightWP_2016"){
-        mu_f.push_back(path + "Mu_RunBCDEFGH_SF_ID_2016_syst.root");
-        mu_h.push_back("NUM_TightID_DEN_genTracks_eta_pt");
-    }
-
-    if (electronSelectionTag == "NoIsoMVA90_2016"){
-        el_f.push_back(path + "EGM2D_RECO_SF_2016.root");
-        el_f.push_back(path + "2016LegacyReReco_ElectronMVA90noiso_Fall17V2.root");
-        el_h.push_back("EGamma_SF2D");
-        el_h.push_back("EGamma_SF2D");
-    }
-
-    if (muonSelectionTag == "TightWP_2017"){
-        mu_f.push_back(path + "Muon_RunBCDEF_SF_ID_2017.root");
-        mu_f.push_back(path + "Muon_RunBCDEF_SF_ISO_2017.root");
-        mu_h.push_back("NUM_TightID_DEN_genTracks_pt_abseta");
-        mu_h.push_back("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta");
-    }
-
-    if (electronSelectionTag == "IsoMVA90_2017"){
-        el_f.push_back(path + "EGM2D_2017_passingRECO_highEt.root");
-        el_f.push_back(path + "Electron_MVA90_2017.root");
-        el_h.push_back("EGamma_SF2D");
-        el_h.push_back("EGamma_SF2D");
-    }
-
-    if (muonSelectionTag == "TightWP_2018"){
-        mu_f.push_back(path + "Muon_RunABCD_SF_ID_2018.root");
-        mu_f.push_back(path + "Muon_RunBCDEF_SF_ISO_2017.root");
-        mu_h.push_back("NUM_TightID_DEN_TrackerMuons_pt_abseta");
-        mu_h.push_back("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta");
-    }
-
-    if (electronSelectionTag == "IsoMVA90_2018"){
-        el_f.push_back(path + "EGM2D_passingRECO_2018All.root");
-        el_f.push_back(path + "2018_ElectronMVA90Iso.root");
-        el_h.push_back("EGamma_SF2D");
-        el_h.push_back("EGamma_SF2D");
-    }
-            
-    //LeptonEfficiencyCorrector worker_mu;
-    //LeptonEfficiencyCorrector worker_el;
-    
-    LeptonEfficiencyCorrector worker_mu(mu_f, mu_h);
-    LeptonEfficiencyCorrector worker_el(el_f, el_h);
-    
-    //worker_mu = LeptonEfficiencyCorrector(mu_f, mu_h);
-    //worker_el = LeptonEfficiencyCorrector(el_f, el_h);
     
     RVec<float> sf_mu(Muon_pt.size());
     RVec<float> sferr_mu(Muon_pt.size()); 
