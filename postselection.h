@@ -21,8 +21,24 @@ using rvec_f = const RVec<float> &;
 using rvec_i = const RVec<int> &;
 using rvec_b = const RVec<bool> &;
 
-
 const string remote_storage = "https://ttedesch.web.cern.ch/ttedesch/nanoAOD-tools/python/postprocessing/";
+
+TFile *TauID_SF_pt_DeepTau2017v2p1VSjet_2017ReReco = TFile::Open(TString(remote_storage) + TString("data/tauSF/TauID_SF_pt_") + TString("DeepTau2017v2p1VSjet") + TString("_") + TString("2017") + TString("ReReco") + TString(".root"));
+
+TFile *TauID_SF_eta_DeepTau2017v2p1VSe_2017ReReco = TFile::Open(TString(remote_storage) + TString("data/tauSF/TauID_SF_eta_") + TString("DeepTau2017v2p1VSe") + TString("_") + TString("2017") + TString("ReReco") + TString(".root"));
+
+TFile *TauID_SF_eta_DeepTau2017v2p1VSmu_2017ReReco = TFile::Open(TString(remote_storage) + TString("data/tauSF/TauID_SF_eta_") + TString("DeepTau2017v2p1VSmu") + TString("_") + TString("2017")  + TString("ReReco")+ TString(".root"));
+
+TFile *TauES_dm_DeepTau2017v2p1VSjet_2017ReReco = TFile::Open(TString(remote_storage) + TString("data/tauSF/TauES_dm_") + TString("DeepTau2017v2p1VSjet") + TString("_") + TString("2017") + TString("ReReco") + TString(".root"));
+TFile *TauES_dm_DeepTau2017v2p1VSjet_2017ReReco_ptgt100 = TFile::Open(TString(remote_storage) + TString("data/tauSF/TauES_dm_") + TString("DeepTau2017v2p1VSjet") + TString("_") + TString("2017") + TString("ReReco") + TString("_ptgt100.root"));
+
+TFile *TauFES_eta_dm_DeepTau2017v2p1VSe_2017ReReco = TFile::Open(TString(remote_storage) + TString("data/tauSF/TauFES_eta-dm_") + TString("DeepTau2017v2p1VSe") + TString("_") + TString("2017") + TString("ReReco") + TString(".root"));
+
+TFile *Btag_eff_2017 = TFile::Open(TString(remote_storage) + TString("Btag_eff_") + TString("2017") + TString(".root"));
+
+TFile *FR_vsjet2_vsmuT_ZZ = TFile::Open(TString(remote_storage) + TString("FR_vsjet2_vsmuT_ZZ.root"));
+                                        
+TFile *FR_vsjet4_vsmuT_ZZ = TFile::Open(TString(remote_storage) + TString("FR_vsjet4_vsmuT_ZZ.root"));
 
 //values for cuts and constant 
 
@@ -185,6 +201,14 @@ float GetSubLeading(rvec_f Jet_pt, rvec_i VBSJet_idx){
 float GetLepton(rvec_f Electron_pt, rvec_i Electron_idx, rvec_f Muon_pt, rvec_i Muon_idx, int GoodLeptonFamily){
     if (GoodLeptonFamily == 0) return Electron_pt[Electron_idx[0]];
     else return Muon_pt[Muon_idx[0]];
+}
+
+float GetLeptonSF(rvec_f Electron_pt, rvec_i Electron_idx, rvec_f Muon_pt, rvec_i Muon_idx, int GoodLeptonFamily, bool IsMC){
+    if (IsMC == false) return 1;
+    else {
+        if (GoodLeptonFamily == 0) return Electron_pt[Electron_idx[0]];
+        else return Muon_pt[Muon_idx[0]];
+    }
 }
 
 float GetLeptonTightFlag(rvec_i Electron_idx, rvec_i Muon_idx, int GoodLeptonFamily){
@@ -529,10 +553,13 @@ float Mo1(float Lepton_pt, float Lepton_eta, float Lepton_phi, float Lepton_mass
 
 float SFFakeRatio_lep_calc_vsjet2(float pT, float eta, int pdgId){
     
-    TFile inFile("FR_vsjet2_vsmuT_ZZ.root"); 
+    //TFile inFile("FR_vsjet2_vsmuT_ZZ.root"); 
+    TFile *inFile = FR_vsjet2_vsmuT_ZZ;
     TH2F *histo;
-    if (abs(pdgId) == 11) histo = (TH2F*)inFile.Get("hFRDataeledif");
-    else if (abs(pdgId) == 13) histo = (TH2F*)inFile.Get("hFRDatamudif");
+    //if (abs(pdgId) == 11) histo = (TH2F*)inFile.Get("hFRDataeledif");
+    //else if (abs(pdgId) == 13) histo = (TH2F*)inFile.Get("hFRDatamudif");
+    if (abs(pdgId) == 11) histo = (TH2F*)inFile->Get("hFRDataeledif");
+    else if (abs(pdgId) == 13) histo = (TH2F*)inFile->Get("hFRDatamudif");
 
     auto binx = histo->GetXaxis()->FindBin(pT);
     auto biny = histo->GetYaxis()->FindBin(eta);
@@ -551,10 +578,13 @@ float SFFakeRatio_lep_calc_vsjet2(float pT, float eta, int pdgId){
         
 float SFFakeRatio_lep_calc_vsjet4(float pT, float eta, int pdgId){
     
-    TFile inFile("FR_vsjet4_vsmuT_ZZ.root"); 
+    //TFile inFile("FR_vsjet4_vsmuT_ZZ.root"); 
+    TFile *inFile = FR_vsjet4_vsmuT_ZZ;
     TH2F *histo;
-    if (abs(pdgId) == 11) histo = (TH2F*)inFile.Get("hFRDataeledif");
-    else if (abs(pdgId) == 13) histo = (TH2F*)inFile.Get("hFRDatamudif");
+    //if (abs(pdgId) == 11) histo = (TH2F*)inFile.Get("hFRDataeledif");
+    //else if (abs(pdgId) == 13) histo = (TH2F*)inFile.Get("hFRDatamudif");
+    if (abs(pdgId) == 11) histo = (TH2F*)inFile->Get("hFRDataeledif");
+    else if (abs(pdgId) == 13) histo = (TH2F*)inFile->Get("hFRDatamudif");
 
     auto binx = histo->GetXaxis()->FindBin(pT);
     auto biny = histo->GetYaxis()->FindBin(eta);
@@ -573,9 +603,11 @@ float SFFakeRatio_lep_calc_vsjet4(float pT, float eta, int pdgId){
 
         
 float SFFakeRatio_tau_calc_vsjet2(float pT, float eta){
-    TFile inFile("FR_vsjet2_vsmuT_ZZ.root"); 
+    //TFile inFile("FR_vsjet2_vsmuT_ZZ.root"); 
+    TFile *inFile = FR_vsjet2_vsmuT_ZZ;
 
-    TH2F *histo = (TH2F*)inFile.Get("hFRDatataudif");
+    //TH2F *histo = (TH2F*)inFile.Get("hFRDatataudif");
+    TH2F *histo = (TH2F*)inFile->Get("hFRDatataudif");
 
     auto binx = histo->GetXaxis()->FindBin(pT);
     auto biny = histo->GetYaxis()->FindBin(eta);
@@ -594,9 +626,11 @@ float SFFakeRatio_tau_calc_vsjet2(float pT, float eta){
         
 float SFFakeRatio_tau_calc_vsjet4(float pT, float eta){
 
-    TFile inFile("FR_vsjet4_vsmuT_ZZ.root"); 
+    //TFile inFile("FR_vsjet4_vsmuT_ZZ.root"); 
+    TFile *inFile = FR_vsjet4_vsmuT_ZZ;
 
-    TH2F *histo = (TH2F*)inFile.Get("hFRDatataudif");
+    //TH2F *histo = (TH2F*)inFile.Get("hFRDatataudif");
+    TH2F *histo = (TH2F*)inFile->Get("hFRDatataudif");
 
     auto binx = histo->GetXaxis()->FindBin(pT);
     auto biny = histo->GetYaxis()->FindBin(eta);
@@ -672,14 +706,6 @@ RVec<int> SelectVBSQGenJet(rvec_i GenPart_pdgId, rvec_i GenPart_genPartIdxMother
     return finalgenjets_idx;
 }
 
-//RVec<int> SelectVBSQGenJet(rvec_i GenJet_partonFlavour){
-//    RVec<int> idx;
-//    for (int i = 0; i < GenJet_partonFlavour.size(); i++) {
-//        if(abs(GenJet_partonFlavour[i])>0 && abs(GenJet_partonFlavour[i])<10) idx.emplace_back(i);
-//    }
-//    return idx;
-//}
-
 bool atleast2Jets(rvec_i GenJet_idx){
     if(GenJet_idx.size() < 2) return false;
     else return true;
@@ -690,158 +716,102 @@ int IsGenMatched(int i, int j){
     else return 0;
 }
 
-/*
-float Lepton_IDIso_SF(float Lepton_pt, float Lepton_eta, int Lepton_pdgId){
-    if(abs(Lepton_pdgId)==13){
-        f_muon_id = ROOT.TFile.Open("Muon_RunBCDEF_SF_ID_2017.root", "READ")
-        f_muon_iso = ROOT.TFile.Open("Muon_RunBCDEF_SF_ISO_2017.root", "READ")
-        h_muon_id = ROOT.TH2D(f_muon_id.Get("NUM_TightID_DEN_genTracks_pt_abseta"))
-        h_muon_iso = ROOT.TH2D(f_muon_iso.Get("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta"))
-      
-        float pt = Lepton_pt;
-        float abseta = abs(Lepton_eta);
-        int binx_id = h_muon_id.GetXaxis().FindBin(pt);
-        int biny_id = h_muon_id.GetYaxis().FindBin(abseta);
-        int nxbins_id = h_muon_id.GetXaxis().GetNbins();
-        int nybins_id = h_muon_id.GetYaxis().GetNbins();
-
-        if (binx_id > nxbins_id) binx_id = copy.deepcopy(nxbins_id);
-        else if (binx_id <= 0) binx_id = 1;
-
-        if (biny_id > nybins_id) biny_id = copy.deepcopy(nybins_id);
-        else if (biny_id <= 0) biny_id = 1;
-
-        binx_iso = h_muon_iso.GetXaxis().FindBin(pt)
-        biny_iso = h_muon_iso.GetYaxis().FindBin(abseta)
-        nxbins_iso = h_muon_iso.GetXaxis().GetNbins()
-        nybins_iso = h_muon_iso.GetYaxis().GetNbins()
-        
-        if (binx_iso > nxbins_iso) binx_iso = copy.deepcopy(nxbins_iso);
-        else if(binx_iso <= 0) binx_iso = 1;
-        if (biny_iso > nybins_iso) biny_iso = copy.deepcopy(nybins_iso);
-        else if (biny_iso <= 0) biny_iso = 1;
-        
-        SF_muon_id = copy.deepcopy(h_muon_id.GetBinContent(binx_id, biny_id));
-        SF_muon_iso = copy.deepcopy(h_muon_iso.GetBinContent(binx_iso, biny_iso));
-
-        f_muon_id.Close();
-        f_muon_iso.Close();
-
-        return SF_muon_id*SF_muon_iso
-    }
-    else if (abs(Lepton_pdgId)==11){
-        TFile f_electron_id("Electron_MVA90_2017.root", "READ");
-        TH2F *h_electron_id = (TH2F*)f_electron_id.Get("EGamma_SF2D");
-
-        if(Lepton_pt < 20.) TFile f_electron_reco("EGM2D_2017_passingRECO_lowEt.root", "READ");
-        else if (lepton.pt >= 20.) TFile f_electron_reco("EGM2D_2017_passingRECO_highEt.root", "READ");
-        TH2F *h_electron_reco = (TH2F*)f_electron_reco.Get("EGamma_SF2D");
-
-        auto pt = Lepton_pt;
-        auto eta = Lepton_eta;
-        auto biny_id = h_electron_id->GetXaxis()->FindBin(pt);
-        auto binx_id = h_electron_id->GetYaxis()->FindBin(eta);
-        auto nxbins_id = h_electron_id->GetXaxis()->GetNbins();
-        auto nybins_id = h_electron_id->GetYaxis()->GetNbins(); 
-        if (binx_id > nxbins_id) binx_id = nxbins_id;
-        else if (binx_id <= 0) binx_id = 1;
-        if (biny_id > nybins_id) biny_id = nybins_id;
-        else if (biny_id <= 0) biny_id = 1;
-
-        auto biny_reco = h_electron_reco->GetXaxis()->FindBin(pt);
-        auto binx_reco = h_electron_reco->GetYaxis()->FindBin(eta);
-        auto nxbins_reco = h_electron_reco->GetXaxis()->GetNbins();
-        auto nybins_reco = h_electron_reco->GetYaxis()->GetNbins();
-        if (binx_reco > nxbins_reco) binx_reco = *nxbins_reco;
-        else if (binx_reco <= 0) binx_reco = 1;
-        if (biny_reco > nybins_reco) biny_reco = *nybins_reco;
-        else if (biny_reco <= 0) biny_reco = 1;
-
-        auto SF_electron_id = h_electron_id.GetBinContent(binx_id, biny_id);
-        auto SF_electron_reco = h_electron_reco.GetBinContent(binx_reco, biny_reco);
-
-        f_electron_id.Close();
-        f_electron_reco.Close();
-
-        return SF_electron_id*SF_electron_reco;
-    }
-
-    else return -1.;
-}
-*/
-
-RVec<RVec<float>> getTauSF(float SelectedTau_pt, float SelectedTau_eta, int SelectedTau_genPartFlav){
+RVec<RVec<float>> getTauSF(float SelectedTau_pt, float SelectedTau_eta, int SelectedTau_genPartFlav, bool IsMC){
     RVec<float> vsJet, vsEle, vsMu;
-    string id;
-    std::string year = std::to_string(2017);
-    // vs Jet
-    id =  "DeepTau2017v2p1VSjet";
-    TString path = TString(remote_storage) + TString("data/tauSF/TauID_SF_pt_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
-    //TFile *f = new TFile(path);
-    TFile *f = TFile::Open(path);
-    //TFile *f = new TFile();
-    double_t pt = SelectedTau_pt;
-    if (SelectedTau_genPartFlav==5){
-        TString path_down = TString(TString(vsJetwp) + TString("_down"));
-        TString path_cent = TString(TString(vsJetwp) + TString("_cent"));
-        TString path_up = TString(TString(vsJetwp) + TString("_up"));
-        TF1 * h_down = (TF1*)f->Get(path_down);
-        TF1 * h_cent =  (TF1*)f->Get(path_cent);
-        TF1 * h_up =  (TF1*)f->Get(path_up);
-        vsJet.emplace_back(h_down->Eval(pt));
-        vsJet.emplace_back(h_cent->Eval(pt));
-        vsJet.emplace_back(h_up->Eval(pt));
-    }
-    else{
+    if (IsMC == false){
         vsJet.emplace_back(1.0);
         vsJet.emplace_back(1.0);
         vsJet.emplace_back(1.0);
+        vsEle.emplace_back(1.0);
+        vsEle.emplace_back(1.0);
+        vsEle.emplace_back(1.0);
+        vsMu.emplace_back(1.0);
+        vsMu.emplace_back(1.0);
+        vsMu.emplace_back(1.0);
+        
+        
     }
     
-    int bin;
-    float sf, err;
-    float eta = abs(SelectedTau_eta);  
-    
-    // vs ele
-    id = "DeepTau2017v2p1VSe";
-    TString path_ele =  TString(remote_storage) + TString("data/tauSF/TauID_SF_eta_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
-    //TFile *f_ele = new TFile(path_ele);
-    TFile *f_ele = TFile::Open(path_ele);
-    TString histoname_ele = TString(vsElewp);
-    TH1F * hist = (TH1F *) f_ele->Get(histoname_ele);
-    if (SelectedTau_genPartFlav == 1 || SelectedTau_genPartFlav == 3){
-        bin = hist->GetXaxis()->FindBin(eta);
-        sf  = hist->GetBinContent(bin);
-        err = hist->GetBinError(bin);
-        vsEle.emplace_back(sf-err);
-        vsEle.emplace_back(sf);
-        vsEle.emplace_back(sf+err);
-    }
     else{
-        vsEle.emplace_back(1.0);
-        vsEle.emplace_back(1.0);
-        vsEle.emplace_back(1.0);
-    }
+        string id;
+        std::string year = std::to_string(2017);
+        // vs Jet
+        id =  "DeepTau2017v2p1VSjet";
+        //TString path = TString(remote_storage) + TString("data/tauSF/TauID_SF_pt_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
+        //TFile *f = new TFile(path);
+        TFile *f =  TauID_SF_pt_DeepTau2017v2p1VSjet_2017ReReco;
+        //else if (year == "2017") TFile *f =  TauID_SF_pt_DeepTau2017v2p1VSjet_2018ReReco;
+        //TFile *f = TFile::Open(path);
+        //TFile *f = new TFile();
+        double_t pt = SelectedTau_pt;
+        if (SelectedTau_genPartFlav==5){
+            TString path_down = TString(TString(vsJetwp) + TString("_down"));
+            TString path_cent = TString(TString(vsJetwp) + TString("_cent"));
+            TString path_up = TString(TString(vsJetwp) + TString("_up"));
+            TF1 * h_down = (TF1*)f->Get(path_down);
+            TF1 * h_cent =  (TF1*)f->Get(path_cent);
+            TF1 * h_up =  (TF1*)f->Get(path_up);
 
-    //vs Mu
-    id = "DeepTau2017v2p1VSmu";
-    TString path_mu =  TString(remote_storage) + TString("data/tauSF/TauID_SF_eta_") + TString(id) + TString("_") + TString(year)  + TString("ReReco")+ TString(".root");
-    //TFile *f_mu = new TFile(path_mu);
-    TFile *f_mu = TFile::Open(path_mu);
-    TString histoname_mu = TString(vsMuwp);
-    TH1F * hist_mu = (TH1F *) f_mu->Get(histoname_mu);
-    if (SelectedTau_genPartFlav == 2 || SelectedTau_genPartFlav == 4){
-        bin = hist_mu->GetXaxis()->FindBin(eta);
-        sf  = hist_mu->GetBinContent(bin);
-        err = hist_mu->GetBinError(bin);
-        vsMu.emplace_back(sf-err);
-        vsMu.emplace_back(sf);
-        vsMu.emplace_back(sf+err);
-    }
-    else{
-        vsMu.emplace_back(1.0);
-        vsMu.emplace_back(1.0);
-        vsMu.emplace_back(1.0);
+            vsJet.emplace_back(h_down->Eval(pt));
+            vsJet.emplace_back(h_cent->Eval(pt));
+            vsJet.emplace_back(h_up->Eval(pt));
+        }
+        else{
+            vsJet.emplace_back(1.0);
+            vsJet.emplace_back(1.0);
+            vsJet.emplace_back(1.0);
+        }
+
+        int bin;
+        float sf, err;
+        float eta = abs(SelectedTau_eta);  
+
+        // vs ele
+        id = "DeepTau2017v2p1VSe";
+        //TString path_ele =  TString(remote_storage) + TString("data/tauSF/TauID_SF_eta_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
+        //TFile *f_ele = new TFile(path_ele);
+        //TFile *f_ele = TFile::Open(path_ele);
+
+        TFile *f_ele = TauID_SF_eta_DeepTau2017v2p1VSe_2017ReReco;
+        //else if(year == "2018") TFile *f_ele = TauID_SF_eta_DeepTau2017v2p1VSe_2018ReReco;
+        TString histoname_ele = TString(vsElewp);
+        TH1F * hist = (TH1F *) f_ele->Get(histoname_ele);
+        if (SelectedTau_genPartFlav == 1 || SelectedTau_genPartFlav == 3){
+            bin = hist->GetXaxis()->FindBin(eta);
+            sf  = hist->GetBinContent(bin);
+            err = hist->GetBinError(bin);
+            vsEle.emplace_back(sf-err);
+            vsEle.emplace_back(sf);
+            vsEle.emplace_back(sf+err);
+        }
+        else{
+            vsEle.emplace_back(1.0);
+            vsEle.emplace_back(1.0);
+            vsEle.emplace_back(1.0);
+        }
+
+        //vs Mu
+        id = "DeepTau2017v2p1VSmu";
+        //TString path_mu =  TString(remote_storage) + TString("data/tauSF/TauID_SF_eta_") + TString(id) + TString("_") + TString(year)  + TString("ReReco")+ TString(".root");
+        //TFile *f_mu = new TFile(path_mu);
+        //TFile *f_mu = TFile::Open(path_mu);
+        TFile *f_mu = TauID_SF_eta_DeepTau2017v2p1VSmu_2017ReReco;
+        //else if (year == "2018") TFile *f_mu = TauID_SF_eta_DeepTau2017v2p1VSmu_2018ReReco
+        TString histoname_mu = TString(vsMuwp);
+        TH1F * hist_mu = (TH1F *) f_mu->Get(histoname_mu);
+        if (SelectedTau_genPartFlav == 2 || SelectedTau_genPartFlav == 4){
+            bin = hist_mu->GetXaxis()->FindBin(eta);
+            sf  = hist_mu->GetBinContent(bin);
+            err = hist_mu->GetBinError(bin);
+            vsMu.emplace_back(sf-err);
+            vsMu.emplace_back(sf);
+            vsMu.emplace_back(sf+err);
+        }
+        else{
+            vsMu.emplace_back(1.0);
+            vsMu.emplace_back(1.0);
+            vsMu.emplace_back(1.0);
+        }
     }
     
     RVec<RVec<float>> result;
@@ -853,67 +823,26 @@ RVec<RVec<float>> getTauSF(float SelectedTau_pt, float SelectedTau_eta, int Sele
 }
 
 
-/*
-tesTool = TauESTool(act_camp, 'DeepTau2017v2p1VSjet')
-tes_Down, tes, tes_Up = tesTool.getTES(GoodTau.eta, GoodTau.decayMode, GoodTau.genPartFlav, unc='All')
-class TauESTool:
-    def __init__(self, year, id='DeepTau2017v2p1VSjet', path=datapath):
-        """Choose the IDs and WPs for SFs."""
-        assert year in campaigns, "You must choose a year from %s."%(', '.join(campaigns))
-        file_lowpt  = ensureTFile(os.path.join(path,"TauES_dm_%s_%s.root"%(id,year)))
-        file_highpt = ensureTFile(os.path.join(path,"TauES_dm_%s_%s_ptgt100.root"%(id,year)))
-        self.hist_lowpt  = extractTH1(file_lowpt,'tes')
-        self.hist_highpt = extractTH1(file_highpt,'tes')
-        self.hist_lowpt.SetDirectory(0)
-        self.hist_highpt.SetDirectory(0)
-        self.pt_low  = 34  # average pT in Z -> tautau measurement (incl. in DM)
-        self.pt_high = 170 # average pT in W* -> taunu measurement (incl. in DM)
-        self.DMs     = [0,1,10] if "oldDM" in id else [0,1,10,11]
-        file_lowpt.Close()
-        file_highpt.Close()
+RVec<float> getTES(float SelectedTau_pt, int SelectedTau_decayMode, int SelectedTau_genPartFlav, bool IsMC){
     
-    def getTES(self, pt, dm, genmatch=5, unc=None):
-        """Get tau ES vs. tau DM."""
-        if genmatch==5 and dm in self.DMs:
-          bin = self.hist_lowpt.GetXaxis().FindBin(dm)
-          tes = self.hist_lowpt.GetBinContent(bin)
-          if unc!=None:
-            if pt>=self.pt_high: # high pT
-              bin_high = self.hist_highpt.GetXaxis().FindBin(dm)
-              err      = self.hist_highpt.GetBinError(bin_high)
-            elif pt>self.pt_low: # linearly interpolate between low and high pT
-              bin_high = self.hist_highpt.GetXaxis().FindBin(dm)
-              err_high = self.hist_highpt.GetBinError(bin_high)
-              err_low  = self.hist_lowpt.GetBinError(bin)
-              err      = err_low + (err_high-err_low)/(self.pt_high-self.pt_low)*(pt-self.pt_low)
-            else: # low pT
-              err      = self.hist_lowpt.GetBinError(bin)
-            if unc=='Up':
-              tes += err
-            elif unc=='Down':
-              tes -= err
-            elif unc=='All':
-              return tes-err, tes, tes+err
-          return tes
-        elif unc=='All':
-          return 1.0, 1.0, 1.0
-        return 1.0
-*/
-
-RVec<float> getTES(float SelectedTau_pt, int SelectedTau_decayMode, int SelectedTau_genPartFlav){
     string year = "2017";
     string id = "DeepTau2017v2p1VSjet";
     
     float pt_low  = 34;
     float pt_high = 170;
-    TString path_low = TString(remote_storage) + TString("data/tauSF/TauES_dm_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
-    TString path_high = TString(remote_storage) + TString("data/tauSF/TauES_dm_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString("_ptgt100.root");
+    //TString path_low = TString(remote_storage) + TString("data/tauSF/TauES_dm_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
+    //TString path_high = TString(remote_storage) + TString("data/tauSF/TauES_dm_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString("_ptgt100.root");
     RVec<float> result(3);
-    if((SelectedTau_decayMode == 0 || SelectedTau_decayMode == 1 || SelectedTau_decayMode == 10 || SelectedTau_decayMode == 11) && SelectedTau_genPartFlav == 5){ 
-        //TFile *infile_low = new TFile(path_low);
-        //TFile *infile_high = new TFile(path_high);
-        TFile *infile_low = TFile::Open(path_low);
-        TFile *infile_high = TFile::Open(path_high);
+    if(IsMC == false){
+        result[0] = 1.;
+        result[1] = 1.;
+        result[2] = 1.;
+    }
+    else if((SelectedTau_decayMode == 0 || SelectedTau_decayMode == 1 || SelectedTau_decayMode == 10 || SelectedTau_decayMode == 11) && SelectedTau_genPartFlav == 5){ 
+        TFile *infile_low = TauES_dm_DeepTau2017v2p1VSjet_2017ReReco;
+        //else if (year =="2018") TFile *infile_low = TauES_dm_DeepTau2017v2p1VSjet_2018ReReco;
+        TFile *infile_high = TauES_dm_DeepTau2017v2p1VSjet_2017ReReco_ptgt100;
+        //else if (year =="2018") TFile *infile_low = TauES_dm_DeepTau2018v2p1VSjet_2018ReReco_ptgt100;        
         TH1F * hist_low = (TH1F *) infile_low->Get("tes");
         TH1F * hist_high = (TH1F *) infile_high->Get("tes");
         int bin = hist_low->GetXaxis()->FindBin(SelectedTau_decayMode);
@@ -943,15 +872,23 @@ RVec<float> getTES(float SelectedTau_pt, int SelectedTau_decayMode, int Selected
     return result;
 }
 
-RVec<float> getFES(int SelectedTau_decayMode, int SelectedTau_genPartFlav){
+RVec<float> getFES(int SelectedTau_decayMode, int SelectedTau_genPartFlav, bool IsMC){
     string year = "2017";
     string id = "DeepTau2017v2p1VSe";
     
-    TString path = TString(remote_storage) + TString("data/tauSF/TauFES_eta-dm_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
+    //TString path = TString(remote_storage) + TString("data/tauSF/TauFES_eta-dm_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
     RVec<float> result(3);
-    if((SelectedTau_decayMode == 0 || SelectedTau_decayMode == 1) && (SelectedTau_genPartFlav == 1 || SelectedTau_genPartFlav == 3)){ 
+    if(IsMC == false){
+        result[0] = 1.;
+        result[1] = 1.;
+        result[2] = 1.;
+    }
+    else if((SelectedTau_decayMode == 0 || SelectedTau_decayMode == 1) && (SelectedTau_genPartFlav == 1 || SelectedTau_genPartFlav == 3)){ 
         //TFile *infile = new TFile(path);
-        TFile *infile = TFile::Open(path);
+        //TFile *infile = TFile::Open(path);
+        TFile *infile = TauFES_eta_dm_DeepTau2017v2p1VSe_2017ReReco;
+        //else if(year =="2018") infile = TauFES_eta-dm_DeepTau2017v2p1VSe_2018ReReco;
+        
         TGraphAsymmErrors * graph = (TGraphAsymmErrors *) infile->Get("fes");
         float y = graph->GetY()[SelectedTau_decayMode];
         float yup  = graph->GetErrorYhigh(SelectedTau_decayMode);
@@ -971,9 +908,11 @@ RVec<float> getFES(int SelectedTau_decayMode, int SelectedTau_genPartFlav){
 
 float efficiency(int flv, float eta, float pt, string year){
 
-    TString path = TString(remote_storage) + TString("Btag_eff_") + TString(year) + TString(".root");
+    //TString path = TString(remote_storage) + TString("Btag_eff_") + TString(year) + TString(".root");
     //TFile *infile = new TFile(path);
-    TFile *infile = TFile::Open(path);
+    //TFile *infile = TFile::Open(path);
+    TFile *infile = Btag_eff_2017;
+    //else if(year =="2018") infile = Btag_eff_2018;
     TH2F * h;
     if(flv == 5){
         //TH2F * h = (TH2F *) infile->Get("h2_BTaggingEff_b")->CreateHistogram();
@@ -996,8 +935,20 @@ float efficiency(int flv, float eta, float pt, string year){
     return h->GetBinContent(binx,biny);
 }
     
-RVec<float> btagcalc(rvec_i GoodJets_idx, rvec_f Jet_pt, rvec_f Jet_eta, rvec_i Jet_partonFlavour, rvec_f Jet_btagDeepFlavB, rvec_f Jet_btagSF_deepjet_M_up, rvec_f Jet_btagSF_deepjet_M_down, rvec_f Jet_btagSF_deepjet_M, rvec_f Jet_btagDeepB){
+RVec<float> btagcalc(rvec_i GoodJets_idx, rvec_f Jet_pt, rvec_f Jet_eta, rvec_i Jet_partonFlavour, rvec_f Jet_btagDeepFlavB, rvec_f Jet_btagSF_deepjet_M_up, rvec_f Jet_btagSF_deepjet_M_down, rvec_f Jet_btagSF_deepjet_M, rvec_f Jet_btagDeepB, bool IsMC){
 
+    if (IsMC == false){
+        RVec<float> result_dummy(5);
+        result_dummy[0] = 1.;
+        result_dummy[1] = 1.;
+        result_dummy[2] = 1.;
+        result_dummy[3] = 1.;
+        result_dummy[4] = 1.;
+    
+    return result_dummy;
+    
+    }
+    
     string tagger = "DeepFlv"; 
     string WP = "M";
     float threshold;
@@ -1106,4 +1057,942 @@ RVec<float> btagcalc(rvec_i GoodJets_idx, rvec_f Jet_pt, rvec_f Jet_eta, rvec_i 
     result[4] = p_data_mistagDown/p_MC;
     
     return result;
+}
+
+unordered_set<int> data_flags({201, 202, 203, 204, 205, 206, 207, 212, 213, 214, 215, 216, 217, 218, 223, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 429, 430, 431, 432, 433, 438, 439, 440, 441, 442, 446, 447, 448, 449, 450});
+
+unordered_map<int,float> xsecs({
+    {268,0.1191},
+    {19,0.1191},
+    {432,1.0},
+    {203,1.0},
+    {5,0.01595},
+    {315,1.0},
+    {66,1.0},
+    {254,0.01595},
+    {423,0.05565},
+    {196,0.05565},
+    {262,1.0},
+    {13,1.0},
+    {163,0.5439},
+    {92,1.0},
+    {122,3.185},
+    {371,3.185},
+    {341,1.0},
+    {396,0.5439},
+    {335,0.1191},
+    {240,1.0},
+    {447,1.0},
+    {86,0.1191},
+    {299,0.1191},
+    {52,1.0},
+    {301,1.0},
+    {50,0.1191},
+    {378,377.96},
+    {129,377.96},
+    {24,1.0},
+    {338,0.1191},
+    {149,0.0389136},
+    {89,0.1191},
+    {400,0.2432},
+    {167,0.2432},
+    {174,22.81},
+    {219,1.0},
+    {141,1.0},
+    {14,1.0},
+    {263,1.0},
+    {63,0.1191},
+    {312,0.1191},
+    {148,1.60809},
+    {369,3.185},
+    {238,1.0},
+    {325,0.1191},
+    {303,0.1191},
+    {54,0.1191},
+    {76,0.1191},
+    {120,3.185},
+    {12,0.002014},
+    {234,1.0},
+    {448,1.0},
+    {261,0.002014},
+    {115,0.5644},
+    {306,1.0},
+    {11,0.002014},
+    {278,1.0},
+    {29,1.0},
+    {118,14.93},
+    {217,1.0},
+    {36,0.1191},
+    {285,0.1191},
+    {21,1.0},
+    {411,28.87},
+    {184,28.87},
+    {157,1012.0},
+    {414,3.879},
+    {187,3.879},
+    {323,1.0},
+    {74,1.0},
+    {402,0.2149},
+    {28,0.1191},
+    {171,1.0},
+    {277,0.1191},
+    {272,0.1191},
+    {320,0.1191},
+    {419,1.0},
+    {169,0.2149},
+    {192,1.0},
+    {158,330.4},
+    {23,0.1191},
+    {424,0.013989},
+    {354,1.0},
+    {105,1.0},
+    {197,0.013989},
+    {344,0.1191},
+    {416,0.5269},
+    {189,0.5269},
+    {95,0.1191},
+    {59,0.1191},
+    {446,1.0},
+    {258,1.0},
+    {9,1.0},
+    {232,1.0},
+    {308,0.1191},
+    {42,1.0},
+    {267,0.1191},
+    {150,1.0},
+    {291,1.0},
+    {336,1.0},
+    {351,1.0},
+    {87,1.0},
+    {53,0.1191},
+    {374,1.404},
+    {49,0.1191},
+    {298,0.1191},
+    {302,0.1191},
+    {218,1.0},
+    {37,0.1191},
+    {172,11.08},
+    {439,1.0},
+    {295,0.1191},
+    {69,1.0},
+    {55,0.1191},
+    {71,0.1191},
+    {215,1.0},
+    {227,1.0},
+    {442,1.0},
+    {244,1.0},
+    {355,347700},
+    {286,0.1191},
+    {3,0.002014},
+    {252,0.002014},
+    {106,23700000.0},
+    {412,28.87},
+    {130,88.287},
+    {426,88.287},
+    {185,28.87},
+    {114,1.0},
+    {133,1637.13},
+    {363,1.0},
+    {284,0.1191},
+    {313,0.1191},
+    {222,1.0},
+    {421,0.2086},
+    {194,0.2086},
+    {445,1.0},
+    {177,22.81},
+    {383,59.1811},
+    {35,0.1191},
+    {228,1.0},
+    {413,30.52},
+    {273,1.0},
+    {367,14.93},
+    {385,6.65621},
+    {138,6.65621},
+    {136,59.1811},
+    {72,0.1191},
+    {311,0.1191},
+    {17,0.1191},
+    {266,0.1191},
+    {62,0.1191},
+    {321,0.1191},
+    {347,0.1191},
+    {201,1.0},
+    {180,22.81},
+    {358,32100},
+    {109,29980.0},
+    {429,1.0},
+    {98,0.1191},
+    {231,1.0},
+    {236,1.0},
+    {264,1.0},
+    {450,1.0},
+    {393,1.0},
+    {293,0.1191},
+    {410,28.87},
+    {44,0.1191},
+    {247,1.0},
+    {193,0.1703},
+    {126,0.7882},
+    {324,1.0},
+    {183,28.87},
+    {125,1.404},
+    {75,1.0},
+    {375,0.7882},
+    {420,0.1703},
+    {206,1.0},
+    {399,0.5104},
+    {27,0.1191},
+    {287,1.0},
+    {31,0.1191},
+    {38,1.0},
+    {276,0.1191},
+    {99,0.0002014},
+    {348,0.0002014},
+    {329,0.1191},
+    {80,0.1191},
+    {26,0.1191},
+    {444,1.0},
+    {221,1.0},
+    {275,0.1191},
+    {404,1.0},
+    {372,1.404},
+    {417,2.127},
+    {190,2.127},
+    {123,1.404},
+    {111,1088.0},
+    {427,47.13},
+    {207,1.0},
+    {83,1.0},
+    {107,1547000.0},
+    {269,1.0},
+    {237,1.0},
+    {20,1.0},
+    {356,347700},
+    {332,1.0},
+    {199,47.13},
+    {388,1.0},
+    {101,1.0},
+    {350,1.0},
+    {146,14.5805},
+    {300,1.0},
+    {397,1.0},
+    {250,0.01538},
+    {1,0.01538},
+    {164,1.0},
+    {51,1.0},
+    {153,101.8},
+    {297,1.0},
+    {48,1.0},
+    {0,0.02064},
+    {93,1.0},
+    {145,59.1811},
+    {342,1.0},
+    {175,22.81},
+    {191,1.0},
+    {418,1.0},
+    {213,1.0},
+    {440,1.0},
+    {211,1.0},
+    {390,330.4},
+    {381,1627.45},
+    {134,1627.45},
+    {152,330.4},
+    {437,1.0},
+    {25,1.0},
+    {391,101.8},
+    {90,0.1191},
+    {339,0.1191},
+    {147,6.65621},
+    {274,1.0},
+    {10,0.002014},
+    {33,1.0},
+    {282,1.0},
+    {259,0.002014},
+    {188,3.879},
+    {415,3.879},
+    {47,1.0},
+    {296,1.0},
+    {434,1.0},
+    {166,0.5104},
+    {61,1.0},
+    {408,45.62},
+    {256,0.002014},
+    {7,0.002014},
+    {179,22.81},
+    {15,1.0},
+    {243,1.0},
+    {310,1.0},
+    {208,1.0},
+    {376,1.0},
+    {68,0.1191},
+    {317,0.1191},
+    {127,1.0},
+    {405,11.08},
+    {326,0.1191},
+    {77,0.1191},
+    {230,1.0},
+    {331,0.1191},
+    {209,1.0},
+    {435,1.0},
+    {82,0.1191},
+    {84,1.0},
+    {30,1.0},
+    {279,1.0},
+    {333,1.0},
+    {39,1.0},
+    {202,1.0},
+    {431,1.0},
+    {337,1.0},
+    {425,0.2147},
+    {198,0.2147},
+    {88,1.0},
+    {253,0.01036},
+    {143,1627.45},
+    {173,22.81},
+    {4,0.01036},
+    {235,1.0},
+    {283,1.0},
+    {34,1.0},
+    {288,1.0},
+    {449,1.0},
+    {384,14.5805},
+    {443,1.0},
+    {220,1.0},
+    {137,14.5805},
+    {160,54.8},
+    {438,1.0},
+    {156,1.0},
+    {65,1.0},
+    {314,1.0},
+    {212,1.0},
+    {58,0.1191},
+    {307,0.1191},
+    {103,1.0},
+    {334,0.1191},
+    {85,0.1191},
+    {377,365.3},
+    {352,1.0},
+    {176,22.81},
+    {139,1.60809},
+    {386,1.60809},
+    {407,45.62},
+    {233,1.0},
+    {216,1.0},
+    {81,0.1191},
+    {318,1.0},
+    {40,0.1191},
+    {392,54.8},
+    {204,1.0},
+    {362,25.24},
+    {113,20.23},
+    {433,1.0},
+    {154,54.8},
+    {289,0.1191},
+    {292,1.0},
+    {186,30.52},
+    {380,1637.13},
+    {43,1.0},
+    {210,1.0},
+    {41,0.1191},
+    {290,0.1191},
+    {387,0.038592},
+    {280,0.1191},
+    {271,0.1191},
+    {22,0.1191},
+    {394,1.0},
+    {140,0.0389136},
+    {161,1.0},
+    {246,1.0},
+    {389,1012.0},
+    {151,1012.0},
+    {46,0.1191},
+    {6,1.0},
+    {224,1.0},
+    {16,1.0},
+    {379,1.0},
+    {248,1.0},
+    {132,1.0},
+    {265,1.0},
+    {255,1.0},
+    {436,1.0},
+    {368,3.185},
+    {67,0.1191},
+    {316,0.1191},
+    {119,3.185},
+    {328,1.0},
+    {360,1207},
+    {79,1.0},
+    {60,1.0},
+    {309,1.0},
+    {200,1.0},
+    {406,45.62},
+    {428,1.0},
+    {294,0.1191},
+    {45,0.1191},
+    {178,22.81},
+    {128,365.3},
+    {195,0.008039},
+    {340,0.1191},
+    {104,1.0},
+    {229,1.0},
+    {353,1.0},
+    {91,0.1191},
+    {422,0.008039},
+    {346,1.0},
+    {214,1.0},
+    {441,1.0},
+    {97,1.0},
+    {226,1.0},
+    {142,1637.13},
+    {18,0.1191},
+    {359,6831},
+    {251,1.0},
+    {131,1.0},
+    {110,6334.0},
+    {366,0.008348},
+    {144,435.237},
+    {117,0.008348},
+    {304,0.1191},
+    {373,1.404},
+    {124,1.404},
+    {102,1.0},
+    {239,1.0},
+    {430,1.0},
+    {155,81880.0},
+    {57,1.0},
+    {225,1.0},
+    {112,99.11},
+    {2,1.0},
+    {116,0.0004536},
+    {365,0.0004536},
+    {361,119.9},
+    {168,0.4316},
+    {108,322600.0},
+    {357,347700},
+    {401,0.4316},
+    {70,1.0},
+    {181,22.81},
+    {343,0.1191},
+    {245,1.0},
+    {94,0.1191},
+    {223,1.0},
+    {382,435.237},
+    {322,0.1191},
+    {364,0.5644},
+    {73,0.1191},
+    {135,435.237},
+    {8,0.002014},
+    {241,1.0},
+    {330,0.1191},
+    {249,0.02064},
+    {205,1.0},
+    {182,34.91},
+    {281,0.1191},
+    {170,0.07358},
+    {403,0.07358},
+    {32,0.1191},
+    {409,34.91},
+    {159,101.8},
+    {395,0.1097},
+    {121,14.93},
+    {370,14.93},
+    {162,0.1097},
+    {56,1.0},
+    {305,1.0},
+    {260,0.002014},
+    {345,1.0},
+    {96,1.0},
+    {242,1.0},
+    {257,0.002014},
+    {100,1.0},
+    {349,1.0},
+    {319,1.0},
+    {270,1.0},
+    {78,1.0},
+    {327,1.0},
+    {165,4.078},
+    {398,4.078},
+    {64,0.1191},
+    });
+    
+unordered_map<int,float> Nevents({
+    {268,1},
+    {19,1},
+    {432,1},
+    {203,1},
+    {5,1977800},
+    {315,1},
+    {66,1},
+    {254,1991000},
+    {423,250000},
+    {196,250000},
+    {262,1},
+    {13,1},
+    {163,700000},
+    {92,1},
+    {122,408000},
+    {371,500000},
+    {341,1},
+    {396,678600},
+    {335,1},
+    {240,1},
+    {447,1},
+    {86,1},
+    {299,1},
+    {52,1},
+    {301,1},
+    {50,1},
+    {378,128640000},
+    {129,41729120},
+    {24,1},
+    {338,1},
+    {149,21495421},
+    {89,1},
+    {400,13280000},
+    {167,7932650},
+    {174,200000},
+    {219,1},
+    {141,1},
+    {14,1},
+    {263,1},
+    {63,1},
+    {312,1},
+    {148,20258624},
+    {369,492000},
+    {238,1},
+    {325,1},
+    {303,1},
+    {54,1},
+    {76,1},
+    {120,55000},
+    {12,490000},
+    {234,1},
+    {448,1},
+    {261,489000},
+    {115,8744768},
+    {306,1},
+    {11,496000},
+    {278,1},
+    {29,1},
+    {118,500000},
+    {217,1},
+    {36,1},
+    {285,1},
+    {21,1},
+    {411,984000},
+    {184,992000},
+    {157,42331295},
+    {414,1000000},
+    {187,500000},
+    {323,1},
+    {74,1},
+    {402,4911941},
+    {28,1},
+    {171,1},
+    {277,1},
+    {272,1},
+    {320,1},
+    {419,1},
+    {169,4994543},
+    {192,1},
+    {158,10037851},
+    {23,1},
+    {424,250000},
+    {354,1},
+    {105,1},
+    {197,250000},
+    {344,1},
+    {416,7525991},
+    {189,9999987},
+    {95,1},
+    {59,1},
+    {446,1},
+    {258,1},
+    {9,1},
+    {232,1},
+    {308,1},
+    {42,1},
+    {267,1},
+    {150,1},
+    {291,1},
+    {336,1},
+    {351,1},
+    {87,1},
+    {53,1},
+    {374,482400},
+    {49,1},
+    {298,1},
+    {302,1},
+    {218,1},
+    {37,1},
+    {172,2000000},
+    {439,1},
+    {295,1},
+    {69,1},
+    {55,1},
+    {71,1},
+    {215,1},
+    {227,1},
+    {442,1},
+    {244,1},
+    {355,1},
+    {286,1},
+    {3,1937000},
+    {252,1768000},
+    {106,9403812},
+    {412,958000},
+    {130,9000000},
+    {426,64310000},
+    {185,988000},
+    {114,1},
+    {133,22226705},
+    {363,1},
+    {284,1},
+    {313,1},
+    {222,1},
+    {421,240000},
+    {194,232300},
+    {445,1},
+    {177,200000},
+    {383,5932701},
+    {35,1},
+    {228,1},
+    {413,12575000},
+    {273,1},
+    {367,485000},
+    {385,8402687},
+    {138,20432728},
+    {136,14313274},
+    {72,1},
+    {311,1},
+    {17,989200},
+    {266,1000000},
+    {62,1},
+    {321,1},
+    {347,1},
+    {201,1},
+    {180,200000},
+    {358,1},
+    {109,1},
+    {429,1},
+    {98,1},
+    {231,1},
+    {236,1},
+    {264,1},
+    {450,1},
+    {393,1},
+    {293,1},
+    {410,1000000},
+    {44,1},
+    {247,1},
+    {193,968000},
+    {126,827046},
+    {324,1},
+    {183,953600},
+    {125,485420},
+    {75,1},
+    {375,1021031},
+    {420,871500},
+    {206,1},
+    {399,8822000},
+    {27,1},
+    {287,1},
+    {31,1},
+    {38,1},
+    {276,1},
+    {99,100000},
+    {348,100000},
+    {329,1},
+    {80,1},
+    {26,1},
+    {444,1},
+    {221,1},
+    {275,1},
+    {404,1},
+    {372,913200},
+    {417,1102578},
+    {190,918508},
+    {123,936000},
+    {111,1261997},
+    {427,3885000},
+    {207,1},
+    {83,1},
+    {107,8611681},
+    {269,1},
+    {237,1},
+    {20,1},
+    {356,1},
+    {332,1},
+    {199,3807850},
+    {388,1},
+    {101,1},
+    {350,1},
+    {146,21709087},
+    {300,1},
+    {397,1},
+    {250,150000},
+    {1,150000},
+    {164,1},
+    {51,1},
+    {153,5748466},
+    {297,1},
+    {48,1},
+    {0,145800},
+    {93,1},
+    {145,14313274},
+    {342,1},
+    {175,200000},
+    {191,1},
+    {418,1},
+    {213,1},
+    {440,1},
+    {211,1},
+    {390,20456037},
+    {381,29425374},
+    {134,35862893},
+    {152,10037851},
+    {437,1},
+    {25,1},
+    {391,5652357},
+    {90,1},
+    {339,1},
+    {147,20432728},
+    {274,1},
+    {10,484000},
+    {33,1},
+    {282,1},
+    {259,482000},
+    {188,9725000},
+    {415,1},
+    {47,1},
+    {296,1},
+    {434,1},
+    {166,8940000},
+    {61,1},
+    {408,200000},
+    {256,488000},
+    {7,490000},
+    {179,200000},
+    {15,1},
+    {243,1},
+    {310,1},
+    {208,1},
+    {376,1},
+    {68,1},
+    {317,1},
+    {127,1},
+    {405,7758900},
+    {326,1},
+    {77,1},
+    {230,1},
+    {331,1},
+    {209,1},
+    {435,1},
+    {82,1},
+    {84,1},
+    {30,1},
+    {279,1},
+    {333,1},
+    {39,1},
+    {202,1},
+    {431,1},
+    {337,1},
+    {425,1154000},
+    {198,1000000},
+    {88,1},
+    {253,1923000},
+    {143,35862893},
+    {173,200000},
+    {4,1976900},
+    {235,1},
+    {283,1},
+    {34,1},
+    {288,1},
+    {449,1},
+    {384,19771294},
+    {443,1},
+    {220,1},
+    {137,21709087},
+    {160,4328648},
+    {438,1},
+    {156,1},
+    {65,1},
+    {314,1},
+    {212,1},
+    {58,1},
+    {307,1},
+    {103,1},
+    {334,1},
+    {85,1},
+    {377,100790000},
+    {352,1},
+    {176,200000},
+    {139,20258624},
+    {386,7633949},
+    {407,200000},
+    {233,1},
+    {216,1},
+    {81,1},
+    {318,1},
+    {40,1},
+    {392,2809978},
+    {204,1},
+    {362,1},
+    {113,214088},
+    {433,1},
+    {154,4328648},
+    {289,1},
+    {292,1},
+    {186,2921180},
+    {380,28084244},
+    {43,1},
+    {210,1},
+    {41,1},
+    {290,1},
+    {387,3273980},
+    {280,1},
+    {271,1},
+    {22,1},
+    {394,1},
+    {140,21495421},
+    {161,1},
+    {246,1},
+    {389,68898175},
+    {151,42331295},
+    {46,1},
+    {6,1},
+    {224,1},
+    {16,1},
+    {379,1},
+    {248,1},
+    {132,1},
+    {265,1},
+    {255,1},
+    {436,1},
+    {368,494000},
+    {67,1},
+    {316,1},
+    {119,1472800},
+    {328,1},
+    {360,1},
+    {79,1},
+    {60,1},
+    {309,1},
+    {200,1},
+    {406,200000},
+    {428,1},
+    {294,1},
+    {45,1},
+    {178,200000},
+    {128,43506449},
+    {195,1944000},
+    {340,1},
+    {104,1},
+    {229,1},
+    {353,1},
+    {91,1},
+    {422,1986000},
+    {346,1},
+    {214,1},
+    {441,1},
+    {97,1},
+    {226,1},
+    {142,22226705},
+    {18,1},
+    {359,1},
+    {251,1},
+    {131,1},
+    {110,1877745},
+    {366,3774800},
+    {144,21250517},
+    {117,3949400},
+    {304,1},
+    {373,911500},
+    {124,923500},
+    {102,1},
+    {239,1},
+    {430,1},
+    {155,9586029},
+    {57,1},
+    {225,1},
+    {112,224332},
+    {2,1},
+    {116,3858600},
+    {365,3908600},
+    {361,1},
+    {168,811306},
+    {108,5529691},
+    {357,1},
+    {401,835296},
+    {70,1},
+    {181,200000},
+    {343,1},
+    {245,1},
+    {94,1},
+    {223,1},
+    {382,25468933},
+    {322,1},
+    {364,8382600},
+    {73,1},
+    {135,21250517},
+    {8,498000},
+    {241,1},
+    {330,1},
+    {249,149400},
+    {205,1},
+    {182,7794186},
+    {281,1},
+    {170,13276146},
+    {403,13736000},
+    {32,1},
+    {409,9598000},
+    {159,5748466},
+    {395,592000},
+    {121,493000},
+    {370,491200},
+    {162,499800},
+    {56,1},
+    {305,1},
+    {260,488000},
+    {345,1},
+    {96,1},
+    {242,1},
+    {257,476000},
+    {100,1},
+    {349,1},
+    {319,1},
+    {270,1},
+    {78,1},
+    {327,1},
+    {165,8729288},
+    {398,4691915},
+    {64,1},
+});
+        
+
+bool isMC(int SampleFlag){
+    bool is_in = data_flags.find(SampleFlag) != data_flags.end();
+    if (is_in == true) return false;
+    else return true;
+}
+
+float getLumi(int Year, bool IsMC){
+    if (IsMC == false) return 1.;
+    else if(Year == 2016) return -999;
+    else if (Year == 2017) return 41.48;
+    else return 59.83;
+}
+
+float getXSec(int Sample, bool IsMC){
+    if (IsMC == false) return 1.;
+    else{
+        return  xsecs[Sample];
+    }
+}
+
+float getNevents(int Sample, bool IsMC){
+    if (IsMC == false) return 1.;
+    else{
+        return  Nevents[Sample];
+    }
 }
