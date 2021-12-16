@@ -215,6 +215,30 @@ float GetInvMass(rvec_f pt, rvec_f eta, rvec_f phi, rvec_f mass, rvec_i VBSJets_
     return (p1 + p2).M();
 }
 
+float GetInvMassNoIndex(float pt1, float eta1, float phi1, float mass1, float pt2, float eta2, float phi2, float mass2)
+{
+    ROOT::Math::PtEtaPhiMVector p1(pt1, eta1, phi1, mass1);
+    ROOT::Math::PtEtaPhiMVector p2(pt2, eta2, phi2, mass2);
+    return (p1 + p2).M();
+}
+
+float GetInvMassNoIndex4(float pt1, float eta1, float phi1, float mass1, float pt2, float eta2, float phi2, float mass2, float pt3, float eta3, float phi3, float mass3, float pt4, float eta4, float phi4, float mass4)
+{
+    ROOT::Math::PtEtaPhiMVector p1(pt1, eta1, phi1, mass1);
+    ROOT::Math::PtEtaPhiMVector p2(pt2, eta2, phi2, mass2);
+    ROOT::Math::PtEtaPhiMVector p3(pt3, eta3, phi3, mass4);
+    ROOT::Math::PtEtaPhiMVector p4(pt4, eta4, phi3, mass4);
+    return (p1 + p2 + p3 + p4).M();
+}
+
+//float ComputeTransverseMass(float met_et, float met_phi, float lep_pt, float lep_eta, float lep_phi, float lep_e)
+//{
+//    ROOT::Math::PtEtaPhiEVector met(met_et, 0, met_phi, met_et);
+//    ROOT::Math::PtEtaPhiEVector lep(lep_pt, lep_eta, lep_phi, lep_e);
+//    return (met + lep).Mt() / 1000.0;
+//}
+
+
 float GetLeading(rvec_f Jet_pt, rvec_i VBSJet_idx){
     return Jet_pt[VBSJet_idx[0]];
 }
@@ -517,9 +541,9 @@ bool BVeto(rvec_f Jet_pt, rvec_f Jet_eta, rvec_f Jet_btagDeepFlavB, rvec_i GoodJ
     bool veto = false;
     for (size_t i = 0; i < GoodJet_idx.size(); i++) {
         //if (Jet_btagDeepFlavB[i]>=WP_btagger[BTAG_ALGO][BTAG_WP])*(Jet_pt[i]>BTAG_PT_CUT)*(abs(Jet_eta[i])<BTAG_ETA_CUT) return true;
-        if ((Jet_btagDeepFlavB[i]>=BTAG_WP_VALUE) && (Jet_pt[i]>BTAG_PT_CUT) && (abs(Jet_eta[i])<BTAG_ETA_CUT)) return true;
+        if ((Jet_btagDeepFlavB[i]>=BTAG_WP_VALUE) && (Jet_pt[i]>BTAG_PT_CUT) && (abs(Jet_eta[i])<BTAG_ETA_CUT)) return false;
     }
-    return false;
+    return true;
 }
 
 float GetLog2(float x){
@@ -2052,4 +2076,11 @@ float getNevents(int Sample, bool IsMC){
     else{
         return  Nevents[Sample];
     }
+}
+
+TMVA::Experimental::RBDT<> bdt("SMxgb", "https://ttedesch.web.cern.ch/ttedesch/SMxgb.root");
+
+float SMinference(float m_jj, float m_jjtaulep, float m_taulep, float mT_lep_MET, float leadjet_pt, float subleadjet_pt, float tau_mass, float MET_pt){
+    auto y1 = bdt.Compute({m_jj, m_jjtaulep, m_taulep, mT_lep_MET, leadjet_pt, subleadjet_pt, tau_mass, MET_pt});
+    return y1[0];
 }
