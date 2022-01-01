@@ -711,6 +711,7 @@ float GetEventSFFake(float lepton_SFFake, float tau_SFFake, int lepton_LnTRegion
     else if (lepton_LnTRegion==0 && tau_LnTRegion==0) return 0.;
 }
 
+/*
 RVec<int> SelectVBSQGenJet(rvec_i GenPart_pdgId, rvec_i GenPart_genPartIdxMother, rvec_f GenPart_pt, rvec_f GenPart_eta, rvec_i GenJet_partonFlavour, rvec_f GenJet_pt, rvec_f GenJet_eta){
 
     RVec<int> GenPart_idx;
@@ -750,6 +751,79 @@ RVec<int> SelectVBSQGenJet(rvec_i GenPart_pdgId, rvec_i GenPart_genPartIdxMother
         }
     }
         
+    RVec<int> finalgenjets_idx(2);
+           
+    if(GenJet_pt[idx_genjet1] > GenJet_pt[idx_genjet2]){ 
+           finalgenjets_idx[0] = idx_genjet1;
+           finalgenjets_idx[1] = idx_genjet2;
+    }
+    else{ 
+           finalgenjets_idx[0] = idx_genjet2;
+           finalgenjets_idx[1] = idx_genjet1;
+    }
+    return finalgenjets_idx;
+}
+*/
+
+RVec<int> SelectVBSQGenJet(rvec_i GenPart_pdgId, rvec_i GenPart_genPartIdxMother, rvec_f GenPart_pt, rvec_f GenPart_eta, rvec_i GenJet_partonFlavour, rvec_f GenJet_pt, rvec_f GenJet_eta){
+
+    RVec<int> GenPart_idx;
+    
+    for (int i = 0; i < GenPart_pdgId.size(); i++) {
+        if(GenPart_genPartIdxMother[i]==0 && abs(GenPart_pdgId[i])>0 && abs(GenPart_pdgId[i])<10) GenPart_idx.emplace_back(i);
+    }
+    
+    RVec<int> dummy_idx;
+    dummy_idx.emplace_back(-9999);
+    dummy_idx.emplace_back(-9999);
+    
+    if (GenPart_idx.size() < 1) return dummy_idx;
+    
+    int GenPart_idx1 = GenPart_idx[0];
+    int GenPart_idx2 = GenPart_idx[1];
+    
+    if(GenPart_pt[GenPart_idx1] == GenPart_pt[GenPart_idx2] && GenPart_eta[GenPart_idx1] == GenPart_eta[GenPart_idx2]) return dummy_idx;
+    
+    int qflav1 = GenPart_pdgId[GenPart_idx1];
+    int qflav2 = GenPart_pdgId[GenPart_idx2];
+    
+    RVec<int> LightGenJet_idx;
+
+    for (int i = 0; i < GenJet_partonFlavour.size(); i++) {
+        if(abs(GenJet_partonFlavour[i])>0 && abs(GenJet_partonFlavour[i])<10 && (GenJet_partonFlavour[i]==qflav1 || GenJet_partonFlavour[i]==qflav2)) LightGenJet_idx.emplace_back(i);
+    }
+    
+    if(LightGenJet_idx.size() < 2){
+        LightGenJet_idx.clear();
+        for (int i = 0; i < GenJet_partonFlavour.size(); i++) {
+            if(abs(GenJet_partonFlavour[i])>0 && abs(GenJet_partonFlavour[i])<10) LightGenJet_idx.emplace_back(i);
+        }
+    }
+    
+    float discrim1 = 1000000.;
+    float discrim2 = 1000000.;
+    int idx_genjet1 = -1;
+    int idx_genjet2 = -1;
+    float tmpdiscr1;
+    float tmpdiscr2;
+           
+    for (int i = 0; i < LightGenJet_idx.size(); i++) {
+        tmpdiscr1 = abs(GenJet_eta[LightGenJet_idx[i]] -  GenPart_eta[GenPart_idx1]) + abs(GenJet_pt[LightGenJet_idx[i]] -  GenPart_pt[GenPart_idx1]);
+        tmpdiscr2 = abs(GenJet_eta[LightGenJet_idx[i]] -  GenPart_eta[GenPart_idx2]) + abs(GenJet_pt[LightGenJet_idx[i]] -  GenPart_pt[GenPart_idx2]);
+        if(tmpdiscr1 < discrim1){
+            discrim1 = tmpdiscr1;
+            idx_genjet1 = LightGenJet_idx[i];
+        }
+        if(tmpdiscr2 < discrim2){
+            discrim2 = tmpdiscr2;
+            idx_genjet2 = LightGenJet_idx[i];
+        }
+    }
+    
+    //cout<<idx_genjet1<<": "<<discrim1<<", "<<idx_genjet2<<": "<<discrim2<<endl;
+    
+    if((idx_genjet1 == -1 || idx_genjet2 == -1) || (idx_genjet1 == idx_genjet2)) return dummy_idx;
+    
     RVec<int> finalgenjets_idx(2);
            
     if(GenJet_pt[idx_genjet1] > GenJet_pt[idx_genjet2]){ 
@@ -2078,7 +2152,8 @@ float getNevents(int Sample, bool IsMC){
     }
 }
 
-TMVA::Experimental::RBDT<> bdt("SMxgb", "https://ttedesch.web.cern.ch/ttedesch/SMxgb.root");
+//TMVA::Experimental::RBDT<> bdt("SMxgb", "https://ttedesch.web.cern.ch/ttedesch/SMxgb.root");
+TMVA::Experimental::RBDT<> bdt("xgb_SM_v100", "https://ttedesch.web.cern.ch/ttedesch/VBS_ML_v4/xgb_SM_v100.root");
 
 float SMinference(float m_jj, float m_jjtaulep, float m_taulep, float mT_lep_MET, float leadjet_pt, float subleadjet_pt, float tau_mass, float MET_pt){
     auto y1 = bdt.Compute({m_jj, m_jjtaulep, m_taulep, mT_lep_MET, leadjet_pt, subleadjet_pt, tau_mass, MET_pt});
