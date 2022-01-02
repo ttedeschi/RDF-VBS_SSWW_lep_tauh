@@ -22,6 +22,7 @@
 #include <TH1.h>
 #include <TH2.h>
 #include <TH2F.h>
+#include <cmath>
 
 using namespace ROOT::VecOps;
 using RNode = ROOT::RDF::RNode;
@@ -468,3 +469,211 @@ RVec<RVec<float>> LepSF(rvec_f Electron_pt, rvec_f Electron_eta, rvec_i Electron
     return result;
 }
 
+string remote_storage = "https://ttedesch.web.cern.ch/ttedesch/nanoAOD-tools/python/postprocessing/data/";
+void set_null_directory(TH2F *histo){
+    histo->SetDirectory(NULL);
+}
+
+
+
+TFile *pufile_data2016 = TFile::Open(TString(remote_storage) + TString("pileup/PileupData_GoldenJSON_Full2016.root"));
+TH1 *histo_target_2016 = (TH1*)pufile_data2016->Get("pileup");
+TH1 *histo_target_2016_plus = (TH1*)pufile_data2016->Get("pileup_plus");
+TH1 *histo_target_2016_minus = (TH1*)pufile_data2016->Get("pileup_minus");
+//histo_target_2016->SetDirectory(NULL);
+//histo_target_2016_plus->SetDirectory(NULL);
+//histo_target_2016_minus->SetDirectory(NULL);
+TFile *pufile_mc2016 = TFile::Open(TString(remote_storage) + TString("pileup/pileup_profile_Summer16.root"));
+TH1 *histo_2016 = (TH1*)pufile_mc2016->Get("pileup");
+TH1 *histo_2016_plus = (TH1*)pufile_mc2016->Get("pileup_plus");
+TH1 *histo_2016_minus = (TH1*)pufile_mc2016->Get("pileup_minus");
+//histo_2016->SetDirectory(NULL);
+//histo_2016_plus->SetDirectory(NULL);
+//histo_2016_minus->SetDirectory(NULL);
+
+TFile *pufile_data2017 = TFile::Open(TString(remote_storage) + TString("pileup/PileupHistogram-goldenJSON-13tev-2017-99bins_withVar.root"));
+TH1 *histo_target_2017 = (TH1*)pufile_data2017->Get("pileup");
+TH1 *histo_target_2017_plus = (TH1*)pufile_data2017->Get("pileup_plus");
+TH1 *histo_target_2017_minus = (TH1*)pufile_data2017->Get("pileup_minus");
+//histo_target_2017->SetDirectory(NULL);
+//histo_target_2017_plus->SetDirectory(NULL);
+//histo_target_2017_minus->SetDirectory(NULL);
+TFile *pufile_mc2017 = TFile::Open(TString(remote_storage) + TString("pileup/mcPileup2017.root"));
+TH1 *histo_2017 = (TH1*)pufile_mc2017->Get("pileup");
+TH1 *histo_2017_plus = (TH1*)pufile_mc2017->Get("pileup_plus");
+TH1 *histo_2017_minus = (TH1*)pufile_mc2017->Get("pileup_minus");
+//histo_2017->SetDirectory(NULL);
+//histo_2017_plus->SetDirectory(NULL);
+//histo_2017_minus->SetDirectory(NULL);
+
+TFile *pufile_data2018 = TFile::Open(TString(remote_storage) + TString("pileup/PileupHistogram-goldenJSON-13tev-2018-100bins_withVar.root"));
+TH1 *histo_target_2018 = (TH1*)pufile_data2018->Get("pileup");
+TH1 *histo_target_2018_plus = (TH1*)pufile_data2018->Get("pileup_plus");
+TH1 *histo_target_2018_minus = (TH1*)pufile_data2018->Get("pileup_minus");
+//histo_target_2018->SetDirectory(NULL);
+//histo_target_2018_plus->SetDirectory(NULL);
+//histo_target_2018_minus->SetDirectory(NULL);
+TFile *pufile_mc2018 = TFile::Open(TString(remote_storage) + TString("pileup/mcPileup2018.root"));
+TH1 *histo_2018 = (TH1*)pufile_mc2018->Get("pileup");
+TH1 *histo_2018_plus = (TH1*)pufile_mc2018->Get("pileup_plus");
+TH1 *histo_2018_minus = (TH1*)pufile_mc2018->Get("pileup_minus");
+//histo_2018->SetDirectory(NULL);
+//histo_2018_plus->SetDirectory(NULL);
+//histo_2018_minus->SetDirectory(NULL);
+//close files??
+
+RVec<float> puWeight(int Year, int Pileup_nTrueInt){
+    RVec<float> result(3);
+    if (Year == 2016){ 
+        histo_2016->SetDirectory(NULL);
+        histo_2016_plus->SetDirectory(NULL);
+        histo_2016_minus->SetDirectory(NULL);
+        histo_target_2016->SetDirectory(NULL);
+        histo_target_2016_plus->SetDirectory(NULL);
+        histo_target_2016_minus->SetDirectory(NULL);
+        WeightCalculatorFromHistogram worker_2016(histo_2016, histo_target_2016, true, true, false);
+        WeightCalculatorFromHistogram worker_2016_plus(histo_2016, histo_target_2016, true, true, false);
+        WeightCalculatorFromHistogram worker_2016_minus(histo_2016, histo_target_2016, true, true, false);
+        if(Pileup_nTrueInt < histo_2016->GetNbinsX()) result[0] = worker_2016.getWeight(Pileup_nTrueInt);
+        else result[0] = 1;
+        if(Pileup_nTrueInt < histo_2016_plus->GetNbinsX()) result[1] = worker_2016_plus.getWeight(Pileup_nTrueInt);
+        else result[1] = 1;
+        if(Pileup_nTrueInt < histo_2016_minus->GetNbinsX()) result[2] = worker_2016_minus.getWeight(Pileup_nTrueInt);
+        else result[2] = 1;
+    }
+    else if (Year == 2017){
+        histo_2017->SetDirectory(NULL);
+        histo_2017_plus->SetDirectory(NULL);
+        histo_2017_minus->SetDirectory(NULL);
+        histo_target_2017->SetDirectory(NULL);
+        histo_target_2017_plus->SetDirectory(NULL);
+        histo_target_2017_minus->SetDirectory(NULL);
+        WeightCalculatorFromHistogram worker_2017(histo_2017, histo_target_2017, true, true, false);
+        WeightCalculatorFromHistogram worker_2017_plus(histo_2017, histo_target_2017, true, true, false);
+        WeightCalculatorFromHistogram worker_2017_minus(histo_2017, histo_target_2017, true, true, false);
+        if(Pileup_nTrueInt < histo_2017->GetNbinsX()) result[0] = worker_2017.getWeight(Pileup_nTrueInt);
+        else result[0] = 1;
+        if(Pileup_nTrueInt < histo_2017_plus->GetNbinsX()) result[1] = worker_2017_plus.getWeight(Pileup_nTrueInt);
+        else result[1] = 1;
+        if(Pileup_nTrueInt < histo_2017_minus->GetNbinsX()) result[2] = worker_2017_minus.getWeight(Pileup_nTrueInt);
+        else result[2] = 1;
+    }
+    else if (Year == 2018){
+        histo_2018->SetDirectory(NULL);
+        histo_2018_plus->SetDirectory(NULL);
+        histo_2018_minus->SetDirectory(NULL);
+        histo_target_2018->SetDirectory(NULL);
+        histo_target_2018_plus->SetDirectory(NULL);
+        histo_target_2018_minus->SetDirectory(NULL);
+        WeightCalculatorFromHistogram worker_2018(histo_2018, histo_target_2018, true, true, false);
+        WeightCalculatorFromHistogram worker_2018_plus(histo_2018, histo_target_2018, true, true, false);
+        WeightCalculatorFromHistogram worker_2018_minus(histo_2018, histo_target_2018, true, true, false);
+        if(Pileup_nTrueInt < histo_2018->GetNbinsX()) result[0] = worker_2018.getWeight(Pileup_nTrueInt);
+        else result[0] = 1;
+        if(Pileup_nTrueInt < histo_2018_plus->GetNbinsX()) result[1] = worker_2018_plus.getWeight(Pileup_nTrueInt);
+        else result[1] = 1;
+        if(Pileup_nTrueInt < histo_2018_minus->GetNbinsX()) result[2] = worker_2018_minus.getWeight(Pileup_nTrueInt);
+        else result[2] = 1;
+    }
+    return result;    
+}
+
+//string remote_storage = "https://ttedesch.web.cern.ch/ttedesch/nanoAOD-tools/";
+string remote_storage_ = "https://ttedesch.web.cern.ch/ttedesch/nanoAOD-tools/";
+TFile *L1PrefiringMaps = TFile::Open(TString(remote_storage_) + TString("data/prefire_maps/L1PrefiringMaps.root"));
+TH2F * L1prefiring_jetptvseta_2017BtoF = (TH2F *) L1PrefiringMaps->Get("L1prefiring_jetptvseta_2017BtoF");
+TH2F * L1prefiring_photonptvseta_2017BtoF = (TH2F *) L1PrefiringMaps->Get("L1prefiring_photonptvseta_2017BtoF");
+
+
+//TH2F * L1prefiring_jetptvseta_UL2017BtoF = (TH2F *) L1PrefiringMaps->Get("L1prefiring_jetptvseta_UL2017BtoF");
+//TH2F * L1prefiring_photonptvseta_UL2017BtoF = (TH2F *) L1PrefiringMaps->Get("L1prefiring_photonptvseta_UL2017BtoF");
+
+float GetPrefireProbability(TH2F *Map, float eta, float pt, float maxpt, int variation){
+        float x = maxpt - 0.01;
+        int bin = Map->FindBin(eta, min(pt, x));
+        float pref_prob = Map->GetBinContent(bin);
+
+        float stat = Map->GetBinError(bin);  //bin statistical uncertainty
+        float syst = 0.2 * pref_prob;  //20% of prefire rate
+
+        float r = sqrt(stat * stat + syst * syst);
+        float y = pref_prob + r;
+        float z = pref_prob - r;
+        if (variation == 1) pref_prob = min(y , float(1.0));
+        else if (variation == -1) pref_prob = max(z , float(0.0));
+
+        return pref_prob;
+}
+
+float EGvalue(rvec_f Photon_pt, rvec_f Photon_eta, rvec_i Photon_jetIdx, rvec_i Photon_electronIdx, rvec_f Electron_pt, rvec_f Electron_eta, rvec_i Electron_jetIdx, rvec_i Electron_photonIdx, int jid, int s){
+        float phopf = 1.0;
+        vector<int> PhotonInJet;
+        float JetMinPt = 20;  //Min/Max Values may need to be fixed for new maps
+        float JetMaxPt = 500;
+        float JetMinEta = 2.0;
+        float JetMaxEta = 3.0;
+        float PhotonMinPt = 20;
+        float PhotonMaxPt = 500;
+        float PhotonMinEta = 2.0;
+        float PhotonMaxEta = 3.0;
+
+        TH2F *photon_map = L1prefiring_photonptvseta_2017BtoF;
+
+        for(int i = 0; i < Photon_pt.size(); i++){
+            if (Photon_jetIdx[i] == jid){
+                if (Photon_pt[i] >= PhotonMinPt && abs(Photon_eta[i]) <= PhotonMaxEta && abs(Photon_eta[i]) >= PhotonMinEta){
+                    float phopf_temp = 1 - GetPrefireProbability(photon_map, Photon_eta[i], Photon_pt[i], PhotonMaxPt, s);
+                    float elepf_temp = 1.0;
+                    if (Photon_electronIdx[i] > -1){
+                        if (Electron_pt[Photon_electronIdx[i]] >= PhotonMinPt && abs(Electron_eta[Photon_electronIdx[i]]) <= PhotonMaxEta and abs(Electron_eta[Photon_electronIdx[i]]) >= PhotonMinEta) elepf_temp = 1 - GetPrefireProbability(photon_map, Electron_eta[Photon_electronIdx[i]], Electron_pt[Photon_electronIdx[i]], PhotonMaxPt, s);
+                    }
+                    phopf = phopf * min(phopf_temp, elepf_temp);
+                    PhotonInJet.push_back(i);
+                }
+            }
+        }
+        for(int i = 0; i < Electron_pt.size(); i++){
+            if (Electron_jetIdx[i] == jid && find(PhotonInJet.begin(), PhotonInJet.end(), Electron_photonIdx[i]) == PhotonInJet.end()){
+                if (Electron_pt[i] >= PhotonMinPt && abs(Electron_eta[i]) <= PhotonMaxEta && abs(Electron_eta[i]) >= PhotonMinEta) phopf = phopf * ( 1 - GetPrefireProbability(photon_map, Electron_eta[i], Electron_pt[i], PhotonMaxPt, s));
+            }
+        }
+        return phopf;
+}
+
+RVec<float> PrefCorr(rvec_f Photon_pt, rvec_f Photon_eta, rvec_i Photon_jetIdx, rvec_i Photon_electronIdx, rvec_f Electron_pt, rvec_f Electron_eta, rvec_i Electron_jetIdx, rvec_i Electron_photonIdx, rvec_f Jet_pt, rvec_f Jet_eta){
+    RVec<float> result(3);
+
+    float JetMinPt = 20;  //Min/Max Values may need to be fixed for new maps
+    float JetMaxPt = 500;
+    float JetMinEta = 2.0;
+    float JetMaxEta = 3.0;
+    float PhotonMinPt = 20;
+    float PhotonMaxPt = 500;
+    float PhotonMinEta = 2.0;
+    float PhotonMaxEta = 3.0;
+    TH2F *jet_map =  L1prefiring_jetptvseta_2017BtoF;
+
+    float prefw = 1.0;
+
+    vector<int> v{0,-1,1};
+    for (int j = 0; j < v.size(); j++){
+        int s = v[j];
+        for(int i = 0; i < Jet_pt.size(); i++){
+            float jetpf = 1.0;
+            //PhotonInJet = []
+
+            if(Jet_pt[i] >= JetMinPt && abs(Jet_eta[i]) <= JetMaxEta && abs(Jet_eta[i]) >= JetMinEta){
+                jetpf = jetpf * ( 1 - GetPrefireProbability(jet_map, Jet_eta[i], Jet_pt[i], JetMaxPt, s));
+                float phopf = EGvalue(Photon_pt, Photon_eta, Photon_jetIdx, Photon_electronIdx, Electron_pt, Electron_eta, Electron_jetIdx, Electron_photonIdx, i, s);
+                prefw = prefw * min(jetpf, phopf);
+            }
+        }
+        //Then loop over all photons/electrons not associated to jets
+        prefw = prefw * EGvalue(Photon_pt, Photon_eta, Photon_jetIdx, Photon_electronIdx, Electron_pt, Electron_eta, Electron_jetIdx, Electron_photonIdx, -1, s);
+
+        result[j] = prefw;
+
+    }
+    return result;
+
+}
