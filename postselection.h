@@ -30,13 +30,15 @@ const float PT_CUT_MU=  35;
 const float ETA_CUT_MU= 2.4;
 const float ISO_CUT_MU= 0.15;
 
-const size_t PT_CUT_ELE=  35;
+//const size_t PT_CUT_ELE=  35;
+const float PT_CUT_ELE=  35;
 const float ETA_CUT_ELE= 2.4;
 const float ISO_CUT_ELE= 0.08;
 
 const float REL_ISO_CUT_LEP_VETO_ELE=   0.2;
 const float PT_CUT_LEP_VETO_ELE=        15;
 const float ETA_CUT_LEP_VETO_ELE=       2.4;
+
 const float REL_ISO_CUT_LEP_VETO_MU=    0.4;
 const float PT_CUT_LEP_VETO_MU=         10;
 const float ETA_CUT_LEP_VETO_MU=        2.4;
@@ -57,9 +59,11 @@ const float BTAG_WP_VALUE = 0.3033;
 
 const size_t ID_TAU_RECO_DEEPTAU_VSJET_LOOSE_ELE = 16; //byDeepTau2017v2p1VSjet ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight
 const size_t ID_TAU_RECO_DEEPTAU_VSJET_LOOSE_MU = 8; //byDeepTau2017v2p1VSjet ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight
+
 const size_t ID_TAU_RECO_DEEPTAU_VSJET=  64; //byDeepTau2017v2p1VSjet ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight
 const size_t ID_TAU_RECO_DEEPTAU_VSELE=  4;  //byDeepTau2017v2p1VSe ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight
 const size_t ID_TAU_RECO_DEEPTAU_VSMU=   8;  //byDeepTau2017v2p1VSmu ID working points (deepTau2017v2p1): bitmask 1 = VLoose, 2 = Loose, 4 = Medium, 8 = Tight
+
 const size_t ID_TAU_RECO_MVA=            8; //IsolationMVArun2v1DBoldDMwLT ID working point (2017v1): bitmask 1 = VVLoose, 2 = VLoose, 4 = Loose, 8 = Medium, 16 = Tight, 32 = VTight, 64 = VVTight
 const size_t ID_TAU_ANTIMU=              1; //Anti-muon discriminator V3: : bitmask 1 = Loose, 2 = Tight
 const size_t ID_TAU_ANTIELE=             2; //Anti-electron MVA discriminator V6 (2015): bitmask 1 = VLoose, 2 = Loose, 4 = Medium, 8 = Tight, 16 = VTight
@@ -135,7 +139,7 @@ float deltaR(float eta1, float phi1, float eta2, float phi2){
 }
 
 
-bool LepVetoEle(rvec_i Electron_idx, rvec_f Electron_pt, rvec_f Electron_eta, rvec_b Iso_WPL, rvec_i jetRelIso, rvec_f Muon_pt, rvec_f Muon_eta, rvec_i Iso04_all, rvec_b Muon_looseId )
+bool LepVetoEle(rvec_i Electron_idx, rvec_f Electron_pt, rvec_f Electron_eta, rvec_b Iso_WPL, rvec_f jetRelIso, rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Iso04_all, rvec_b Muon_looseId )
 {
     bool IsEleVetoPassed = true;
     bool IsMuVetoPassed = true;
@@ -152,7 +156,7 @@ bool LepVetoEle(rvec_i Electron_idx, rvec_f Electron_pt, rvec_f Electron_eta, rv
 
 
 
-bool LepVetoMu(rvec_i Muon_idx, rvec_f Electron_pt, rvec_f Electron_eta, rvec_b Electron_mvaFall17V2Iso_WPL, rvec_i Electron_jetRelIso, rvec_f Muon_pt, rvec_f Muon_eta, rvec_i Muon_pfRelIso04_all, rvec_b Muon_looseId)
+bool LepVetoMu(rvec_i Muon_idx, rvec_f Electron_pt, rvec_f Electron_eta, rvec_b Electron_mvaFall17V2Iso_WPL, rvec_f Electron_jetRelIso, rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_pfRelIso04_all, rvec_b Muon_looseId)
 {
     bool IsEleVetoPassed = true;
     bool IsMuVetoPassed = true;
@@ -183,19 +187,23 @@ bool atleast2GoodJets(rvec_i GoodJets_idx){
 
 RVec<size_t> SelectVBSJets_invmass(rvec_f pt, rvec_f eta, rvec_f phi, rvec_f mass, rvec_i GoodJets_idx)
 {
+    
     RVec<size_t> idx;
     // Find first lepton pair with invariant mass closest to Z mass
     auto idx_cmb = Combinations(GoodJets_idx, 2);
-    auto best_mass = -1;
+    //auto best_mass = -1.;
+    float best_mass = -1.;
     size_t best_i1 = 0; size_t best_i2 = 0;
     for (size_t i = 0; i < idx_cmb[0].size(); i++) {
         const auto i1 = idx_cmb[0][i];
         const auto i2 = idx_cmb[1][i];
-        //std::cout<<i1<<i2<<endl;
+        //cout<<i1<<i2<<endl;
         if (abs(eta[GoodJets_idx[i1]] - eta[GoodJets_idx[i2]]) >= DELTAETA_JJ_CUT) {
             ROOT::Math::PtEtaPhiMVector p1(pt[GoodJets_idx[i1]], eta[GoodJets_idx[i1]], phi[GoodJets_idx[i1]], mass[GoodJets_idx[i1]]);
             ROOT::Math::PtEtaPhiMVector p2(pt[GoodJets_idx[i2]], eta[GoodJets_idx[i2]], phi[GoodJets_idx[i2]], mass[GoodJets_idx[i2]]);
-            const auto this_mass = (p1 + p2).M();
+            //const auto this_mass = (p1 + p2).M();
+            float this_mass = (p1 + p2).M();
+            //cout<<this_mass<<endl;
             if (this_mass > best_mass) {
                 best_mass = this_mass;
                 best_i1 = GoodJets_idx[i1];
@@ -203,6 +211,7 @@ RVec<size_t> SelectVBSJets_invmass(rvec_f pt, rvec_f eta, rvec_f phi, rvec_f mas
             }
         }
     } 
+    //cout<<"best "<<best_i1<<best_i2<<best_mass;
     idx.emplace_back(best_i1);
     idx.emplace_back(best_i2);
     return idx;
@@ -271,13 +280,21 @@ float GetTau(rvec_f pt, rvec_i idx){
 
 RVec<int> SelectElectron(rvec_f lepton_pt, rvec_f lepton_eta, rvec_f lepton_phi, rvec_f lepton_jetRelIso, rvec_b lepton_mvaFall17V2Iso_WPL, rvec_f lepton_mvaFall17V2Iso_WP90, rvec_f jet_eta, rvec_f jet_phi, rvec_i VBSJets_idx){
     //setting jet-related quantities if isolation from them is needed
-    const auto jet1_idx = VBSJets_idx[0];
-    const auto jet2_idx = VBSJets_idx[1];
+    //const auto jet1_idx = VBSJets_idx[0];
+    //const auto jet2_idx = VBSJets_idx[1];
 
-    const auto jet1eta = jet_eta[jet1_idx];
-    const auto jet2eta = jet_eta[jet2_idx];
-    const auto jet1phi = jet_phi[jet1_idx];
-    const auto jet2phi = jet_phi[jet2_idx];
+    //const auto jet1eta = jet_eta[jet1_idx];
+    //const auto jet2eta = jet_eta[jet2_idx];
+    //const auto jet1phi = jet_phi[jet1_idx];
+    //const auto jet2phi = jet_phi[jet2_idx];
+    
+    float jet1_idx = VBSJets_idx[0];
+    float jet2_idx = VBSJets_idx[1];
+    //const auto jet1eta = lepton_pt[0]
+    float jet1eta = jet_eta[jet1_idx];
+    float jet2eta = jet_eta[jet2_idx];
+    float jet1phi = jet_phi[jet1_idx];
+    float jet2phi = jet_phi[jet2_idx];
     
     const float isocone = DR_OVERLAP_CONE_OTHER;
 
@@ -320,20 +337,27 @@ RVec<int> SelectElectron(rvec_f lepton_pt, rvec_f lepton_eta, rvec_f lepton_phi,
         idx[0] = -1;
         idx[1] = -1;  
     }
-    
     return idx;
 }
 
 
 RVec<int> SelectMuon(rvec_f lepton_pt, rvec_f lepton_eta, rvec_f lepton_phi, rvec_b lepton_tightId, rvec_b lepton_looseId, rvec_f Iso04_all, rvec_f jet_eta, rvec_f jet_phi, rvec_i VBSJets_idx){
     //setting jet-related quantities if isolation from them is needed
-    const auto jet1_idx = VBSJets_idx[0];
-    const auto jet2_idx = VBSJets_idx[1];
+    //const auto jet1_idx = VBSJets_idx[0];
+    //const auto jet2_idx = VBSJets_idx[1];
     //const auto jet1eta = lepton_pt[0]
-    const auto jet1eta = jet_eta[jet1_idx];
-    const auto jet2eta = jet_eta[jet2_idx];
-    const auto jet1phi = jet_phi[jet1_idx];
-    const auto jet2phi = jet_phi[jet2_idx];
+    //const auto jet1eta = jet_eta[jet1_idx];
+    //const auto jet2eta = jet_eta[jet2_idx];
+    //const auto jet1phi = jet_phi[jet1_idx];
+    //const auto jet2phi = jet_phi[jet2_idx];
+    
+    float jet1_idx = VBSJets_idx[0];
+    float jet2_idx = VBSJets_idx[1];
+    //const auto jet1eta = lepton_pt[0]
+    float jet1eta = jet_eta[jet1_idx];
+    float jet2eta = jet_eta[jet2_idx];
+    float jet1phi = jet_phi[jet1_idx];
+    float jet2phi = jet_phi[jet2_idx];
     
     const float isocone = DR_OVERLAP_CONE_OTHER;
 
@@ -366,11 +390,11 @@ RVec<int> SelectMuon(rvec_f lepton_pt, rvec_f lepton_eta, rvec_f lepton_phi, rve
     //select leading tight/loose-not-tight lepton
     if (Tleptons_idx.size() > 0){
         idx[0] = Tleptons_idx[0];
-        idx[1] = 0;
+        idx[1] = 1;
     }
     else if (LnTleptons_idx.size() > 0){
         idx[0] = LnTleptons_idx[0];
-        idx[1] = 1;
+        idx[1] = 0;
     }
     else{
         idx[0] = -1;
@@ -438,7 +462,7 @@ int DetermineGoodLepton(bool HLT_IsoMu27, bool HLT_Mu50, bool HLT_Ele35_WPTight_
                 SingleEle = false;
                 SingleMu = true;
             }
-            else if(not ele_lepton_veto and mu_lepton_veto){           
+            else if(!ele_lepton_veto && mu_lepton_veto){           
                 GoodLeptonFamily = 1;
                 //lepton_TightRegion[0] = copy.deepcopy(mu_TightRegion)
                 SingleEle = false;
@@ -963,16 +987,18 @@ RVec<RVec<float>> getTauSF(float SelectedTau_pt, float SelectedTau_eta, int Sele
 
 
 RVec<float> getTES(float SelectedTau_pt, int SelectedTau_decayMode, int SelectedTau_genPartFlav, bool IsMC){
-    
+    //cout<<"acscsascno"<<endl;
     string year = "2017";
     string id = "DeepTau2017v2p1VSjet";
     
     float pt_low  = 34;
     float pt_high = 170;
+    
     //TString path_low = TString(remote_storage) + TString("data/tauSF/TauES_dm_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString(".root");
     //TString path_high = TString(remote_storage) + TString("data/tauSF/TauES_dm_") + TString(id) + TString("_") + TString(year) + TString("ReReco") + TString("_ptgt100.root");
     RVec<float> result(3);
     if(IsMC == false){
+        //cout<<"babba"<<endl;
         result[0] = 1.;
         result[1] = 1.;
         result[2] = 1.;
@@ -986,23 +1012,28 @@ RVec<float> getTES(float SelectedTau_pt, int SelectedTau_decayMode, int Selected
         //TH1F * hist_high = (TH1F *) infile_high->Get("tes");
         //int bin = hist_low->GetXaxis()->FindBin(SelectedTau_decayMode);
         //float tes = hist_low->GetBinContent(bin);
+        //cout<<"ciarro"<<endl;
         int bin = TauES_dm_DeepTau2017v2p1VSjet_2017ReReco_hist_low->GetXaxis()->FindBin(SelectedTau_decayMode);
         float tes = TauES_dm_DeepTau2017v2p1VSjet_2017ReReco_hist_low->GetBinContent(bin);
         float err;
         if (SelectedTau_pt > pt_high){
+            //cout<<"a"<<endl;
             //int bin_high = hist_high->GetXaxis()->FindBin(SelectedTau_decayMode);
             //float err = hist_high->GetBinError(bin_high);
             int bin_high = TauES_dm_DeepTau2017v2p1VSjet_2017ReReco_ptgt100_hist_high->GetXaxis()->FindBin(SelectedTau_decayMode);
-            float err = TauES_dm_DeepTau2017v2p1VSjet_2017ReReco_ptgt100_hist_high->GetBinError(bin_high);
+            //float err = TauES_dm_DeepTau2017v2p1VSjet_2017ReReco_ptgt100_hist_high->GetBinError(bin_high);
+            err = TauES_dm_DeepTau2017v2p1VSjet_2017ReReco_ptgt100_hist_high->GetBinError(bin_high);
         }
         else if (SelectedTau_pt > pt_low){
             //int bin_high = hist_high->GetXaxis()->FindBin(SelectedTau_decayMode);
             //float err_high = hist_high->GetBinError(bin_high);
             //float err_low  = hist_low->GetBinError(bin);
+            //cout<<"b"<<endl;
             int bin_high = TauES_dm_DeepTau2017v2p1VSjet_2017ReReco_ptgt100_hist_high->GetXaxis()->FindBin(SelectedTau_decayMode);
             float err_high = TauES_dm_DeepTau2017v2p1VSjet_2017ReReco_ptgt100_hist_high->GetBinError(bin_high);
             float err_low  = TauES_dm_DeepTau2017v2p1VSjet_2017ReReco_hist_low->GetBinError(bin);
-            float err      = err_low + (err_high-err_low)/(pt_high-pt_low)*(SelectedTau_pt-pt_low);
+            //float err      = err_low + (err_high-err_low)/(pt_high-pt_low)*(SelectedTau_pt-pt_low);
+            err      = err_low + (err_high-err_low)/(pt_high-pt_low)*(SelectedTau_pt-pt_low);
         }
         //else err = hist_low->GetBinError(bin);
         else err = TauES_dm_DeepTau2017v2p1VSjet_2017ReReco_hist_low->GetBinError(bin);
@@ -1012,10 +1043,12 @@ RVec<float> getTES(float SelectedTau_pt, int SelectedTau_decayMode, int Selected
         result[2] = tes+err;
     }
     else{
+        cout<<"d"<<endl;
         result[0] = 1.;
         result[1] = 1.;
         result[2] = 1.;
     }
+    //cout<<"oiknionono"<<endl;
     return result;
 }
 
@@ -2158,4 +2191,60 @@ TMVA::Experimental::RBDT<> bdt("xgb_SM_v100", "https://ttedesch.web.cern.ch/tted
 float SMinference(float m_jj, float m_jjtaulep, float m_taulep, float mT_lep_MET, float leadjet_pt, float subleadjet_pt, float tau_mass, float MET_pt){
     auto y1 = bdt.Compute({m_jj, m_jjtaulep, m_taulep, mT_lep_MET, leadjet_pt, subleadjet_pt, tau_mass, MET_pt});
     return y1[0];
+}
+
+/*
+R__LOAD_LIBRARY(/usr/local/lib/libtensorflow.so)
+#include "cppflow/ops.h"
+#include "cppflow/model.h"
+cppflow::model model("./dnn_optimized_model_tagger_mjjabsdeltaetajj");
+
+    
+
+float DNNinference(float x1, float x2, float x3, float x4, float x5, float x6, float x7, float x8, float x9, float x10, float x11, float x12, float x13, float x14, float x15, float x16, float x17, float x18, float x19, float x20, float x21, float x22, float x23, float x24, float x25, float x26, float x27, float x28){
+    auto input = cppflow::fill({1, 28}, 1.0f);
+    auto output = model(input);
+    auto values = output.get_data<float>();
+    return values[0];
+}
+*/
+/*
+float DNNinference(float x1, float x2, float x3, float x4, float x5, float x6, float x7, float x8, float x9, float x10, float x11, float x12, float x13, float x14, float x15, float x16, float x17, float x18, float x19, float x20){
+     TMVA::Reader *reader = new TMVA::Reader();
+    Float_t var1, var2, var3, var4;
+    reader->AddVariable( "var1", &x1 );
+    reader->AddVariable( "var2", &x2 );
+    reader->AddVariable( "var3", &x3 );
+    reader->AddVariable( "var4", &x4 );
+    reader->AddVariable( "var5", &x5 );
+    reader->AddVariable( "var6", &x6 );
+    reader->AddVariable( "var7", &x7 );
+    reader->AddVariable( "var8", &x8 );
+    reader->AddVariable( "var9", &x9 );
+    reader->AddVariable( "var10", &x10 );
+    reader->AddVariable( "var11", &x11 );
+    reader->AddVariable( "var12", &x12 );
+    reader->AddVariable( "var13", &x13 );
+    reader->AddVariable( "var14", &x14 );
+    reader->AddVariable( "var15", &x15 );
+    reader->AddVariable( "var16", &x16 );
+    reader->AddVariable( "var17", &x17 );
+    reader->AddVariable( "var18", &x18 );
+    reader->AddVariable( "var19", &x19 );
+    reader->AddVariable( "var20", &x20 );
+    
+    reader->BookMVA('PyKeras', TString('dataset/weights/TMVAClassification_PyKeras.weights.xml'))
+        
+    auto y1 = bdt.Compute({m_jj, m_jjtaulep, m_taulep, mT_lep_MET, leadjet_pt, subleadjet_pt, tau_mass, MET_pt});
+    return y1[0];
+}
+*/
+
+RVec<int> GetGenMatched(rvec_i Jet_genJetIdx, rvec_i GenJet_idx){
+    RVec<int> GenMatched_idx(2);
+    for (int i = 0; i < Jet_genJetIdx.size(); i++) {
+        if(Jet_genJetIdx[i] == GenJet_idx[0])  GenMatched_idx[0] = i;
+        else if(Jet_genJetIdx[i] == GenJet_idx[1])  GenMatched_idx[1] = i;
+    }
+    return GenMatched_idx;
 }
