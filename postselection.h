@@ -271,7 +271,8 @@ float GetLeptonSF(rvec_f Electron_pt, rvec_i Electron_idx, rvec_f Muon_pt, rvec_
     }
 }
 
-float GetLeptonTightFlag(rvec_i Electron_idx, rvec_i Muon_idx, int GoodLeptonFamily){
+//float GetLeptonTightFlag(rvec_i Electron_idx, rvec_i Muon_idx, int GoodLeptonFamily){
+int GetLeptonTightFlag(rvec_i Electron_idx, rvec_i Muon_idx, int GoodLeptonFamily){
     if (GoodLeptonFamily == 0) return Electron_idx[1];
     else return Muon_idx[1];
 }
@@ -522,11 +523,13 @@ RVec<int> SelectAndVetoTaus(rvec_f Tau_pt, rvec_f Tau_eta, rvec_f Tau_phi, RVec<
                 nTau++;
                 if(Tau_idDeepTau2017v2p1VSjet[i]>=ID_TAU_RECO_DEEPTAU_VSJET){
                     idx[0] = i;
-                    idx[1] = 0;
+                    //idx[1] = 0;
+                    idx[1] = 1;
                 } 
                 else{
                     idx[0] = i;
-                    idx[1] = 1;
+                    //idx[1] = 1;
+                    idx[1] = 0;
                 }
             }   
         }
