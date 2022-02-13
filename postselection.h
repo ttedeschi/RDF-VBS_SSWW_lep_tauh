@@ -111,12 +111,14 @@ TH2F *Btag_eff_2017_h_c = (TH2F *) eff_c->CreateHistogram();
 TEfficiency *eff_udsg = (TEfficiency *) Btag_eff_2017->Get("h2_BTaggingEff_udsg");
 TH2F *Btag_eff_2017_h_udsg = (TH2F *) eff_udsg->CreateHistogram();
 
-TFile *FR_vsjet2_vsmuT_ZZ = TFile::Open(TString(remote_storage) + TString("FR_vsjet2_vsmuT_ZZ.root"));
+//TFile *FR_vsjet2_vsmuT_ZZ = TFile::Open(TString(remote_storage) + TString("FR_vsjet2_vsmuT_ZZ.root"));
+TFile *FR_vsjet2_vsmuT_ZZ = TFile::Open(TString(remote_storage) + TString("FR_vsjet2_2017.root"));
 TH2F *FR_vsjet2_vsmuT_ZZ_histo_ele = (TH2F*)FR_vsjet2_vsmuT_ZZ->Get("hFRDataeledif");
 TH2F *FR_vsjet2_vsmuT_ZZ_histo_mu = (TH2F*)FR_vsjet2_vsmuT_ZZ->Get("hFRDatamudif");
 TH2F *FR_vsjet2_vsmuT_ZZ_histo_tau = (TH2F*)FR_vsjet2_vsmuT_ZZ->Get("hFRDatataudif");
                                         
-TFile *FR_vsjet4_vsmuT_ZZ = TFile::Open(TString(remote_storage) + TString("FR_vsjet4_vsmuT_ZZ.root"));
+//TFile *FR_vsjet4_vsmuT_ZZ = TFile::Open(TString(remote_storage) + TString("FR_vsjet4_vsmuT_ZZ.root"));
+TFile *FR_vsjet4_vsmuT_ZZ = TFile::Open(TString(remote_storage) + TString("FR_vsjet4_2017.root"));
 TH2F *FR_vsjet4_vsmuT_ZZ_histo_ele = (TH2F*)FR_vsjet4_vsmuT_ZZ->Get("hFRDataeledif");
 TH2F *FR_vsjet4_vsmuT_ZZ_histo_mu = (TH2F*)FR_vsjet4_vsmuT_ZZ->Get("hFRDatamudif");
 TH2F *FR_vsjet4_vsmuT_ZZ_histo_tau = (TH2F*)FR_vsjet4_vsmuT_ZZ->Get("hFRDatataudif");
@@ -689,7 +691,8 @@ float SFFakeRatio_tau_calc_vsjet2(float pT, float eta){
     TH2F *histo = FR_vsjet2_vsmuT_ZZ_histo_tau;
 
     auto binx = histo->GetXaxis()->FindBin(pT);
-    auto biny = histo->GetYaxis()->FindBin(eta);
+    //auto biny = histo->GetYaxis()->FindBin(eta);
+    auto biny = histo->GetYaxis()->FindBin(abs(eta));
     auto nxbins = histo->GetXaxis()->GetNbins();
     auto nybins = histo->GetYaxis()->GetNbins();
         
@@ -714,7 +717,8 @@ float SFFakeRatio_tau_calc_vsjet4(float pT, float eta){
     TH2F *histo = FR_vsjet4_vsmuT_ZZ_histo_tau;
 
     auto binx = histo->GetXaxis()->FindBin(pT);
-    auto biny = histo->GetYaxis()->FindBin(eta);
+    //auto biny = histo->GetYaxis()->FindBin(eta);
+    auto biny = histo->GetYaxis()->FindBin(abs(eta));
     auto nxbins = histo->GetXaxis()->GetNbins();
     auto nybins = histo->GetYaxis()->GetNbins();
         
@@ -1043,7 +1047,7 @@ RVec<float> getTES(float SelectedTau_pt, int SelectedTau_decayMode, int Selected
         result[2] = tes+err;
     }
     else{
-        cout<<"d"<<endl;
+        //cout<<"d"<<endl;
         result[0] = 1.;
         result[1] = 1.;
         result[2] = 1.;
@@ -1052,7 +1056,9 @@ RVec<float> getTES(float SelectedTau_pt, int SelectedTau_decayMode, int Selected
     return result;
 }
 
-RVec<float> getFES(int SelectedTau_decayMode, int SelectedTau_genPartFlav, bool IsMC){
+//RVec<float> getFES(int SelectedTau_decayMode, int SelectedTau_genPartFlav, bool IsMC){
+RVec<float> getFES(float SelectedTau_eta, int SelectedTau_decayMode, int SelectedTau_genPartFlav, bool IsMC){
+
     string year = "2017";
     string id = "DeepTau2017v2p1VSe";
     
@@ -1074,9 +1080,17 @@ RVec<float> getFES(int SelectedTau_decayMode, int SelectedTau_genPartFlav, bool 
         //float yup  = graph->GetErrorYhigh(SelectedTau_decayMode);
         //float ylow = graph->GetErrorYlow(SelectedTau_decayMode);
         
-        float y = TauFES_eta_dm_DeepTau2017v2p1VSe_2017ReReco_graph->GetY()[SelectedTau_decayMode];
-        float yup  = TauFES_eta_dm_DeepTau2017v2p1VSe_2017ReReco_graph->GetErrorYhigh(SelectedTau_decayMode);
-        float ylow = TauFES_eta_dm_DeepTau2017v2p1VSe_2017ReReco_graph->GetErrorYlow(SelectedTau_decayMode);
+        //float y = TauFES_eta_dm_DeepTau2017v2p1VSe_2017ReReco_graph->GetY()[SelectedTau_decayMode];
+        //float yup  = TauFES_eta_dm_DeepTau2017v2p1VSe_2017ReReco_graph->GetErrorYhigh(SelectedTau_decayMode);
+        //float ylow = TauFES_eta_dm_DeepTau2017v2p1VSe_2017ReReco_graph->GetErrorYlow(SelectedTau_decayMode);
+        
+        int endcap_index_shift = 0;
+        if(abs(SelectedTau_eta) >= 1.5) endcap_index_shift = 2;
+        
+        float y = TauFES_eta_dm_DeepTau2017v2p1VSe_2017ReReco_graph->GetY()[SelectedTau_decayMode + endcap_index_shift];
+        float yup  = TauFES_eta_dm_DeepTau2017v2p1VSe_2017ReReco_graph->GetErrorYhigh(SelectedTau_decayMode + endcap_index_shift);
+        float ylow = TauFES_eta_dm_DeepTau2017v2p1VSe_2017ReReco_graph->GetErrorYlow(SelectedTau_decayMode + endcap_index_shift);
+        
         result[0] = y-ylow;
         result[1] = y;
         result[2] = y + yup;
@@ -1248,6 +1262,10 @@ RVec<float> btagcalc(rvec_i GoodJets_idx, rvec_f Jet_pt, rvec_f Jet_eta, rvec_i 
 }
 
 unordered_set<int> data_flags({201, 202, 203, 204, 205, 206, 207, 212, 213, 214, 215, 216, 217, 218, 223, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 429, 430, 431, 432, 433, 438, 439, 440, 441, 442, 446, 447, 448, 449, 450});
+
+unordered_set<int> dataEle_flags({212, 213, 214, 215, 216, 217, 218, 438, 439, 440, 441, 442});
+
+unordered_set<int> dataMu_flags({201, 202, 203, 204, 205, 206, 207, 429, 430, 431, 432, 433});
 
 unordered_map<int,float> xsecs({
     {268,0.1191},
@@ -2247,4 +2265,15 @@ RVec<int> GetGenMatched(rvec_i Jet_genJetIdx, rvec_i GenJet_idx){
         else if(Jet_genJetIdx[i] == GenJet_idx[1])  GenMatched_idx[1] = i;
     }
     return GenMatched_idx;
+}
+
+
+bool DataLeptonCheck(int SampleFlag, int GoodLeptonFamily, bool isMC){
+    if(isMC == false){
+        bool is_in_ele = dataEle_flags.find(SampleFlag) != dataEle_flags.end();
+        if(is_in_ele == true && GoodLeptonFamily == 1) return false;
+        bool is_in_mu = dataMu_flags.find(SampleFlag) != dataMu_flags.end();
+        if(is_in_mu == true && GoodLeptonFamily == 0) return false;
+    }
+    return true;
 }
