@@ -1562,7 +1562,11 @@ void BTagCalibration::readCSV(std::istream &s)
     addEntry(BTagEntry(line));
   }
 
-  while (getline(s,line)) {
+  //while (getline(s,line)) {
+  int line_counter = 0;
+  int max_lines = 1000;
+  while (getline(s,line) && line_counter < max_lines) {
+    line_counter++;
     line = BTagEntry::trimStr(line);
     if (line.empty()) {  // skip empty lines
       continue;
@@ -1669,7 +1673,8 @@ std::cerr << "ERROR in BTagCalibration: "
             << ost;
 throw std::exception();
     }
-    otherSysTypeReaders_[ost] = std::auto_ptr<BTagCalibrationReaderImpl>(
+    //otherSysTypeReaders_[ost] = std::auto_ptr<BTagCalibrationReaderImpl>(
+    otherSysTypeReaders_[ost] = std::unique_ptr<BTagCalibrationReaderImpl>(
         new BTagCalibrationReaderImpl(op, ost)
     );
   }
@@ -1680,7 +1685,8 @@ void BTagCalibrationReader::BTagCalibrationReaderImpl::load(
                                              BTagEntry::JetFlavor jf,
                                              std::string measurementType)
 {
-  if (tmpData_[jf].size()) {
+  //if (tmpData_[jf].size()) {
+  if (!tmpData_[jf].empty()) { 
 std::cerr << "ERROR in BTagCalibration: "
           << "Data for this jet-flavor is already loaded: "
           << jf;
@@ -1765,7 +1771,14 @@ double BTagCalibrationReader::BTagCalibrationReaderImpl::eval_auto_bounds(
   auto sf_bounds_eta = min_max_eta(jf, discr);
   bool eta_is_out_of_bounds = false;
 
-  if (sf_bounds_eta.first < 0) sf_bounds_eta.first = -sf_bounds_eta.second;   
+  //if (sf_bounds_eta.first < 0) sf_bounds_eta.first = -sf_bounds_eta.second;   
+  
+  //added from CMSSW master, not present in CMSSW_10_0
+  if (sf_bounds_eta.first < 0) sf_bounds_eta.first = -sf_bounds_eta.second;  
+  if (useAbsEta_[jf] && eta < 0) {
+      eta = -eta;
+  } 
+    
   if (eta <= sf_bounds_eta.first || eta > sf_bounds_eta.second ) {
     eta_is_out_of_bounds = true;
   }
@@ -1925,15 +1938,15 @@ std::pair<float, float> BTagCalibrationReader::min_max_pt(BTagEntry::JetFlavor j
 //download_file("https://ttedesch.web.cern.ch/ttedesch/nanoAOD-tools/data/btagSF/DeepFlavour_94XSF_V3_B_F.csv", "DeepFlavour_94XSF_V3_B_F.csv"); download_file("https://ttedesch.web.cern.ch/ttedesch/nanoAOD-tools/data/btagSF/DeepJet_102XSF_V1.csv", "DeepJet_102XSF_V1.csv"); download_file("https://ttedesch.web.cern.ch/ttedesch/nanoAOD-tools/data/btagSF/DeepJet_106XUL16preVFPSF_v1_new.csv", "DeepJet_106XUL16preVFPSF_v1_new.csv"); download_file("https://ttedesch.web.cern.ch/ttedesch/nanoAOD-tools/data/btagSF/DeepJet_106XUL16postVFPSF_v2_new.csv", "DeepJet_106XUL16postVFPSF_v2_new.csv"); download_file("https://ttedesch.web.cern.ch/ttedesch/nanoAOD-tools/data/btagSF/DeepJet_106XUL17_v3_new.csv", "DeepJet_106XUL17_v3_new.csv"); download_file("https://ttedesch.web.cern.ch/ttedesch/nanoAOD-tools/data/btagSF/DeepJet_106XUL18_v2_new.csv", "DeepJet_106XUL18_v2_new.csv"); 
 
 
-/* provvisorio
-BTagCalibration calibration_Legacy2016("deepjet", "DeepJet_2016LegacySF_V1.csv");
+
+//BTagCalibration calibration_Legacy2016("deepjet", "DeepJet_2016LegacySF_V1.csv");
 BTagCalibration calibration_2017("deepjet", "DeepFlavour_94XSF_V3_B_F.csv");
-BTagCalibration calibration_2018("deepjet", "DeepJet_102XSF_V1.csv");
-BTagCalibration calibration_UL2016APV("deepjet", "DeepJet_106XUL16preVFPSF_v1_new.csv");
-BTagCalibration calibration_UL2016("deepjet", "DeepJet_106XUL16postVFPSF_v2_new.csv");
-BTagCalibration calibration_UL2017("deepjet", "DeepJet_106XUL17_v3_new.csv");
-BTagCalibration calibration_UL2018("deepjet", "DeepJet_106XUL18_v2_new.csv");
-*/
+//BTagCalibration calibration_2018("deepjet", "DeepJet_102XSF_V1.csv");
+//BTagCalibration calibration_UL2016APV("deepjet", "DeepJet_106XUL16preVFPSF_v1_new.csv");
+//BTagCalibration calibration_UL2016("deepjet", "DeepJet_106XUL16postVFPSF_v2_new.csv");
+//BTagCalibration calibration_UL2017("deepjet", "DeepJet_106XUL17_v3_new.csv");
+//BTagCalibration calibration_UL2018("deepjet", "DeepJet_106XUL18_v2_new.csv");
+
 
 
 /*
@@ -1964,30 +1977,29 @@ BTagCalibrationReader reader_2_UL2018(2,"central",v_systs);
 //BTagEntry btag_dummy;
 //BTagEntry::OperatingPoint a(OP_LOOSE);
 
-/* provvisorio
+
 vector<string> v_systs{"up", "down"};
-BTagCalibrationReader reader_0_Legacy2016(BTagEntry::OP_LOOSE,"central",v_systs); //0 is wp_btv
-BTagCalibrationReader reader_1_Legacy2016(BTagEntry::OP_MEDIUM,"central",v_systs);
-BTagCalibrationReader reader_2_Legacy2016(BTagEntry::OP_TIGHT,"central",v_systs); 
+//BTagCalibrationReader reader_0_Legacy2016(BTagEntry::OP_LOOSE,"central",v_systs); //0 is wp_btv
+//BTagCalibrationReader reader_1_Legacy2016(BTagEntry::OP_MEDIUM,"central",v_systs);
+//BTagCalibrationReader reader_2_Legacy2016(BTagEntry::OP_TIGHT,"central",v_systs); 
 BTagCalibrationReader reader_0_2017(BTagEntry::OP_LOOSE,"central",v_systs); //0 is wp_btv
 BTagCalibrationReader reader_1_2017(BTagEntry::OP_MEDIUM,"central",v_systs);
 BTagCalibrationReader reader_2_2017(BTagEntry::OP_TIGHT,"central",v_systs); 
-BTagCalibrationReader reader_0_2018(BTagEntry::OP_LOOSE,"central",v_systs); //0 is wp_btv
-BTagCalibrationReader reader_1_2018(BTagEntry::OP_MEDIUM,"central",v_systs);
-BTagCalibrationReader reader_2_2018(BTagEntry::OP_TIGHT,"central",v_systs); 
-BTagCalibrationReader reader_0_UL2016APV(BTagEntry::OP_LOOSE,"central",v_systs); //0 is wp_btv
-BTagCalibrationReader reader_1_UL2016APV(BTagEntry::OP_MEDIUM,"central",v_systs);
-BTagCalibrationReader reader_2_UL2016APV(BTagEntry::OP_TIGHT,"central",v_systs); 
-BTagCalibrationReader reader_0_UL2016(BTagEntry::OP_LOOSE,"central",v_systs); //0 is wp_btv
-BTagCalibrationReader reader_1_UL2016(BTagEntry::OP_MEDIUM,"central",v_systs);
-BTagCalibrationReader reader_2_UL2016(BTagEntry::OP_TIGHT,"central",v_systs); 
-BTagCalibrationReader reader_0_UL2017(BTagEntry::OP_LOOSE,"central",v_systs); //0 is wp_btv
-BTagCalibrationReader reader_1_UL2017(BTagEntry::OP_MEDIUM,"central",v_systs);
-BTagCalibrationReader reader_2_UL2017(BTagEntry::OP_TIGHT,"central",v_systs); 
-BTagCalibrationReader reader_0_UL2018(BTagEntry::OP_LOOSE,"central",v_systs); //0 is wp_btv
-BTagCalibrationReader reader_1_UL2018(BTagEntry::OP_MEDIUM,"central",v_systs);
-BTagCalibrationReader reader_2_UL2018(BTagEntry::OP_TIGHT,"central",v_systs); 
-*/
+//BTagCalibrationReader reader_0_2018(BTagEntry::OP_LOOSE,"central",v_systs); //0 is wp_btv
+//BTagCalibrationReader reader_1_2018(BTagEntry::OP_MEDIUM,"central",v_systs);
+//BTagCalibrationReader reader_2_2018(BTagEntry::OP_TIGHT,"central",v_systs); 
+//BTagCalibrationReader reader_0_UL2016APV(BTagEntry::OP_LOOSE,"central",v_systs); //0 is wp_btv
+//BTagCalibrationReader reader_1_UL2016APV(BTagEntry::OP_MEDIUM,"central",v_systs);
+//BTagCalibrationReader reader_2_UL2016APV(BTagEntry::OP_TIGHT,"central",v_systs); 
+//BTagCalibrationReader reader_0_UL2016(BTagEntry::OP_LOOSE,"central",v_systs); //0 is wp_btv
+//BTagCalibrationReader reader_1_UL2016(BTagEntry::OP_MEDIUM,"central",v_systs);
+//BTagCalibrationReader reader_2_UL2016(BTagEntry::OP_TIGHT,"central",v_systs); 
+//BTagCalibrationReader reader_0_UL2017(BTagEntry::OP_LOOSE,"central",v_systs); //0 is wp_btv
+//BTagCalibrationReader reader_1_UL2017(BTagEntry::OP_MEDIUM,"central",v_systs);
+//BTagCalibrationReader reader_2_UL2017(BTagEntry::OP_TIGHT,"central",v_systs); 
+//BTagCalibrationReader reader_0_UL2018(BTagEntry::OP_LOOSE,"central",v_systs); //0 is wp_btv
+//BTagCalibrationReader reader_1_UL2018(BTagEntry::OP_MEDIUM,"central",v_systs);
+//BTagCalibrationReader reader_2_UL2018(BTagEntry::OP_TIGHT,"central",v_systs); 
 
 
 /*
@@ -2138,19 +2150,19 @@ RVec<RVec<float>> btagSF(string sample, string WP, rvec_f Jet_pt, rvec_f Jet_eta
         if (eta >= +max_abs_eta) eta = +max_abs_eta - epsilon;
 
         if(flavor_btv == 0){
-            float sf = reader.eval_auto_bounds("central", BTagEntry::FLAV_B, eta, pt);
-            float sf_up = reader.eval_auto_bounds("up", BTagEntry::FLAV_B, eta, pt);
-            float sf_down = reader.eval_auto_bounds("down", BTagEntry::FLAV_B, eta, pt);
+            sf = reader.eval_auto_bounds("central", BTagEntry::FLAV_B, eta, pt);
+            sf_up = reader.eval_auto_bounds("up", BTagEntry::FLAV_B, eta, pt);
+            sf_down = reader.eval_auto_bounds("down", BTagEntry::FLAV_B, eta, pt);
         }
         else if(flavor_btv == 1){
-            float sf = reader.eval_auto_bounds("central", BTagEntry::FLAV_C, eta, pt);
-            float sf_up = reader.eval_auto_bounds("up", BTagEntry::FLAV_C, eta, pt);
-            float sf_down = reader.eval_auto_bounds("down", BTagEntry::FLAV_C, eta, pt);
+            sf = reader.eval_auto_bounds("central", BTagEntry::FLAV_C, eta, pt);
+            sf_up = reader.eval_auto_bounds("up", BTagEntry::FLAV_C, eta, pt);
+            sf_down = reader.eval_auto_bounds("down", BTagEntry::FLAV_C, eta, pt);
         }
         else {
-            float sf = reader.eval_auto_bounds("central", BTagEntry::FLAV_UDSG, eta, pt);
-            float sf_up = reader.eval_auto_bounds("up", BTagEntry::FLAV_UDSG, eta, pt);
-            float sf_down = reader.eval_auto_bounds("down", BTagEntry::FLAV_UDSG, eta, pt);
+            sf = reader.eval_auto_bounds("central", BTagEntry::FLAV_UDSG, eta, pt);
+            sf_up = reader.eval_auto_bounds("up", BTagEntry::FLAV_UDSG, eta, pt);
+            sf_down = reader.eval_auto_bounds("down", BTagEntry::FLAV_UDSG, eta, pt);
         }
         
         float sf, sf_up, sf_down;
