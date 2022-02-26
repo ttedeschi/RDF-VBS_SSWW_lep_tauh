@@ -1034,6 +1034,42 @@ RVec<float> muonScaleRes(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_phi, rvec_
     return result;
 }
 
+RVec<float> muonScaleRes_data(rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_phi, rvec_i Muon_charge, string era){
+    RVec<float> result;
+    RVec<float> pt_corr, pt_err;
+    RoccoR roccor;
+    
+    if (era == "2016") roccor = roccor_2016;
+    else if (era == "2017") roccor = roccor_2017;
+    else if (era == "2018") roccor = roccor_2018;
+    //else if (era == "2016aUL") roccor = roccor_2016aUL;
+    //else if (era == "2016bUL") roccor = roccor_2016bUL;
+    //else if (era == "2017UL") roccor = roccor_2017UL;
+    //else roccor = roccor_2018UL;
+    
+    for (int j = 0; j < Muon_pt.size(); j++){
+            //pt_corr.emplace_back(Muon_pt[j] * mk_safe(roccor.kScaleDT, Muon_charge[j], Muon_pt[j], Muon_eta[j], Muon_phi[j]));
+            pt_corr.emplace_back(Muon_pt[j] * roccor.kScaleDT(Muon_charge[j], Muon_pt[j], Muon_eta[j], Muon_phi[j]));
+            //pt_err.emplace_back(Muon_pt[j] * mk_safe(roccor.kScaleDTerror, Muon_charge[j], Muon_pt[j], Muonu_eta[j], Muon_phi[j]));
+            pt_err.emplace_back(Muon_pt[j] * roccor.kScaleDTerror(Muon_charge[j], Muon_pt[j], Muon_eta[j], Muon_phi[j]));
+    }
+    
+    RVec<float> pt_corr_up, pt_corr_down;
+    
+    for (int j = 0; j < Muon_pt.size(); j++){
+        pt_corr_up.emplace_back(max(pt_corr[j] + pt_err[j], float(0.0)));
+        pt_corr_down.emplace_back(max(pt_corr[j] - pt_err[j], float(0.0)));
+    }
+    
+    for (int j = 0; j < Muon_pt.size(); j++){
+        result.emplace_back(pt_corr[j]);
+        result.emplace_back(pt_corr_up[j]);
+        result.emplace_back(pt_corr_down[j]);
+    }
+    
+    return result;
+}
+
 RVec<float> getMatrixColumn(const RVec<RVec<float>> & matrix, int column_index){
     RVec<float> result;
     for (int i = 0; i < matrix.size(); i++) result.emplace_back(matrix[i][column_index]);
@@ -2200,3 +2236,10 @@ if isMC:
         f.write("fatJetCorrector = createJMECorrector(isMC="+str(isMC)+", dataYear=\""+str(sample.year)+"\", runPeriod='"+str(sample.runP)+"', jesUncert='All', applyHEMfix=True, jetType = 'AK8PFPuppi')\n")
 */
 
+RVec<float> ones(int n){
+    RVec<float> result;
+    for(int i; i<n; i++){
+        result.emplace_back(1.);
+    }
+    return result;
+}
