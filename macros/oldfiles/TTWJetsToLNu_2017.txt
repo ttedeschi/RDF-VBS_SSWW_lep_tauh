@@ -1,0 +1,8 @@
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/TTWJetsToLNu_2017/210420_101307/0000/tree_hadd_1.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/TTWJetsToLNu_2017/210420_101307/0000/tree_hadd_2.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/TTWJetsToLNu_2017/210420_101307/0000/tree_hadd_5.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/TTWJetsToLNu_2017/210420_101307/0000/tree_hadd_7.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/TTWJetsToLNu_2017/210420_101307/0000/tree_hadd_8.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/TTWJetsToLNu_2017/210420_101307/0000/tree_hadd_9.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/TTWJetsToLNu_2017/210420_101307/0000/tree_hadd_10.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/TTWJetsToLNu_2017/210420_101307/0000/tree_hadd_11.root

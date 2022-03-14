@@ -1,0 +1,2 @@
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToWWToTNMN_13TeV_MCFM701_pythia8/GluGluToWWToTNuMNu2017/210420_103036/0000/tree_hadd_1.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToWWToTNMN_13TeV_MCFM701_pythia8/GluGluToWWToTNuMNu2017/210420_103036/0000/tree_hadd_2.root

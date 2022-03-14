@@ -1,0 +1,4 @@
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/tZq_ll_4f_ckm_NLO_TuneCP5_13TeV-madgraph-pythia8/tZq_ll_4f_2018/210616_093034/0000/tree_hadd_16.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/tZq_ll_4f_ckm_NLO_TuneCP5_13TeV-madgraph-pythia8/tZq_ll_4f_2018/210616_093034/0000/tree_hadd_17.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/tZq_ll_4f_ckm_NLO_TuneCP5_13TeV-madgraph-pythia8/tZq_ll_4f_2018/210616_093034/0000/tree_hadd_18.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/tZq_ll_4f_ckm_NLO_TuneCP5_13TeV-madgraph-pythia8/tZq_ll_4f_2018/210616_093034/0000/tree_hadd_19.root

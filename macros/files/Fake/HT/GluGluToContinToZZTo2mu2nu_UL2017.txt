@@ -1,0 +1,13 @@
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/GluGluToContinToZZTo2mu2nu_TuneCP5_13TeV-mcfm701-pythia8/GluGluToContinToZZTo2mu2nu_UL2017_FakeHT/211228_000632/0000/tree_hadd_1.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/GluGluToContinToZZTo2mu2nu_TuneCP5_13TeV-mcfm701-pythia8/GluGluToContinToZZTo2mu2nu_UL2017_FakeHT/211228_000632/0000/tree_hadd_2.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/GluGluToContinToZZTo2mu2nu_TuneCP5_13TeV-mcfm701-pythia8/GluGluToContinToZZTo2mu2nu_UL2017_FakeHT/211228_000632/0000/tree_hadd_3.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/GluGluToContinToZZTo2mu2nu_TuneCP5_13TeV-mcfm701-pythia8/GluGluToContinToZZTo2mu2nu_UL2017_FakeHT/211228_000632/0000/tree_hadd_4.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/GluGluToContinToZZTo2mu2nu_TuneCP5_13TeV-mcfm701-pythia8/GluGluToContinToZZTo2mu2nu_UL2017_FakeHT/211228_000632/0000/tree_hadd_5.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/GluGluToContinToZZTo2mu2nu_TuneCP5_13TeV-mcfm701-pythia8/GluGluToContinToZZTo2mu2nu_UL2017_FakeHT/211228_000632/0000/tree_hadd_6.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/GluGluToContinToZZTo2mu2nu_TuneCP5_13TeV-mcfm701-pythia8/GluGluToContinToZZTo2mu2nu_UL2017_FakeHT/211228_000632/0000/tree_hadd_7.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/GluGluToContinToZZTo2mu2nu_TuneCP5_13TeV-mcfm701-pythia8/GluGluToContinToZZTo2mu2nu_UL2017_FakeHT/211228_000632/0000/tree_hadd_8.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/GluGluToContinToZZTo2mu2nu_TuneCP5_13TeV-mcfm701-pythia8/GluGluToContinToZZTo2mu2nu_UL2017_FakeHT/211228_000632/0000/tree_hadd_9.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/GluGluToContinToZZTo2mu2nu_TuneCP5_13TeV-mcfm701-pythia8/GluGluToContinToZZTo2mu2nu_UL2017_FakeHT/211228_000632/0000/tree_hadd_10.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/GluGluToContinToZZTo2mu2nu_TuneCP5_13TeV-mcfm701-pythia8/GluGluToContinToZZTo2mu2nu_UL2017_FakeHT/211228_000632/0000/tree_hadd_11.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/GluGluToContinToZZTo2mu2nu_TuneCP5_13TeV-mcfm701-pythia8/GluGluToContinToZZTo2mu2nu_UL2017_FakeHT/211228_000632/0000/tree_hadd_12.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/GluGluToContinToZZTo2mu2nu_TuneCP5_13TeV-mcfm701-pythia8/GluGluToContinToZZTo2mu2nu_UL2017_FakeHT/211228_000632/0000/tree_hadd_13.root

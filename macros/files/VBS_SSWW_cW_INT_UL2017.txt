@@ -1,0 +1,3 @@
+root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS_PG/VBS_SSWW_cW_INT_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_cW_INT_UL2017/211203_153807/0000/tree_hadd_1.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS_PG/VBS_SSWW_cW_INT_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_cW_INT_UL2017/211203_153807/0000/tree_hadd_2.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS_PG/VBS_SSWW_cW_INT_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_cW_INT_UL2017/211203_153807/0000/tree_hadd_3.root

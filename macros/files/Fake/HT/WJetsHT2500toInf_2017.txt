@@ -1,0 +1,5 @@
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/WJetsHT2500toInf_2017_FakeHT/210420_152239/0000/tree_hadd_7.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/WJetsHT2500toInf_2017_FakeHT/210420_152239/0000/tree_hadd_9.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/WJetsHT2500toInf_2017_FakeHT/210420_152239/0000/tree_hadd_27.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/WJetsHT2500toInf_2017_FakeHT/210420_152239/0000/tree_hadd_30.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/WJetsHT2500toInf_2017_FakeHT/210420_152239/0000/tree_hadd_1.root

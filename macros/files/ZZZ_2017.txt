@@ -1,2 +1,2 @@
-root://cms-xrd-global.cern.ch//store/user/ttedesch/VBS_PG/ZZZ_TuneCP5_13TeV-amcatnlo-pythia8/ZZZ_2017/210908_232745/0000/tree_hadd_1.root
-root://cms-xrd-global.cern.ch//store/user/ttedesch/VBS_PG/ZZZ_TuneCP5_13TeV-amcatnlo-pythia8/ZZZ_2017/210908_232745/0000/tree_hadd_2.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/RRVBS/ZZZ_TuneCP5_13TeV-amcatnlo-pythia8/ZZZ_2017/220216_103120/0000/tree_hadd_1.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/RRVBS/ZZZ_TuneCP5_13TeV-amcatnlo-pythia8/ZZZ_2017/220216_103120/0000/tree_hadd_2.root

@@ -1,0 +1,2 @@
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/VHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8/VHToNonbb_2018/210616_103841/0000/tree_hadd_1.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/VHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8/VHToNonbb_2018/210616_103841/0000/tree_hadd_2.root

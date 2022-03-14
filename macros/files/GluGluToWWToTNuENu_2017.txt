@@ -1,2 +1,2 @@
-root://cms-xrd-global.cern.ch//store/user/ttedesch/VBS_PG/GluGluToWWToTNEN_13TeV_MCFM701_pythia8/GluGluToWWToTNuENu_2017/210908_230743/0000/tree_hadd_1.root
-root://cms-xrd-global.cern.ch//store/user/ttedesch/VBS_PG/GluGluToWWToTNEN_13TeV_MCFM701_pythia8/GluGluToWWToTNuENu_2017/210908_230743/0000/tree_hadd_2.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/RRVBS/GluGluToWWToTNEN_13TeV_MCFM701_pythia8/GluGluToWWToTNuENu_2017/220216_100913/0000/tree_hadd_1.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/RRVBS/GluGluToWWToTNEN_13TeV_MCFM701_pythia8/GluGluToWWToTNuENu_2017/220216_100913/0000/tree_hadd_2.root
