@@ -233,11 +233,19 @@ float GetInvMassNoIndex(float pt1, float eta1, float phi1, float mass1, float pt
     return (p1 + p2).M();
 }
 
+float GetInvMassNoIndex3(float pt1, float eta1, float phi1, float mass1, float pt2, float eta2, float phi2, float mass2, float pt3, float eta3, float phi3, float mass3)
+{
+    ROOT::Math::PtEtaPhiMVector p1(pt1, eta1, phi1, mass1);
+    ROOT::Math::PtEtaPhiMVector p2(pt2, eta2, phi2, mass2);
+    ROOT::Math::PtEtaPhiMVector p3(pt3, eta3, phi3, mass3);
+    return (p1 + p2 + p3).M();
+}
+
 float GetInvMassNoIndex4(float pt1, float eta1, float phi1, float mass1, float pt2, float eta2, float phi2, float mass2, float pt3, float eta3, float phi3, float mass3, float pt4, float eta4, float phi4, float mass4)
 {
     ROOT::Math::PtEtaPhiMVector p1(pt1, eta1, phi1, mass1);
     ROOT::Math::PtEtaPhiMVector p2(pt2, eta2, phi2, mass2);
-    ROOT::Math::PtEtaPhiMVector p3(pt3, eta3, phi3, mass4);
+    ROOT::Math::PtEtaPhiMVector p3(pt3, eta3, phi3, mass3);
     ROOT::Math::PtEtaPhiMVector p4(pt4, eta4, phi3, mass4);
     return (p1 + p2 + p3 + p4).M();
 }
@@ -1271,6 +1279,7 @@ unordered_set<int> dataEle_flags({212, 213, 214, 215, 216, 217, 218, 438, 439, 4
 
 unordered_set<int> dataMu_flags({201, 202, 203, 204, 205, 206, 207, 429, 430, 431, 432, 433});
 
+/*
 unordered_map<int,float> xsecs({
     {268,0.1191},
     {19,0.1191},
@@ -1724,7 +1733,7 @@ unordered_map<int,float> xsecs({
     {398,4.078},
     {64,0.1191},
     });
-    
+  
 unordered_map<int,float> Nevents({
     {268,1},
     {19,1},
@@ -2178,7 +2187,121 @@ unordered_map<int,float> Nevents({
     {398,4691915},
     {64,1},
 });
-        
+*/
+
+unordered_map<int,float> xsecs({
+{130,88.287},
+{193,0.1703},
+{194,0.2086},
+{195,0.008039},
+{196,0.05565},
+{197,0.013989},
+{198,0.2147},
+{165,4.078},
+{166,0.5104},
+{167,0.2432},
+{168,0.4316},
+{169,0.2149},
+{170,0.07358},
+{115,0.5644},
+{116,0.0004536},
+{117,0.008348},
+{118,14.93},
+{119,3.185},
+{120,3.185},
+{121,14.93},
+{122,3.185},
+{123,1.404},
+{124,1.404},
+{125,1.404},
+{172,11.08},
+{173,7.09644444444},
+{174,7.09644444444},
+{175,7.09644444444},
+{176,7.09644444444},
+{177,7.09644444444},
+{178,7.09644444444},
+{179,7.09644444444},
+{180,7.09644444444},
+{181,7.09644444444},
+{182,34.91},
+{183,1.0315},
+{185,0.0118},
+{186,2.7757},
+{187,0.0896},
+{188,0.237},
+{189,0.212},
+{190,0.952},
+{151,877.8},
+{152,304.4},
+{153,111.5},
+{154,44.03},
+{155,81880.0},
+{3,0.002014},
+{4,0.01036},
+{5,0.01595},
+{162,0.1097},
+{163,0.5439},
+{199,47.13},
+{1,0.01538},   
+    });
+   
+unordered_map<int,float> Nevents({
+{193,968000},
+{194,232300},
+{195,1944000},
+{196,250000},
+{197,250000},
+{198,1000000},
+{165,4958713},
+{166,8098000},
+{167,6730495},
+{168,811306},
+{169,1771042},
+{170,2471659},
+{1,128500},
+{162,499800},
+{163,700000},
+{115,7547567},
+{116,3256700},
+{117,3495100},
+{118,500000},
+{119,705800},
+{120,55000},
+{121,493000},
+{122,408000},
+{123,353600},
+{124,923500},
+{125,485420},
+{199,3807850},
+{3,1032500},
+{4,1976900},
+{5,1977800},
+{151,27229712},
+{152,8723495},
+{153,172167},
+{154,2461611},
+{155,9586029},
+{172,2000000},
+{173,200000},
+{174,200000},
+{175,200000},
+{176,200000},
+{177,200000},
+{178,200000},
+{179,200000},
+{180,200000},
+{181,200000},
+{182,7794186},
+{183,953600},
+{185,988000},
+{186,2921180},
+{187,500000},
+{188,9725000},
+{189,9999987},
+{190,918508},
+{130,1644828},
+});
 
 bool isMC(int SampleFlag){
     bool is_in = data_flags.find(SampleFlag) != data_flags.end();
@@ -2207,11 +2330,37 @@ float getNevents(int Sample, bool IsMC){
     }
 }
 
-//TMVA::Experimental::RBDT<> bdt("SMxgb", "https://ttedesch.web.cern.ch/ttedesch/SMxgb.root");
-TMVA::Experimental::RBDT<> bdt("xgb_SM_v100", "https://ttedesch.web.cern.ch/ttedesch/VBS_ML_v4/xgb_SM_v100.root");
 
-float SMinference(float m_jj, float m_jjtaulep, float m_taulep, float mT_lep_MET, float leadjet_pt, float subleadjet_pt, float tau_mass, float MET_pt){
-    auto y1 = bdt.Compute({m_jj, m_jjtaulep, m_taulep, mT_lep_MET, leadjet_pt, subleadjet_pt, tau_mass, MET_pt});
+///// old
+////questa è vecchia TMVA::Experimental::RBDT<> bdt("SMxgb", "https://ttedesch.web.cern.ch/ttedesch/SMxgb.root");
+//TMVA::Experimental::RBDT<> bdt("xgb_SM_v100", "https://ttedesch.web.cern.ch/ttedesch/VBS_ML_v4/xgb_SM_v100.root");
+//float SMinference(float m_jj, float m_jjtaulep, float m_taulep, float mT_lep_MET, float leadjet_pt, float subleadjet_pt, float tau_mass, float MET_pt){
+//    auto y1 = bdt.Compute({m_jj, m_jjtaulep, m_taulep, mT_lep_MET, leadjet_pt, subleadjet_pt, tau_mass, MET_pt});
+//    return y1[0];
+//}
+
+int CountBJets(rvec_f Jet_pt, rvec_f Jet_eta, rvec_f Jet_btagDeepFlavB){
+    int nb=0;
+    for (int i = 0; i < Jet_pt.size(); i++) {
+        if (Jet_btagDeepFlavB[i]>=BTAG_WP_VALUE && Jet_pt[i]>BTAG_PT_CUT && abs(Jet_eta[i])<BTAG_ETA_CUT) nb++;
+    }
+    return nb;
+}
+
+float taujet_RelPt(int selectedtau_jetIdx, float selectedtau_pt, rvec_f Jet_pt){
+    if (selectedtau_jetIdx == -1) return -999.;
+    else return Jet_pt[selectedtau_jetIdx]/selectedtau_pt;
+}
+
+float taujet_deltaPhi(int selectedtau_jetIdx, float selectedtau_phi, rvec_f Jet_phi){
+    if (selectedtau_jetIdx == -1) return -999.;
+    else return deltaPhi(selectedtau_phi, Jet_phi[selectedtau_jetIdx]);
+}
+
+//to_keep = ['leadjet_DeepFlv_b', 'subleadjet_DeepFlv_b', 'event_Zeppenfeld_over_deltaEta_jj', 'taujet_relpt', 'm_o1', 'event_RT', 'taujet_deltaPhi', 'nJets', 'mT_lep_MET', 'm_jjtau', 'm_1T', 'nBJets', 'subleadjet_pt', 'm_jjtaulep', 'm_jj', 'leadjet_pt']
+TMVA::Experimental::RBDT<> bdt("xgb_SM_v100", "https://ttedesch.web.cern.ch/ttedesch/VBS_ML_v4/optimized_model_SM_clean.root");
+float SMinference(float leadjet_DeepFlv_b, float subleadjet_DeepFlv_b, float event_Zeppenfeld_over_deltaEta_jj, float taujet_relpt, float m_o1, float event_RT, float taujet_deltaPhi, float nJets, float mT_lep_MET, float m_jjtau, float m_1T, float nBJets, float subleadjet_pt, float m_jjtaulep, float m_jj, float leadjet_pt){
+    auto y1 = bdt.Compute({leadjet_DeepFlv_b, subleadjet_DeepFlv_b, event_Zeppenfeld_over_deltaEta_jj, taujet_relpt, m_o1, event_RT, taujet_deltaPhi, nJets, mT_lep_MET, m_jjtau, m_1T, nBJets, subleadjet_pt, m_jjtaulep, m_jj, leadjet_pt});
     return y1[0];
 }
 
