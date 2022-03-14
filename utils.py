@@ -152,7 +152,18 @@ def stackplot(region, feature, final_state, folder, h, blinded = False):
 
     #if blinded == False:
     hdata = h[region]['Data'][feature._name][final_state]
+    #nbins = hdata.GetNbinsX()
+    #hdata.SetBinContent(1, hdata.GetBinContent(0) + hdata.GetBinContent(1))
+    #hdata.SetBinError(1, math.sqrt(pow(hdata.GetBinError(0),2) + pow(hdata.GetBinError(1),2)))
+    #hdata.SetBinContent(nbins, hdata.GetBinContent(nbins) + hdata.GetBinContent(nbins+1))
+    #hdata.SetBinError(nbins, math.sqrt(pow(hdata.GetBinError(nbins),2) + pow(hdata.GetBinError(nbins+1),2)))
+    
     hsig = h[region]['VBS_ssWW'][feature._name][final_state]
+    #nbins = hsig.GetNbinsX()
+    #hsig.SetBinContent(1, hsig.GetBinContent(0) + hsig.GetBinContent(1))
+    #hsig.SetBinError(1, math.sqrt(pow(hsig.GetBinError(0),2) + pow(hsig.GetBinError(1),2)))
+    #hsig.SetBinContent(nbins, hsig.GetBinContent(nbins) + hsig.GetBinContent(nbins+1))
+    #hsig.SetBinError(nbins, math.sqrt(pow(hsig.GetBinError(nbins),2) + pow(hsig.GetBinError(nbins+1),2)))
 
     if final_state == "etau":
         lep_tag = "e+"
@@ -176,17 +187,27 @@ def stackplot(region, feature, final_state, folder, h, blinded = False):
     stack = ROOT.THStack(stackname, feature._name)
     leg_stack = ROOT.TLegend(0.32,0.58,0.93,0.87)
 
-    colors = [(222, 90, 106), (155, 152, 204), (208, 240, 193), (122, 130, 106), (200, 131, 274), (218, 190, 193), (222, 10, 106), (122, 90, 106), (22,10,67), (102,100,67), (2,10,167), (22,10,67), (22,10,67), (32,121,100), (65,54,63), (132,121,100), (4,11,100), (100,1,10), (50,79,88)]
+    #colors = [(222, 90, 106), (155, 152, 204), (208, 240, 193), (122, 130, 106), (200, 131, 274), (218, 190, 193), (222, 10, 106), (122, 90, 106), (22,10,67), (102,100,67), (2,10,167), (22,10,67), (22,10,67), (32,121,100), (65,54,63), (132,121,100), (4,11,100), (100,1,10), (50,79,88)]
+    colors = {"Other": ROOT.kOrange-4, "tVX": ROOT.kCyan-7, "QCD_ssWW": ROOT.kPink+1, "Vgamma": ROOT.kSpring+7, "ZZ": ROOT.kViolet-9, "WZ": ROOT.kYellow-4, "VBS_ssWW": ROOT.kRed, "DY_jets": ROOT.kRed-9, "Wrong_Sign": ROOT.kGreen-10, "ttbar DiLep": ROOT.kAzure-9, "Fakes": ROOT.kGray}
 
+    
     i = 0
     for v in h[region].keys():
         if v == 'Data' or v == 'VBS_ssWW':
             continue
         h_ = h[region][v][feature._name][final_state]
+        #nbins = h_.GetNbinsX()
+        #h_.SetBinContent(1, h_.GetBinContent(0) + h_.GetBinContent(1))
+        #h_.SetBinError(1, math.sqrt(pow(h_.GetBinError(0),2) + pow(h_.GetBinError(1),2)))
+        #h_.SetBinContent(nbins, h_.GetBinContent(nbins) + h_.GetBinContent(nbins+1))
+        #h_.SetBinError(nbins, math.sqrt(pow(h_.GetBinError(nbins),2) + pow(h_.GetBinError(nbins+1),2)))
         h_.SetLineWidth(1)
         h_.SetLineColor(1)
-        color = colors[i]
-        h_.SetFillColor(ROOT.TColor.GetColor(*color))
+        #color = colors[i]
+        color = colors[v]
+        #h_.SetFillColor(ROOT.TColor.GetColor(*color))
+        h_.SetFillColor(color)
+        h_.SetLineColor(color)
         stack.Add(h_.GetValue())
         leg_stack.AddEntry(h_.GetValue(), v, "f")
         i +=1
@@ -256,7 +277,7 @@ def stackplot(region, feature, final_state, folder, h, blinded = False):
         else:
             ytitle = "Events / a.u"
 
-    print(stack)
+    #print(stack)
     stack.GetYaxis().SetTitle(ytitle)
     stack.GetYaxis().SetTitleFont(42)
     stack.GetXaxis().SetLabelOffset(1.8)
@@ -267,7 +288,9 @@ def stackplot(region, feature, final_state, folder, h, blinded = False):
     stack.SetTitle("")
 
     #hsig.Scale(1000)
-    print("VBS_ssWW")
+    #print("VBS_ssWW")
+    hsig.SetLineColor(colors["VBS_ssWW"])
+    hsig.SetLineWidth(2)
     hsig.Draw("hist same")
     leg_stack.AddEntry(hsig.GetValue(), "VBS_ssWW", "l")
 
@@ -276,19 +299,21 @@ def stackplot(region, feature, final_state, folder, h, blinded = False):
     h_err.SetFillStyle(3154)
     h_err.SetMarkerSize(0)
     h_err.SetFillColor(ROOT.kGray+2)
+    #h_err.SetFillColor(colors[v])
     h_err.Draw("e2same0")
     leg_stack.AddEntry(h_err, "Stat. Unc.", "f")
 
     if blinded == False:
-        print("Data")
+        #print("Data")
         leg_stack.AddEntry(hdata.GetValue(), "Data", "ep")
     leg_stack.Draw("same")
 
     if blinded == False:
         # Draw data
         hdata.SetMarkerStyle(20)
-        hdata.SetMarkerSize(1.2)
-        hdata.SetLineWidth(2)
+        #hdata.SetMarkerSize(1.2)
+        hdata.SetMarkerSize(0.9)
+        #hdata.SetLineWidth(2)
         hdata.SetLineColor(ROOT.kBlack)
         #hdata.Draw("E SAME")
         hdata.Draw("eSAMEpx0")
@@ -302,7 +327,7 @@ def stackplot(region, feature, final_state, folder, h, blinded = False):
     CMS_lumi.writeExtraText = 1
     CMS_lumi.extraText = ""
 
-    print("lep_tag: ", lep_tag)
+    #print("lep_tag: ", lep_tag)
     lumi_sqrtS = "%s fb^{-1}  (13 TeV)"%(lumi)
 
     iPeriod = 0
@@ -355,8 +380,9 @@ def stackplot(region, feature, final_state, folder, h, blinded = False):
     else:
         xmin = feature._xmin[0]
     f1 = ROOT.TLine(xmin, 1., feature._xmax,1.)
-    xmin = 0
-    xmax = 2000
+    #xmin = 0
+    #xmax = 2000
+    xmax = feature._xmax
     f1 = ROOT.TLine(xmin, 1., xmax,1.)
     f1.SetLineColor(ROOT.kBlack)
     f1.SetLineStyle(ROOT.kDashed)
