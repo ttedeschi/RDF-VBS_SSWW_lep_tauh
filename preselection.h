@@ -65,7 +65,8 @@ RVec<float> MHT_pt_phi(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_
     }
     //RVec<int> goodjets(nJets)
     for (size_t i = 0; i < Jet_pt.size(); i++) {
-        if (Jet_pt[i] > 40) continue;
+        //if (Jet_pt[i] > 40) continue;
+        if (Jet_pt[i] < 40) continue;
         if (Jet_muonIdx1[i] != -1 and Jet_muonIdx1[i] < nJet){
             if (Muon_pt[Jet_muonIdx1[i]] > 20 && Muon_miniPFRelIso_all[Jet_muonIdx1[i]] < 0.2) continue;  //prefer the muon
         }
