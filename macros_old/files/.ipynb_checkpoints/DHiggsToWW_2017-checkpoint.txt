@@ -1,0 +1,8 @@
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_150_mZp_2000_TuneCP5_13TeV-madgraph-pythia8/DHiggsToWW_2017/210514_175208/0000/tree_hadd_1.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_150_mZp_2000_TuneCP5_13TeV-madgraph-pythia8/DHiggsToWW_2017/210514_175208/0000/tree_hadd_2.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_150_mZp_2000_TuneCP5_13TeV-madgraph-pythia8/DHiggsToWW_2017/210514_175208/0000/tree_hadd_3.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_150_mZp_2000_TuneCP5_13TeV-madgraph-pythia8/DHiggsToWW_2017/210514_175208/0000/tree_hadd_4.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_150_mZp_2000_TuneCP5_13TeV-madgraph-pythia8/DHiggsToWW_2017/210514_175208/0000/tree_hadd_5.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_150_mZp_2000_TuneCP5_13TeV-madgraph-pythia8/DHiggsToWW_2017/210514_175208/0000/tree_hadd_6.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_150_mZp_2000_TuneCP5_13TeV-madgraph-pythia8/DHiggsToWW_2017/210514_175208/0000/tree_hadd_7.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_150_mZp_2000_TuneCP5_13TeV-madgraph-pythia8/DHiggsToWW_2017/210514_175208/0000/tree_hadd_8.root

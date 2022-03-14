@@ -1,0 +1,4 @@
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8/QCDHT_700to1000_2017/210321_154617/0000/tree_hadd_2.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8/QCDHT_700to1000_2017/210321_154617/0000/tree_hadd_6.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8/QCDHT_700to1000_2017/210321_154617/0000/tree_hadd_8.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8/QCDHT_700to1000_2017/210321_154617/0000/tree_hadd_9.root
