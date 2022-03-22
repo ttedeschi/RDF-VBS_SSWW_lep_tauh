@@ -2312,7 +2312,8 @@ bool isMC(int SampleFlag){
 float getLumi(int Year, bool IsMC){
     if (IsMC == false) return 1.;
     else if(Year == 2016) return -999;
-    else if (Year == 2017) return 41.48;
+    //else if (Year == 2017) return 41.48;
+    else if (Year == 2017) return 41.54;
     else return 59.83;
 }
 
