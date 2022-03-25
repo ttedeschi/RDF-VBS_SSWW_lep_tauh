@@ -863,8 +863,9 @@ RVec<float> PrefCorr(rvec_f Photon_pt, rvec_f Photon_eta, rvec_i Photon_jetIdx, 
 
     float prefw = 1.0;
 
-    vector<int> v{0,-1,1};
+    vector<int> v{0,1,-1};
     for (int j = 0; j < v.size(); j++){
+        prefw = 1.0; // new
         int s = v[j];
         for(int i = 0; i < Jet_pt.size(); i++){
             float jetpf = 1.0;
@@ -878,9 +879,7 @@ RVec<float> PrefCorr(rvec_f Photon_pt, rvec_f Photon_eta, rvec_i Photon_jetIdx, 
         }
         //Then loop over all photons/electrons not associated to jets
         prefw = prefw * EGvalue(Photon_pt, Photon_eta, Photon_jetIdx, Photon_electronIdx, Electron_pt, Electron_eta, Electron_jetIdx, Electron_photonIdx, -1, s);
-
         result[j] = prefw;
-
     }
     return result;
 
