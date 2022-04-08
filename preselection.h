@@ -4,6 +4,9 @@
 /// `ROOT.gInterpreter.Declare()` function.
 ///
 
+#ifndef PRESELECTION_H
+#define PRESELECTION_H
+
 #include "ROOT/RDataFrame.hxx"
 #include "ROOT/RVec.hxx"
 #include "TCanvas.h"
@@ -44,6 +47,45 @@ using rvec_b = const RVec<bool> &;
 //  fclose(file);
 //  return 0;
 //}
+
+bool Pass_min_req(rvec_b Muon_looseId, rvec_f Muon_pt, rvec_f Muon_pfRelIso04_all, rvec_f Muon_eta, rvec_b Electron_mvaFall17V2Iso_WPL, rvec_f Electron_jetRelIso, rvec_f Electron_pt, rvec_f Electron_eta, rvec_i Tau_idDeepTau2017v2p1VSjet, rvec_i Tau_idDeepTau2017v2p1VSe, rvec_i Tau_idDeepTau2017v2p1VSmu, rvec_f Tau_pt, rvec_f Tau_eta, rvec_f Jet_pt, rvec_f Jet_eta, rvec_i Jet_puId)
+{
+    bool loose_muon = false;
+    bool loose_ele = false;
+    bool loose_tau = false;
+    bool loose_jet = false;
+    for(int i = 0; i < Muon_pt.size(); i++){
+        if(Muon_looseId[i] && Muon_pt[i] > 30. && Muon_pfRelIso04_all[i] < 1. && Muon_pfRelIso04_all[i] >=0. && abs(Muon_eta[i]) < 2.4){
+            loose_muon = true;
+            break;
+        }
+    }
+    if(loose_muon == false){
+        for(int i = 0; i < Electron_pt.size(); i++){
+            if(Electron_mvaFall17V2Iso_WPL[i] && Electron_jetRelIso[i] < 1. && Electron_jetRelIso[i] >= 0. && Electron_pt[i] > 30. && ((abs(Electron_eta[i]) < 1.4442) || (abs(Electron_eta[i]) > 1.566 && abs(Electron_eta[i])< 2.5))){
+                loose_ele = true;
+                break;
+            }
+        }
+    }
+    if(loose_muon || loose_ele){
+        for(int i = 0; i < Tau_pt.size(); i++){
+            if(Tau_idDeepTau2017v2p1VSjet[i] >= 2 && Tau_idDeepTau2017v2p1VSe[i] >= 4 && Tau_idDeepTau2017v2p1VSmu[i] >= 8 && Tau_pt[i] > 30. && abs(Tau_eta[i]) < 2.3){
+                loose_tau = true;
+                break;
+            }
+        }
+    }
+    if((loose_muon || loose_ele) && loose_tau){
+        for(int i = 0; i < Jet_pt.size(); i++){
+            if(Jet_pt[i] > 30 and abs(Jet_eta[i]) < 5. and Jet_pt[i] > 30. and (Jet_pt[i] >= 50. or (Jet_pt[i] < 50. and Jet_puId[i] >= 7))){
+                loose_jet = true;
+                break;
+            }
+        }
+    }
+    return (loose_muon || loose_ele) && loose_tau && loose_jet;
+}
 
 RVec<float> MHT_pt_phi(rvec_f Electron_pt, rvec_f Electron_eta, rvec_f Electron_phi, rvec_f Electron_mass, rvec_f Electron_miniPFRelIso_all, rvec_f Muon_pt, rvec_f Muon_eta, rvec_f Muon_phi, rvec_f Muon_mass, rvec_f Muon_miniPFRelIso_all, rvec_f Jet_pt, rvec_f Jet_eta, rvec_f Jet_phi, rvec_f Jet_mass, rvec_i Jet_muonIdx1, rvec_i Jet_muonIdx2, rvec_i Jet_electronIdx1, rvec_i Jet_electronIdx2, int nJet){
     
@@ -2243,3 +2285,5 @@ RVec<float> ones(int n){
     }
     return result;
 }
+
+#endif

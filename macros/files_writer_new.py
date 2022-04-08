@@ -26,7 +26,12 @@ if not(opt.dat in sample_dict.keys()):
 dataset = sample_dict[opt.dat]
 samples = []
 
-if dataset.components is not None:#hasattr(dataset, 'components'): # How to check whether this exists or not
+if "UL" in opt.dat:
+    hascomp = hasattr(dataset, "components")
+else:
+    hascomp = dataset.components is not None
+
+if hascomp:
     samples = [sample for sample in dataset.components]# Method exists and was used.
 else:
     print "You are launching a single sample and not an entire bunch of samples"
@@ -35,7 +40,7 @@ else:
 path = ".."
 
 for sample in samples:
-    dirpath = "./files/"
+    dirpath = "./files_new/"
     crabdir = "/crab_" + str(sample.label)
     if opt.fake:
         if "DataEleB" in sample.label or "DataMuB" in sample.label:

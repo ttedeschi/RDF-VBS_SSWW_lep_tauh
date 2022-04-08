@@ -1,6 +1,6 @@
-root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS_PG/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/TTGJets_UL2017/211203_144721/0000/tree_hadd_1.root
-root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS_PG/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/TTGJets_UL2017/211203_144721/0000/tree_hadd_2.root
-root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS_PG/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/TTGJets_UL2017/211203_144721/0000/tree_hadd_3.root
-root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS_PG/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/TTGJets_UL2017/211203_144721/0000/tree_hadd_4.root
-root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS_PG/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/TTGJets_UL2017/211203_144721/0000/tree_hadd_5.root
-root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS_PG/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/TTGJets_UL2017/211203_144721/0000/tree_hadd_6.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/TTGJets_UL2017/220227_180522/0000/tree_hadd_1.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/TTGJets_UL2017/220227_180522/0000/tree_hadd_2.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/TTGJets_UL2017/220227_180522/0000/tree_hadd_3.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/TTGJets_UL2017/220227_180522/0000/tree_hadd_4.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/TTGJets_UL2017/220227_180522/0000/tree_hadd_5.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/TTGJets_UL2017/220227_180522/0000/tree_hadd_6.root

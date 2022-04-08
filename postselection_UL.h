@@ -139,21 +139,21 @@ TH2F *Btag_eff_UL2017_h_udsg = (TH2F *) eff_udsg->CreateHistogram();
 
 //TFile *FR_vsjet2_vsmuT_ZZ = TFile::Open(TString(remote_storage) + TString("FR_vsjet2_vsmuT_ZZ.root"));
 TFile *FR_vsjet2_vsmuT_ZZ = TFile::Open(TString(remote_storage) + TString("FR_vsjet2_UL2017.root"));
-TH2F *FR_vsjet2_vsmuT_ZZ_histo_ele = (TH2F*)FR_vsjet2_vsmuT_ZZ->Get("hFRDataeledif");
-TH2F *FR_vsjet2_vsmuT_ZZ_histo_mu = (TH2F*)FR_vsjet2_vsmuT_ZZ->Get("hFRDatamudif");
-TH2F *FR_vsjet2_vsmuT_ZZ_histo_tau = (TH2F*)FR_vsjet2_vsmuT_ZZ->Get("hFRDatataudif");
+TH2F *FR_vsjet2_vsmuT_ZZ_histo_ele = (TH2F*)FR_vsjet2_vsmuT_ZZ->Get("FakeRatio_Electron");
+TH2F *FR_vsjet2_vsmuT_ZZ_histo_mu = (TH2F*)FR_vsjet2_vsmuT_ZZ->Get("FakeRatio_Muon");
+TH2F *FR_vsjet2_vsmuT_ZZ_histo_tau = (TH2F*)FR_vsjet2_vsmuT_ZZ->Get("FakeRatio_Tau");
                                         
 //TFile *FR_vsjet4_vsmuT_ZZ = TFile::Open(TString(remote_storage) + TString("FR_vsjet4_vsmuT_ZZ.root"));
 TFile *FR_vsjet4_vsmuT_ZZ = TFile::Open(TString(remote_storage) + TString("FR_vsjet4_UL2017.root"));
-TH2F *FR_vsjet4_vsmuT_ZZ_histo_ele = (TH2F*)FR_vsjet4_vsmuT_ZZ->Get("hFRDataeledif");
-TH2F *FR_vsjet4_vsmuT_ZZ_histo_mu = (TH2F*)FR_vsjet4_vsmuT_ZZ->Get("hFRDatamudif");
-TH2F *FR_vsjet4_vsmuT_ZZ_histo_tau = (TH2F*)FR_vsjet4_vsmuT_ZZ->Get("hFRDatataudif");
+TH2F *FR_vsjet4_vsmuT_ZZ_histo_ele = (TH2F*)FR_vsjet4_vsmuT_ZZ->Get("FakeRatio_Electron");
+TH2F *FR_vsjet4_vsmuT_ZZ_histo_mu = (TH2F*)FR_vsjet4_vsmuT_ZZ->Get("FakeRatio_Muon");
+TH2F *FR_vsjet4_vsmuT_ZZ_histo_tau = (TH2F*)FR_vsjet4_vsmuT_ZZ->Get("FakeRatio_Tau");
 
 //TFile *FR_vsjet8_vsmuT_ZZ = TFile::Open(TString(remote_storage) + TString("FR_vsjet4_vsmuT_ZZ.root"));
 TFile *FR_vsjet8_vsmuT_ZZ = TFile::Open(TString(remote_storage) + TString("FR_vsjet8_UL2017.root"));
-TH2F *FR_vsjet8_vsmuT_ZZ_histo_ele = (TH2F*)FR_vsjet8_vsmuT_ZZ->Get("hFRDataeledif");
-TH2F *FR_vsjet8_vsmuT_ZZ_histo_mu = (TH2F*)FR_vsjet8_vsmuT_ZZ->Get("hFRDatamudif");
-TH2F *FR_vsjet8_vsmuT_ZZ_histo_tau = (TH2F*)FR_vsjet8_vsmuT_ZZ->Get("hFRDatataudif");
+TH2F *FR_vsjet8_vsmuT_ZZ_histo_ele = (TH2F*)FR_vsjet8_vsmuT_ZZ->Get("FakeRatio_Electron");
+TH2F *FR_vsjet8_vsmuT_ZZ_histo_mu = (TH2F*)FR_vsjet8_vsmuT_ZZ->Get("FakeRatio_Muon");
+TH2F *FR_vsjet8_vsmuT_ZZ_histo_tau = (TH2F*)FR_vsjet8_vsmuT_ZZ->Get("FakeRatio_Tau");
 
 //std::map<string, std::map<string, float> > WP_btagger = {
 //    { "CSVv2", {{"L",0.5803},{"M", 0.8838},{"T", 0.9693}}},
@@ -1727,16 +1727,16 @@ unordered_map<int,float> Nevents({
 {240,1978000},
 {241,1952000},
 {242,1902000},
-{373,0},
-{374,0},
-{375,0},
-{376,0},
-{377,0},
-{351,0},
-{352,0},
-{353,0},
-{354,0},
-{355,0},
+{373,1},
+{374,1},
+{375,1},
+{376,1},
+{377,1},
+{351,1},
+{352,1},
+{353,1},
+{354,1},
+{355,1},
 });
 
 bool isMC(int SampleFlag){

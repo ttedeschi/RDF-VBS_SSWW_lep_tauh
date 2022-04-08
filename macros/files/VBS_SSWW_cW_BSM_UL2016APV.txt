@@ -1,6 +1,6 @@
-root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS_PG/VBS_SSWW_cW_BSM_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_cW_BSM_UL2016APV/211206_143416/0000/tree_hadd_1.root
-root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS_PG/VBS_SSWW_cW_BSM_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_cW_BSM_UL2016APV/211206_143416/0000/tree_hadd_2.root
-root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS_PG/VBS_SSWW_cW_BSM_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_cW_BSM_UL2016APV/211206_143416/0000/tree_hadd_3.root
-root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS_PG/VBS_SSWW_cW_BSM_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_cW_BSM_UL2016APV/211206_143416/0000/tree_hadd_4.root
-root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS_PG/VBS_SSWW_cW_BSM_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_cW_BSM_UL2016APV/211206_143416/0000/tree_hadd_5.root
-root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS_PG/VBS_SSWW_cW_BSM_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_cW_BSM_UL2016APV/211206_143416/0000/tree_hadd_6.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS/VBS_SSWW_cW_BSM_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_cW_BSM_UL2016APV/220227_161411/0000/tree_hadd_1.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS/VBS_SSWW_cW_BSM_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_cW_BSM_UL2016APV/220227_161411/0000/tree_hadd_2.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS/VBS_SSWW_cW_BSM_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_cW_BSM_UL2016APV/220227_161411/0000/tree_hadd_3.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS/VBS_SSWW_cW_BSM_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_cW_BSM_UL2016APV/220227_161411/0000/tree_hadd_4.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS/VBS_SSWW_cW_BSM_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_cW_BSM_UL2016APV/220227_161411/0000/tree_hadd_5.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS/VBS_SSWW_cW_BSM_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_cW_BSM_UL2016APV/220227_161411/0000/tree_hadd_6.root

@@ -145,7 +145,292 @@ def CMS_lumi(pad,  lumi_sqrtS,  iPosX , lepText):
 import ROOT
 import os
     
-def stackplot(region, feature, final_state, folder, h, blinded = False):
+def stackplot(region, feature, final_state, folder, h, blinded = False, variation = "nominal", var_type = ""):
+    
+    print(region)
+
+
+    #if blinded == False:
+    hdata = h[region]['Data'][feature._name][final_state]["nominal"]
+    #nbins = hdata.GetNbinsX()
+    #hdata.SetBinContent(1, hdata.GetBinContent(0) + hdata.GetBinContent(1))
+    #hdata.SetBinError(1, math.sqrt(pow(hdata.GetBinError(0),2) + pow(hdata.GetBinError(1),2)))
+    #hdata.SetBinContent(nbins, hdata.GetBinContent(nbins) + hdata.GetBinContent(nbins+1))
+    #hdata.SetBinError(nbins, math.sqrt(pow(hdata.GetBinError(nbins),2) + pow(hdata.GetBinError(nbins+1),2)))
+    
+    if variation == "nominal":
+        hsig = h[region]['VBS_ssWW'][feature._name][final_state][variation]
+    else:
+        hsig = h[region]['VBS_ssWW'][feature._name][final_state][variation + ":" + var_type]
+    #nbins = hsig.GetNbinsX()
+    #hsig.SetBinContent(1, hsig.GetBinContent(0) + hsig.GetBinContent(1))
+    #hsig.SetBinError(1, math.sqrt(pow(hsig.GetBinError(0),2) + pow(hsig.GetBinError(1),2)))
+    #hsig.SetBinContent(nbins, hsig.GetBinContent(nbins) + hsig.GetBinContent(nbins+1))
+    #hsig.SetBinError(nbins, math.sqrt(pow(hsig.GetBinError(nbins),2) + pow(hsig.GetBinError(nbins+1),2)))
+
+    if final_state == "etau":
+        lep_tag = "e+"
+    else:
+        lep_tag = "#mu+"
+    cmsreg = "#tau_{h}" 
+    cmsreg = lep_tag + cmsreg 
+
+    stackname = "stack"
+    canvasname = "canvas"
+    blind = False
+
+    h_err = ROOT.TH1F()
+
+    ROOT.gROOT.SetStyle('Plain')
+    ROOT.gStyle.SetPalette(1)
+    ROOT.gStyle.SetOptStat(0)
+    ROOT.TH1.SetDefaultSumw2()
+
+    # Draw stack with MC contributions
+    stack = ROOT.THStack(stackname, feature._name)
+    leg_stack = ROOT.TLegend(0.32,0.58,0.93,0.87)
+
+    #colors = [(222, 90, 106), (155, 152, 204), (208, 240, 193), (122, 130, 106), (200, 131, 274), (218, 190, 193), (222, 10, 106), (122, 90, 106), (22,10,67), (102,100,67), (2,10,167), (22,10,67), (22,10,67), (32,121,100), (65,54,63), (132,121,100), (4,11,100), (100,1,10), (50,79,88)]
+    colors = {"Other": ROOT.kOrange-4, "tVX": ROOT.kCyan-7, "QCD_ssWW": ROOT.kPink+1, "Vgamma": ROOT.kSpring+7, "ZZ": ROOT.kViolet-9, "WZ": ROOT.kYellow-4, "VBS_ssWW": ROOT.kRed, "DY_jets": ROOT.kRed-9, "Wrong_Sign": ROOT.kGreen-10, "ttbar DiLep": ROOT.kAzure-9, "Fakes": ROOT.kGray}
+
+    
+    i = 0
+    for v in h[region].keys():
+        if v == 'Data' or v == 'VBS_ssWW':
+            continue
+        if v == 'Fakes':
+            h_ = h[region][v][feature._name][final_state]["nominal"]
+        else:
+            if variation == "nominal":
+                h_ = h[region][v][feature._name][final_state][variation]
+            else:
+                h_ = h[region][v][feature._name][final_state][variation + ":" + var_type]
+        #nbins = h_.GetNbinsX()
+        #h_.SetBinContent(1, h_.GetBinContent(0) + h_.GetBinContent(1))
+        #h_.SetBinError(1, math.sqrt(pow(h_.GetBinError(0),2) + pow(h_.GetBinError(1),2)))
+        #h_.SetBinContent(nbins, h_.GetBinContent(nbins) + h_.GetBinContent(nbins+1))
+        #h_.SetBinError(nbins, math.sqrt(pow(h_.GetBinError(nbins),2) + pow(h_.GetBinError(nbins+1),2)))
+        h_.SetLineWidth(1)
+        h_.SetLineColor(1)
+        #color = colors[i]
+        color = colors[v]
+        #h_.SetFillColor(ROOT.TColor.GetColor(*color))
+        h_.SetFillColor(color)
+        h_.SetLineColor(color)
+        #stack.Add(h_.GetValue())
+        #leg_stack.AddEntry(h_.GetValue(), v, "f")
+        stack.Add(h_)
+        leg_stack.AddEntry(h_, v, "f")
+        i +=1
+
+    leg_stack.SetNColumns(2)
+    leg_stack.SetFillColor(0)
+    leg_stack.SetFillStyle(0)
+    leg_stack.SetTextFont(42)
+    leg_stack.SetBorderSize(0)
+    leg_stack.SetTextSize(0.035)
+
+    # Create canvas
+    c1 = ROOT.TCanvas(canvasname,"c1",50,50,700,600)
+    c1.SetFillColor(0)
+    c1.SetBorderMode(0)
+    c1.SetFrameFillStyle(0)
+    c1.SetFrameBorderMode(0)
+    c1.SetLeftMargin( 0.12 )
+    c1.SetRightMargin( 0.9 )
+    c1.SetTopMargin( 1 )
+    c1.SetBottomMargin(-1)
+    c1.SetTickx(1)
+    c1.SetTicky(1)
+    c1.cd()
+
+    pad1= ROOT.TPad("pad1", "pad1", 0, 0.31 , 1, 1)
+    pad1.SetTopMargin(0.1)
+    pad1.SetBottomMargin(0.02)
+    pad1.SetLeftMargin(0.12)
+    pad1.SetRightMargin(0.05)
+    pad1.SetBorderMode(0)
+    pad1.SetTickx(1)
+    pad1.SetTicky(1)
+    pad1.Draw()
+    pad1.cd()
+
+    if blinded == False:
+        maximum = max(stack.GetMaximum(),hdata.GetMaximum())
+    else:
+        maximum = stack.GetMaximum()
+    logscale = True # False #
+    if(logscale) and stack.GetStack().Last().Integral()>0.:
+        stack.SetMinimum(0.01)
+        pad1.SetLogy()
+        stack.SetMaximum(maximum*10000)
+    else:
+        stack.SetMaximum(maximum*1.6)
+
+    stack.Draw("HIST")
+
+    if not feature._iscustom:
+        step = float(feature._xmax - feature._xmin)/float(feature._nbins)
+        #print(str(step))
+        if "GeV" in feature._title:
+            if step.is_integer():
+                ytitle = "Events/ %.0f GeV" %step
+            else:
+                ytitle = "Events / %.2f GeV" %step
+        else:
+           if step.is_integer():
+               ytitle = "Events / %.0f units" %step
+           else:
+               ytitle = "Events / %.2f units" %step
+    else:
+        if "GeV" in feature._title:
+            ytitle = "Events / GeV"
+        else:
+            ytitle = "Events / a.u"
+
+    #print(stack)
+    stack.GetYaxis().SetTitle(ytitle)
+    stack.GetYaxis().SetTitleFont(42)
+    stack.GetXaxis().SetLabelOffset(1.8)
+    stack.GetYaxis().SetTitleOffset(0.85)
+    stack.GetXaxis().SetLabelSize(0.15)
+    stack.GetYaxis().SetLabelSize(0.07)
+    stack.GetYaxis().SetTitleSize(0.07)
+    stack.SetTitle("")
+
+    #hsig.Scale(1000)
+    #print("VBS_ssWW")
+    hsig.SetLineColor(colors["VBS_ssWW"])
+    hsig.SetLineWidth(2)
+    hsig.Draw("hist same")
+    #leg_stack.AddEntry(hsig.GetValue(), "VBS_ssWW", "l")
+    leg_stack.AddEntry(hsig, "VBS_ssWW", "l")
+
+    h_err = stack.GetStack().Last().Clone("h_err")
+    h_err.SetLineWidth(100)
+    h_err.SetFillStyle(3154)
+    h_err.SetMarkerSize(0)
+    h_err.SetFillColor(ROOT.kGray+2)
+    #h_err.SetFillColor(colors[v])
+    h_err.Draw("e2same0")
+    leg_stack.AddEntry(h_err, "Stat. Unc.", "f")
+
+    if blinded == False:
+        #print("Data")
+        #leg_stack.AddEntry(hdata.GetValue(), "Data", "ep")
+        leg_stack.AddEntry(hdata, "Data", "ep")
+    leg_stack.Draw("same")
+
+    if blinded == False:
+        # Draw data
+        hdata.SetMarkerStyle(20)
+        #hdata.SetMarkerSize(1.2)
+        hdata.SetMarkerSize(0.9)
+        #hdata.SetLineWidth(2)
+        hdata.SetLineColor(ROOT.kBlack)
+        #hdata.Draw("E SAME")
+        hdata.Draw("eSAMEpx0")
+    else:
+        hdata = stack.GetStack().Last().Clone("h_data")
+    
+    
+    lumi = 41.53
+    lumi_scale = 21
+
+    CMS_lumi.writeExtraText = 1
+    CMS_lumi.extraText = ""
+
+    #print("lep_tag: ", lep_tag)
+    lumi_sqrtS = "%s fb^{-1}  (13 TeV)"%(lumi)
+
+    iPeriod = 0
+    iPos = 11
+    CMS_lumi(pad1, lumi_sqrtS, iPos, str(cmsreg))
+
+    hratio = stack.GetStack().Last()
+
+    c1.cd()
+    pad2= ROOT.TPad("pad2", "pad2", 0, 0.01 , 1, 0.30)
+    pad2.SetTopMargin(0.05)
+    pad2.SetBottomMargin(0.45)
+    pad2.SetLeftMargin(0.12)
+    pad2.SetRightMargin(0.05)
+    ROOT.gStyle.SetHatchesSpacing(2)
+    ROOT.gStyle.SetHatchesLineWidth(2)
+    c1.cd()
+    pad2.Draw()
+    pad2.cd()
+    ratio = hdata.Clone("ratio")
+    ratio.SetLineColor(ROOT.kBlack)
+    ratio.SetMaximum(10)
+    ratio.SetMinimum(0)
+    ratio.Sumw2()
+    ratio.SetStats(0)
+
+    ratio.Divide(hratio)
+    ratio.SetMarkerStyle(20)
+    ratio.SetMarkerSize(0.9)
+    ratio.Draw("epx0e0")
+    ratio.SetTitle("")
+
+    h_bkg_err = hratio.Clone("h_err")
+    h_bkg_err.Reset()
+    h_bkg_err.Sumw2()
+    for i in range(1,hratio.GetNbinsX()+1):
+        h_bkg_err.SetBinContent(i,1)
+        if(hratio.GetBinContent(i)):
+            h_bkg_err.SetBinError(i, (hratio.GetBinError(i)/hratio.GetBinContent(i)))
+        else:
+            h_bkg_err.SetBinError(i, 10^(-99))
+    h_bkg_err.SetLineWidth(100)
+
+    h_bkg_err.SetMarkerSize(0)
+    h_bkg_err.SetFillColor(ROOT.kGray+1)
+    h_bkg_err.Draw("e20same")
+
+    if not feature._iscustom:
+        xmin = feature._xmin
+    else:
+        xmin = feature._xmin[0]
+    f1 = ROOT.TLine(xmin, 1., feature._xmax,1.)
+    #xmin = 0
+    #xmax = 2000
+    xmax = feature._xmax
+    f1 = ROOT.TLine(xmin, 1., xmax,1.)
+    f1.SetLineColor(ROOT.kBlack)
+    f1.SetLineStyle(ROOT.kDashed)
+    f1.Draw("same")
+
+    ratio.GetYaxis().SetTitle("Data / Bkg")
+    ratio.GetYaxis().SetNdivisions(503)
+    ratio.GetXaxis().SetLabelFont(42)
+    ratio.GetYaxis().SetLabelFont(42)
+    ratio.GetXaxis().SetTitleFont(42)
+    ratio.GetYaxis().SetTitleFont(42)
+    ratio.GetXaxis().SetTitleOffset(1.1)
+    ratio.GetYaxis().SetTitleOffset(0.35)
+    ratio.GetXaxis().SetLabelSize(0.15)
+    ratio.GetYaxis().SetLabelSize(0.15)
+    ratio.GetXaxis().SetTitleSize(0.16)
+    ratio.GetYaxis().SetTitleSize(0.16)
+    ratio.GetYaxis().SetRangeUser(0,1.5)
+    ratio.GetXaxis().SetTitle(feature._title)
+    ratio.GetXaxis().SetLabelOffset(0.04)
+    ratio.GetYaxis().SetLabelOffset(0.02)
+    ratio.Draw("epx0e0same")
+
+    c1.cd()
+    c1.RedrawAxis()
+    pad2.RedrawAxis()
+    c1.Update()
+    #c1.Draw()
+    if region not in os.listdir(folder):
+        os.mkdir(folder + "/" + region)
+    if final_state not in os.listdir(folder + "/" + region):
+        os.mkdir(folder + "/" + region + "/" + final_state)
+    c1.SaveAs("{}.png".format(folder + "/" + region + "/" + final_state + "/" + feature._name + "_" + variation + "_" + var_type))
+    
+def stackplot_no_var(region, feature, final_state, folder, h, blinded = False):
     
     print(region)
 
