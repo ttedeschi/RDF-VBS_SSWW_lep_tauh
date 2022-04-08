@@ -1,3 +1,6 @@
+#ifndef PRESELECTION2_H
+#define PRESELECTION2_H
+
 #include "ROOT/RDataFrame.hxx"
 #include "ROOT/RVec.hxx"
 #include "TCanvas.h"
@@ -19,6 +22,7 @@
 #include <cmath>
 #include <curl/curl.h>
 #include <stdio.h>
+
 
 using namespace ROOT::VecOps;
 using RNode = ROOT::RDF::RNode;
@@ -240,3 +244,5 @@ RVec<RVec<float>> btagSF(rvec_f Jet_pt, rvec_f Jet_eta, rvec_i Jet_hadronFlavour
     }
     return result;
 }
+
+#endif
