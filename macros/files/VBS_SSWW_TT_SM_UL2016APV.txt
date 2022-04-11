@@ -1,3 +1,3 @@
-root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS/VBS_SSWW_TT_polarization_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_TT_SM_UL2016APV/220227_161157/0000/tree_hadd_1.root
-root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS/VBS_SSWW_TT_polarization_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_TT_SM_UL2016APV/220227_161157/0000/tree_hadd_2.root
-root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS/VBS_SSWW_TT_polarization_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_TT_SM_UL2016APV/220227_161157/0000/tree_hadd_3.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSUL/VBS_SSWW_TT_polarization_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_TT_SM_UL2016APV/220325_212332/0000/tree_hadd_1.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSUL/VBS_SSWW_TT_polarization_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_TT_SM_UL2016APV/220325_212332/0000/tree_hadd_2.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSUL/VBS_SSWW_TT_polarization_TuneCP5_13TeV-madgraph-pythia8/VBS_SSWW_TT_SM_UL2016APV/220325_212332/0000/tree_hadd_3.root

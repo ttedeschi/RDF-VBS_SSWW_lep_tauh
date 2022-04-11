@@ -1,0 +1,2 @@
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/WZZ_TuneCP5_13TeV-amcatnlo-pythia8/WZZ_2017/210420_105527/0000/tree_hadd_1.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/WZZ_TuneCP5_13TeV-amcatnlo-pythia8/WZZ_2017/210420_105527/0000/tree_hadd_2.root

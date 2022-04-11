@@ -1,0 +1,5 @@
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/WWTo2L2Nu_DoubleScattering_13TeV-pythia8/WWTo2L2Nu_DoubleScattering_2018/210616_133409/0000/tree_hadd_1.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/WWTo2L2Nu_DoubleScattering_13TeV-pythia8/WWTo2L2Nu_DoubleScattering_2018/210616_133409/0000/tree_hadd_2.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/WWTo2L2Nu_DoubleScattering_13TeV-pythia8/WWTo2L2Nu_DoubleScattering_2018/210616_133409/0000/tree_hadd_3.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/WWTo2L2Nu_DoubleScattering_13TeV-pythia8/WWTo2L2Nu_DoubleScattering_2018/210616_133409/0000/tree_hadd_4.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/WWTo2L2Nu_DoubleScattering_13TeV-pythia8/WWTo2L2Nu_DoubleScattering_2018/210616_133409/0000/tree_hadd_5.root

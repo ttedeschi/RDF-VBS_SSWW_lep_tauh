@@ -1,0 +1,2 @@
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/DY2JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DY2JetsToLL_2018/210616_085534/0000/tree_hadd_4.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/DY2JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DY2JetsToLL_2018/210616_085534/0000/tree_hadd_5.root

@@ -1,0 +1,4 @@
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/TTTo2L2Nu_2017/210420_104834/0000/tree_hadd_8.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/TTTo2L2Nu_2017/210420_104834/0000/tree_hadd_10.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/TTTo2L2Nu_2017/210420_104834/0000/tree_hadd_5.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/TTTo2L2Nu_2017/210420_104834/0000/tree_hadd_7.root

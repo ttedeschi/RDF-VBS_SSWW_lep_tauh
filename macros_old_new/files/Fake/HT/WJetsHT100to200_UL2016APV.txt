@@ -1,0 +1,9 @@
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8/WJetsHT100to200_UL2016APV_FakeHT/211227_224455/0000/tree_hadd_3.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8/WJetsHT100to200_UL2016APV_FakeHT/211227_224455/0000/tree_hadd_5.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8/WJetsHT100to200_UL2016APV_FakeHT/211227_224455/0000/tree_hadd_6.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8/WJetsHT100to200_UL2016APV_FakeHT/211227_224455/0000/tree_hadd_8.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8/WJetsHT100to200_UL2016APV_FakeHT/211227_224455/0000/tree_hadd_9.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8/WJetsHT100to200_UL2016APV_FakeHT/211227_224455/0000/tree_hadd_10.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8/WJetsHT100to200_UL2016APV_FakeHT/211227_224455/0000/tree_hadd_14.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8/WJetsHT100to200_UL2016APV_FakeHT/211227_224455/0000/tree_hadd_16.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake_UL/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8/WJetsHT100to200_UL2016APV_FakeHT/211227_224455/0000/tree_hadd_19.root

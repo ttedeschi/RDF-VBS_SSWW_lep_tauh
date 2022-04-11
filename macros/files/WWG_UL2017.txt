@@ -1,2 +1,2 @@
-root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS/WWG_TuneCP5_13TeV-amcatnlo-pythia8/WWG_UL2017/220227_184140/0000/tree_hadd_1.root
-root://cms-xrd-global.cern.ch//store/user/apiccine/ULVBS/WWG_TuneCP5_13TeV-amcatnlo-pythia8/WWG_UL2017/220227_184140/0000/tree_hadd_2.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSUL/WWG_TuneCP5_13TeV-amcatnlo-pythia8/WWG_UL2017/220326_002133/0000/tree_hadd_1.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSUL/WWG_TuneCP5_13TeV-amcatnlo-pythia8/WWG_UL2017/220326_002133/0000/tree_hadd_2.root

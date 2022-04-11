@@ -1,0 +1,2 @@
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/GluGluToContinToZZTo4e_13TeV_MCFM701_pythia8/GluGluToContinToZZTo4e_2018_FakeHT/211005_105528/0000/tree_hadd_1.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/GluGluToContinToZZTo4e_13TeV_MCFM701_pythia8/GluGluToContinToZZTo4e_2018_FakeHT/211005_105528/0000/tree_hadd_2.root

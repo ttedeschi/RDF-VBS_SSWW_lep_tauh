@@ -1,0 +1,5 @@
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/TT_SemiLep_2018_FakeHT/211005_105838/0000/tree_hadd_64.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/TT_SemiLep_2018_FakeHT/211005_105838/0000/tree_hadd_12.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/TT_SemiLep_2018_FakeHT/211005_105838/0000/tree_hadd_19.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/TT_SemiLep_2018_FakeHT/211005_105838/0000/tree_hadd_24.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/TT_SemiLep_2018_FakeHT/211005_105838/0000/tree_hadd_58.root
