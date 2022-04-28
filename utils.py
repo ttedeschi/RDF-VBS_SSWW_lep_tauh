@@ -151,7 +151,7 @@ def stackplot(region, feature, final_state, folder, h, blinded = False, variatio
 
 
     #if blinded == False:
-    hdata = h[region]['Data'][feature._name][final_state]["nominal"]
+    hdata = h[region]['Data'][feature._name][final_state]
     #nbins = hdata.GetNbinsX()
     #hdata.SetBinContent(1, hdata.GetBinContent(0) + hdata.GetBinContent(1))
     #hdata.SetBinError(1, math.sqrt(pow(hdata.GetBinError(0),2) + pow(hdata.GetBinError(1),2)))
@@ -191,7 +191,7 @@ def stackplot(region, feature, final_state, folder, h, blinded = False, variatio
     leg_stack = ROOT.TLegend(0.32,0.58,0.93,0.87)
 
     #colors = [(222, 90, 106), (155, 152, 204), (208, 240, 193), (122, 130, 106), (200, 131, 274), (218, 190, 193), (222, 10, 106), (122, 90, 106), (22,10,67), (102,100,67), (2,10,167), (22,10,67), (22,10,67), (32,121,100), (65,54,63), (132,121,100), (4,11,100), (100,1,10), (50,79,88)]
-    colors = {"Other": ROOT.kOrange-4, "tVX": ROOT.kCyan-7, "QCD_ssWW": ROOT.kPink+1, "Vgamma": ROOT.kSpring+7, "ZZ": ROOT.kViolet-9, "WZ": ROOT.kYellow-4, "VBS_ssWW": ROOT.kRed, "DY_jets": ROOT.kRed-9, "Wrong_Sign": ROOT.kGreen-10, "ttbar DiLep": ROOT.kAzure-9, "Fakes": ROOT.kGray}
+    colors = {"Other": ROOT.kOrange-4, "tVX": ROOT.kCyan-7, "QCD_ssWW": ROOT.kPink+1, "Vgamma": ROOT.kSpring+7, "ZZ": ROOT.kViolet-9, "WZ": ROOT.kYellow-4, "VBS_ssWW": ROOT.kRed, "DY_jets": ROOT.kRed-9, "Wrong_Sign": ROOT.kGreen-10, "ttbar_DiLep": ROOT.kAzure-9, "Fakes": ROOT.kGray}
 
     
     i = 0
@@ -199,7 +199,7 @@ def stackplot(region, feature, final_state, folder, h, blinded = False, variatio
         if v == 'Data' or v == 'VBS_ssWW':
             continue
         if v == 'Fakes':
-            h_ = h[region][v][feature._name][final_state]["nominal"]
+            h_ = h[region][v][feature._name][final_state]
         else:
             if variation == "nominal":
                 h_ = h[region][v][feature._name][final_state][variation]
@@ -473,11 +473,13 @@ def stackplot_no_var(region, feature, final_state, folder, h, blinded = False):
     leg_stack = ROOT.TLegend(0.32,0.58,0.93,0.87)
 
     #colors = [(222, 90, 106), (155, 152, 204), (208, 240, 193), (122, 130, 106), (200, 131, 274), (218, 190, 193), (222, 10, 106), (122, 90, 106), (22,10,67), (102,100,67), (2,10,167), (22,10,67), (22,10,67), (32,121,100), (65,54,63), (132,121,100), (4,11,100), (100,1,10), (50,79,88)]
-    colors = {"Other": ROOT.kOrange-4, "tVX": ROOT.kCyan-7, "QCD_ssWW": ROOT.kPink+1, "Vgamma": ROOT.kSpring+7, "ZZ": ROOT.kViolet-9, "WZ": ROOT.kYellow-4, "VBS_ssWW": ROOT.kRed, "DY_jets": ROOT.kRed-9, "Wrong_Sign": ROOT.kGreen-10, "ttbar DiLep": ROOT.kAzure-9, "Fakes": ROOT.kGray}
+    colors = {"Other": ROOT.kOrange-4, "tVX": ROOT.kCyan-7, "QCD_ssWW": ROOT.kPink+1, "Vgamma": ROOT.kSpring+7, "ZZ": ROOT.kViolet-9, "WZ": ROOT.kYellow-4, "VBS_ssWW": ROOT.kRed, "DY_jets": ROOT.kRed-9, "Wrong_Sign": ROOT.kGreen-10, "ttbar_DiLep": ROOT.kAzure-9, "Fakes": ROOT.kGray}
 
     
     i = 0
-    for v in h[region].keys():
+    
+    for v in ['ZZ', 'Other', 'tVX', 'Vgamma', 'WZ', 'Wrong_Sign', 'DY_jets', 'ttbar_DiLep', 'Fakes', 'Data']:
+    #for v in h[region].keys():
         if v == 'Data' or v == 'VBS_ssWW':
             continue
         h_ = h[region][v][feature._name][final_state]

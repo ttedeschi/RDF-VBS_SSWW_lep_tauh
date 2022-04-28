@@ -3,7 +3,10 @@
 /// ROOT C++ interpreter prior to the start of the analysis via the
 /// `ROOT.gInterpreter.Declare()` function.
 ///
- 
+
+#ifndef POST_H
+#define POST_H
+
 #include "ROOT/RDataFrame.hxx"
 #include "ROOT/RVec.hxx"
 #include "TCanvas.h"
@@ -103,7 +106,7 @@ const string vsMuwp = "Tight";
 //const string remote_storage = "https://ttedesch.web.cern.ch/ttedesch/nanoAOD-tools_UL/python/postprocessing/";
 const string remote_storage = "https://vbs-pg-support.web.cern.ch/nanoAOD-tools/python/postprocessing/";
 
-
+/*
 TFile *TauID_SF_pt_DeepTau2017v2p1VSjet_UL2017 = TFile::Open(TString(remote_storage) + TString("data/tauSF/TauID_SF_pt_") + TString("DeepTau2017v2p1VSjet") + TString("_") + TString("2017") + TString("ReReco") + TString(".root"));
 TString path_down = TString(TString(vsJetwp) + TString("_down"));
 TString path_cent = TString(TString(vsJetwp) + TString("_cent"));
@@ -124,6 +127,32 @@ TFile *TauES_dm_DeepTau2017v2p1VSjet_UL2017 = TFile::Open(TString(remote_storage
 TH1F * TauES_dm_DeepTau2017v2p1VSjet_UL2017_hist_low = (TH1F *) TauES_dm_DeepTau2017v2p1VSjet_UL2017->Get("tes");
 
 TFile *TauES_dm_DeepTau2017v2p1VSjet_UL2017_ptgt100 = TFile::Open(TString(remote_storage) + TString("data/tauSF/TauES_dm_") + TString("DeepTau2017v2p1VSjet") + TString("_") + TString("2017") + TString("ReReco") + TString("_ptgt100.root"));
+TH1F * TauES_dm_DeepTau2017v2p1VSjet_UL2017_ptgt100_hist_high = (TH1F *) TauES_dm_DeepTau2017v2p1VSjet_UL2017_ptgt100->Get("tes");
+
+TFile *TauFES_eta_dm_DeepTau2017v2p1VSe_UL2017 = TFile::Open(TString(remote_storage) + TString("data/tauSF/TauFES_eta-dm_") + TString("DeepTau2017v2p1VSe") + TString("_") + TString("2017")  + TString("ReReco") + TString(".root"));
+TGraphAsymmErrors * TauFES_eta_dm_DeepTau2017v2p1VSe_UL2017_graph = (TGraphAsymmErrors *) TauFES_eta_dm_DeepTau2017v2p1VSe_UL2017->Get("fes");
+*/
+
+TFile *TauID_SF_pt_DeepTau2017v2p1VSjet_UL2017 = TFile::Open(TString(remote_storage) + TString("data/tauSF/TauID_SF_pt_") + TString("DeepTau2017v2p1VSjet") + TString("_") + TString("UL2017") + TString(".root"));
+TString path_down = TString(TString(vsJetwp) + TString("_down"));
+TString path_cent = TString(TString(vsJetwp) + TString("_cent"));
+TString path_up = TString(TString(vsJetwp) + TString("_up"));
+TF1 * TauID_SF_pt_DeepTau2017v2p1VSjet_UL2017_h_down = (TF1*)TauID_SF_pt_DeepTau2017v2p1VSjet_UL2017->Get(path_down);
+TF1 * TauID_SF_pt_DeepTau2017v2p1VSjet_UL2017_h_cent =  (TF1*)TauID_SF_pt_DeepTau2017v2p1VSjet_UL2017->Get(path_cent);
+TF1 * TauID_SF_pt_DeepTau2017v2p1VSjet_UL2017_h_up =  (TF1*)TauID_SF_pt_DeepTau2017v2p1VSjet_UL2017->Get(path_up);
+
+TFile *TauID_SF_eta_DeepTau2017v2p1VSe_UL2017 = TFile::Open(TString(remote_storage) + TString("data/tauSF/TauID_SF_eta_") + TString("DeepTau2017v2p1VSe") + TString("_") + TString("UL2017") + TString(".root"));
+TString histoname_ele = TString(vsElewp);
+TH1F * TauID_SF_eta_DeepTau2017v2p1VSe_UL2017_hist = (TH1F *) TauID_SF_eta_DeepTau2017v2p1VSe_UL2017->Get(histoname_ele);
+
+TFile *TauID_SF_eta_DeepTau2017v2p1VSmu_UL2017 = TFile::Open(TString(remote_storage) + TString("data/tauSF/TauID_SF_eta_") + TString("DeepTau2017v2p1VSmu") + TString("_") + TString("2017ReReco") + TString(".root"));
+TString histoname_mu = TString(vsMuwp);
+TH1F * TauID_SF_eta_DeepTau2017v2p1VSmu_UL2017_hist = (TH1F *) TauID_SF_eta_DeepTau2017v2p1VSmu_UL2017->Get(histoname_mu);
+
+TFile *TauES_dm_DeepTau2017v2p1VSjet_UL2017 = TFile::Open(TString(remote_storage) + TString("data/tauSF/TauES_dm_") + TString("DeepTau2017v2p1VSjet") + TString("_") + TString("UL2017") +  TString(".root"));        
+TH1F * TauES_dm_DeepTau2017v2p1VSjet_UL2017_hist_low = (TH1F *) TauES_dm_DeepTau2017v2p1VSjet_UL2017->Get("tes");
+
+TFile *TauES_dm_DeepTau2017v2p1VSjet_UL2017_ptgt100 = TFile::Open(TString(remote_storage) + TString("data/tauSF/TauES_dm_") + TString("DeepTau2017v2p1VSjet") + TString("_") + TString("2017ReReco") + TString("_ptgt100.root"));
 TH1F * TauES_dm_DeepTau2017v2p1VSjet_UL2017_ptgt100_hist_high = (TH1F *) TauES_dm_DeepTau2017v2p1VSjet_UL2017_ptgt100->Get("tes");
 
 TFile *TauFES_eta_dm_DeepTau2017v2p1VSe_UL2017 = TFile::Open(TString(remote_storage) + TString("data/tauSF/TauFES_eta-dm_") + TString("DeepTau2017v2p1VSe") + TString("_") + TString("2017")  + TString("ReReco") + TString(".root"));
@@ -466,9 +495,13 @@ int DetermineGoodLepton(bool HLT_IsoMu27, bool HLT_Mu50, bool HLT_Ele35_WPTight_
     bool passHT = false;
     int GoodLeptonFamily;
     
-    if(HLT_IsoMu27 || HLT_Mu50) passMu = true;
-    if(HLT_Ele35_WPTight_Gsf || HLT_Ele32_WPTight_Gsf_L1DoubleEG || HLT_Photon200) passEle = true;
-    if(HLT_PFHT250 || HLT_PFHT350) passHT = true;
+    //if(HLT_IsoMu27 || HLT_Mu50) passMu = true;
+    //if(HLT_Ele35_WPTight_Gsf || HLT_Ele32_WPTight_Gsf_L1DoubleEG || HLT_Photon200) passEle = true;
+    //if(HLT_PFHT250 || HLT_PFHT350) passHT = true;
+    
+    if(HLT_IsoMu27) passMu = true;
+    if(HLT_Ele35_WPTight_Gsf) passEle = true;
+    //if(HLT_PFHT250 || HLT_PFHT350) passHT = true;
     
     bool ele_lepton_veto = false;
     bool mu_lepton_veto = false;
@@ -1134,7 +1167,7 @@ RVec<float> getTES(float SelectedTau_pt, int SelectedTau_decayMode, int Selected
     return result;
 }
 */
-RVec<float> getTES(rvec_f Tau_pt, rvec_i Tau_decayMode, rvec_i Tau_genPartFlav, bool IsMC, string year){
+RVec<float> getTES(rvec_f Tau_pt, rvec_i Tau_decayMode, const RVec<UChar_t> &Tau_genPartFlav, bool IsMC, string year){
     string id = "DeepTau2017v2p1VSjet";
     
     float pt_low  = 34;
@@ -1147,7 +1180,7 @@ RVec<float> getTES(rvec_f Tau_pt, rvec_i Tau_decayMode, rvec_i Tau_genPartFlav, 
                 
         int SelectedTau_decayMode = Tau_decayMode[i];
         float SelectedTau_pt = Tau_pt[i];
-        int SelectedTau_genPartFlav = Tau_genPartFlav[i];
+        //auto SelectedTau_genPartFlav = Tau_genPartFlav[i];
         
         if(IsMC == false){
             result[0] = 1.;
@@ -1155,11 +1188,11 @@ RVec<float> getTES(rvec_f Tau_pt, rvec_i Tau_decayMode, rvec_i Tau_genPartFlav, 
             result[2] = 1.;
         }
 
-        else if((SelectedTau_decayMode == 0 || SelectedTau_decayMode == 1 || SelectedTau_decayMode == 10 || SelectedTau_decayMode == 11) && SelectedTau_genPartFlav == 5){ 
+        else if((SelectedTau_decayMode == 0 || SelectedTau_decayMode == 1 || SelectedTau_decayMode == 10 || SelectedTau_decayMode == 11) && Tau_genPartFlav[i] == 5){ 
             int bin = TauES_dm_DeepTau2017v2p1VSjet_UL2017_hist_low->GetXaxis()->FindBin(SelectedTau_decayMode);
             float tes = TauES_dm_DeepTau2017v2p1VSjet_UL2017_hist_low->GetBinContent(bin);
             float err;
-            if (SelectedTau_pt > pt_high){
+            if (SelectedTau_pt >= pt_high){
                 int bin_high = TauES_dm_DeepTau2017v2p1VSjet_UL2017_ptgt100_hist_high->GetXaxis()->FindBin(SelectedTau_decayMode);
                 err = TauES_dm_DeepTau2017v2p1VSjet_UL2017_ptgt100_hist_high->GetBinError(bin_high);
             }
@@ -1251,7 +1284,7 @@ RVec<float> getFES(rvec_f Tau_eta, rvec_i Tau_decayMode, rvec_i Tau_genPartFlav,
             result[2] = 1.;
         }
         
-        else if((SelectedTau_decayMode == 0 || SelectedTau_decayMode == 1) && (SelectedTau_genPartFlav == 1 || SelectedTau_genPartFlav == 3)){ 
+        else if((SelectedTau_decayMode == 0 || SelectedTau_decayMode == 1) && (SelectedTau_genPartFlav == '0x01' || SelectedTau_genPartFlav == '0x03')){ 
 
             int endcap_index_shift = 0;
             if(abs(SelectedTau_eta) >= 1.5) endcap_index_shift = 2;
@@ -1441,10 +1474,8 @@ unordered_set<int> dataEle_flags({361, 362, 363, 364, 365, 366, 367, 368, 369, 3
 unordered_set<int> dataMu_flags({339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360,});
 
 unordered_map<int,float> xsecs({
-
-{25,51.1}, //UL2016APV
+{25,51.1},
 {26,191.3},
-{69,0.01538},
 {18,3.697},
 {19,0.5297},
 {20,0.2529},
@@ -1457,19 +1488,19 @@ unordered_map<int,float> xsecs({
 {52,0.05565},
 {53,0.01398},
 {54,0.2147},
-{15,87.3348},
+{15,72.1},
 {64,27.59},
-{67,6077.22},
+{67,7181.0},
 {28,12.178},
-{29,0.005724444444444444},
-{30,0.005724444444444444},
-{31,0.005725999999999999},
-{32,0.005725999999999999},
-{33,0.005725999999999999},
-{34,0.005725999999999999},
-{35,0.005725999999999999},
-{36,0.005725999999999999},
-{37,0.005725999999999999},
+{29,0.014193333333333334},
+{30,0.007096666666666667},
+{31,0.007096666666666667},
+{32,0.007096666666666667},
+{33,0.014193333333333334},
+{34,0.007096666666666667},
+{35,0.007096666666666667},
+{36,0.007096666666666667},
+{37,0.014193333333333334},
 {38,35.85},
 {40,1.0315},
 {42,0.0118},
@@ -1501,11 +1532,8 @@ unordered_map<int,float> xsecs({
 {343,1.},
 {344,1.},
 {345,1.},
-    
-    
-{110,51.1}, //UL2016
+{110,51.1},
 {111,191.3},
-{153,0.01538},
 {103,3.697},
 {104,0.5297},
 {105,0.2529},
@@ -1518,19 +1546,19 @@ unordered_map<int,float> xsecs({
 {136,0.05565},
 {137,0.01398},
 {138,0.2147},
-{100,87.3348},
+{100,72.1},
 {148,27.59},
-{151,6077.22},
+{151,7181.0},
 {113,12.178},
-{114,0.005724444444444444},
-{115,0.005724444444444444},
-{116,0.005725999999999999},
-{117,0.005725999999999999},
-{118,0.005725999999999999},
-{119,0.005725999999999999},
-{120,0.005725999999999999},
-{121,0.005725999999999999},
-{122,0.005725999999999999},
+{114,0.014193333333333334},
+{115,0.007096666666666667},
+{116,0.007096666666666667},
+{117,0.007096666666666667},
+{118,0.014193333333333334},
+{119,0.007096666666666667},
+{120,0.007096666666666667},
+{121,0.007096666666666667},
+{122,0.014193333333333334},
 {123,35.85},
 {125,1.0315},
 {127,0.0118},
@@ -1558,10 +1586,8 @@ unordered_map<int,float> xsecs({
 {347,1.},
 {348,1.},
 {349,1.},
-    
-{194,51.1}, //UL2017
+{194,51.1},
 {195,191.3},
-{238,0.01538},
 {187,3.697},
 {188,0.5297},
 {189,0.2529},
@@ -1574,19 +1600,19 @@ unordered_map<int,float> xsecs({
 {221,0.05565},
 {222,0.01398},
 {223,0.2147},
-{184,87.3348},
+{184,72.1},
 {233,27.59},
-{236,6077.22},
+{236,7181.0},
 {197,12.178},
-{198,0.005724444444444444},
-{199,0.005724444444444444},
-{200,0.005725999999999999},
-{201,0.005725999999999999},
-{202,0.005725999999999999},
-{203,0.005725999999999999},
-{204,0.005725999999999999},
-{205,0.005725999999999999},
-{206,0.005725999999999999},
+{198,0.014193333333333334},
+{199,0.007096666666666667},
+{200,0.007096666666666667},
+{201,0.007096666666666667},
+{202,0.014193333333333334},
+{203,0.007096666666666667},
+{204,0.007096666666666667},
+{205,0.007096666666666667},
+{206,0.014193333333333334},
 {207,35.85},
 {209,1.0315},
 {211,0.0118},
@@ -1617,11 +1643,9 @@ unordered_map<int,float> xsecs({
 {352,1.},
 {353,1.},
 {354,1.},
-{355,1.}, 
-    
-{279,51.1}, //UL2018
+{355,1.},
+{279,51.1},
 {280,191.3},
-{323,0.01538},
 {272,3.697},
 {273,0.5297},
 {274,0.2529},
@@ -1634,19 +1658,19 @@ unordered_map<int,float> xsecs({
 {306,0.05565},
 {307,0.01398},
 {308,0.2147},
-{269,87.3348},
+{269,72.1},
 {318,27.59},
-{321,6077.22},
+{321,7181.0},
 {282,12.178},
-{283,0.005724444444444444},
-{284,0.005724444444444444},
-{285,0.005725999999999999},
-{286,0.005725999999999999},
-{287,0.005725999999999999},
-{288,0.005725999999999999},
-{289,0.005725999999999999},
-{290,0.005725999999999999},
-{291,0.005725999999999999},
+{283,0.014193333333333334},
+{284,0.007096666666666667},
+{285,0.007096666666666667},
+{286,0.007096666666666667},
+{287,0.014193333333333334},
+{288,0.007096666666666667},
+{289,0.007096666666666667},
+{290,0.007096666666666667},
+{291,0.014193333333333334},
 {292,35.85},
 {294,1.0315},
 {296,0.0118},
@@ -1676,10 +1700,123 @@ unordered_map<int,float> xsecs({
 {358,1.},
 {359,1.},
 {360,1.},
-    });
-   
+});
+
+
 unordered_map<int,float> Nevents({
-{194,29890946}, //UL2017
+{25,27805647},
+{26,53848477},
+{18,1511805},
+{19,6277000},
+{20,5792000},
+{21,308442},
+{22,1264826},
+{23,3723000},
+{28,3018000},
+{50,5190000},
+{51,5072000},
+{52,5394000},
+{53,5302000},
+{54,800000},
+{15,37505000},
+{64,7934000},
+{67,90947213},
+{28,3018000},
+{29,1994000},
+{30,1991000},
+{31,1906000},
+{32,1997000},
+{33,1953000},
+{34,1914000},
+{35,1958000},
+{36,1994000},
+{37,1956000},
+{38,2300000},
+{40,4666982},
+{42,1000000},
+{43,6134000},
+{44,2204000},
+{45,1452000},
+{46,1977996},
+{47,440780},
+{1,16862000},
+{2,19622315},
+{11,500000},
+{4,500000},
+{5,500000},
+{6,500000},
+{8,500000},
+{3,972000},
+{7,927966},
+{10,497032},
+{71,1921000},
+{72,1983000},
+{73,1994000},
+{363,0},
+{364,0},
+{365,0},
+{366,0},
+{367,0},
+{341,0},
+{342,0},
+{343,0},
+{344,0},
+{345,0},
+{110,31562465},
+{111,55939475},
+{103,1416230},
+{104,5401000},
+{105,6017000},
+{106,308983},
+{107,1264826},
+{108,3967000},
+{113,2900000},
+{134,4159000},
+{135,4595000},
+{136,4554000},
+{137,4534000},
+{138,698000},
+{100,43546000},
+{148,7584000},
+{151,71839442},
+{113,2900000},
+{114,1959000},
+{115,1927000},
+{116,1982000},
+{117,1991000},
+{118,1984000},
+{119,1859000},
+{120,1996000},
+{121,1973000},
+{122,1991000},
+{123,2491000},
+{125,4882983},
+{127,1000000},
+{128,6443000},
+{129,2893000},
+{130,1500000},
+{131,2240994},
+{132,330462},
+{86,15928000},
+{87,15890000},
+{96,500000},
+{89,499000},
+{90,500000},
+{91,493000},
+{93,500000},
+{88,992608},
+{92,997445},
+{95,499183},
+{155,1926000},
+{156,1956000},
+{157,1953000},
+{369,0},
+{370,0},
+{371,0},
+{347,0},
+{348,0},
+{349,0},
+{194,29890946},
 {195,60212926},
 {187,3534208},
 {188,13822000},
@@ -1693,7 +1830,7 @@ unordered_map<int,float> Nevents({
 {221,9898000},
 {222,9524000},
 {223,1736000},
-{184,103204000},
+{184,106724000},
 {233,7889000},
 {236,195529774},
 {197,7098000},
@@ -1727,16 +1864,73 @@ unordered_map<int,float> Nevents({
 {240,1978000},
 {241,1952000},
 {242,1902000},
-{373,1},
-{374,1},
-{375,1},
-{376,1},
-{377,1},
-{351,1},
-{352,1},
-{353,1},
-{354,1},
-{355,1},
+{373,0},
+{374,0},
+{375,0},
+{376,0},
+{377,0},
+{351,0},
+{352,0},
+{353,0},
+{354,0},
+{355,0},
+{279,29919798},
+{280,61613294},
+{272,4437068},
+{273,19816000},
+{274,19608000},
+{275,970179},
+{276,10450000},
+{277,14000000},
+{282,9994000},
+{304,9894000},
+{305,9961999},
+{306,9994000},
+{307,9889000},
+{308,2500000},
+{269,145020000},
+{318,7940000},
+{321,195510810},
+
+{282,9994000},
+{283,4904000},
+{284,4928000},
+{285,4784000},
+{286,4998000},
+{287,4986000},
+{288,4864000},
+{289,4948000},
+{290,4958000},
+{291,4678000},
+{292,7956000},
+{294,9865972},
+{296,940000},
+{297,12966000},
+{298,9492608},
+{299,2987000},
+{300,7328993},
+{301,1208288},
+{255,56886000},
+{256,64107525},
+{265,500000},
+{258,500000},
+{259,500000},
+{260,500000},
+{262,496000},
+{257,974000},
+{261,994626},
+{264,493998},
+{325,1927000},
+{326,1939000},
+{327,1930000},
+{379,0},
+{380,0},
+{381,0},
+{382,0},
+{357,0},
+{358,0},
+{359,0},
+{360,0},
 });
 
 bool isMC(int SampleFlag){
@@ -1869,3 +2063,313 @@ bool DataLeptonCheck(int SampleFlag, int GoodLeptonFamily, bool isMC){
     }
     return true;
 }
+
+//### placeholder to determinate which strategy to be used to implement PDF uncertainty ###
+//try:
+//    pdftitle = chain.GetBranch("LHEPdfWeight").GetTitle()
+//except:
+//    isPDFHessian = False
+//    pass
+//else:
+//    if pdftitle != "":
+//        firstpdf = pdftitle.split(" ")[-3]
+//        lastpdf = pdftitle.split(" ")[-1]
+//        isPDFHessian = IsPdfHessian(firstpdf, lastpdf)
+//    else:
+//        isPDFHessian = False
+
+//print("isPDFHessian", isPDFHessian)
+
+//def IsPdfHessian(firstpdf, lastpdf):
+//    pdfcsv = open("data/lhapdf.csv")
+//    reader = csv.reader(pdfcsv)
+//    pdfdict = {rows[0]:rows[1] for rows in reader}
+//    namepdf = pdfdict[str(firstpdf)]
+//    if "hess" in namepdf:
+//        return True
+//    else:
+//        return False
+
+unordered_map<int,bool> IsPdfHessian({
+ { 25 , true },
+{ 26 , true },
+{ 18 , true },
+{ 19 , true },
+{ 20 , true },
+{ 21 , true },
+{ 22 , true },
+{ 23 , true },
+{ 28 , false },
+{ 50 , true },
+{ 51 , true },
+{ 52 , true },
+{ 53 , true },
+{ 54 , true },
+{ 15 , true },
+{ 67 , true },
+{ 28 , false },
+{ 29 , false },
+{ 30 , false },
+{ 31 , false },
+{ 32 , false },
+{ 33 , false },
+{ 34 , false },
+{ 35 , false },
+{ 36 , false },
+{ 37 , false },
+{ 38 , true },
+{ 40 , false },
+{ 42 , true },
+{ 43 , true },
+{ 44 , true },
+{ 45 , true },
+{ 46 , true },
+{ 47 , true },
+{ 1 , false },
+{ 2 , false },
+{ 11 , false },
+{ 4 , false },
+{ 5 , false },
+{ 6 , false },
+{ 8 , false },
+{ 3 , false },
+{ 7 , false },
+{ 10 , false },
+{ 71 , true },
+{ 72 , true },
+{ 73 , true },
+{ 110 , true },
+{ 111 , true },
+{ 103 , true },
+{ 104 , true },
+{ 105 , true },
+{ 106 , true },
+{ 107 , true },
+{ 108 , true },
+{ 113 , false },
+{ 134 , true },
+{ 135 , true },
+{ 136 , true },
+{ 137 , true },
+{ 138 , true },
+{ 100 , true },
+{ 151 , true },
+{ 113 , false },
+{ 114 , false },
+{ 115 , false },
+{ 116 , false },
+{ 117 , false },
+{ 118 , false },
+{ 119 , false },
+{ 120 , false },
+{ 121 , false },
+{ 122 , false },
+{ 123 , true },
+{ 125 , false },
+{ 127 , true },
+{ 128 , true },
+{ 129 , true },
+{ 130 , true },
+{ 131 , true },
+{ 132 , true },
+{ 86 , false },
+{ 87 , false },
+{ 96 , false },
+{ 89 , false },
+{ 90 , false },
+{ 91 , false },
+{ 93 , false },
+{ 88 , false },
+{ 92 , false },
+{ 95 , false },
+{ 155 , true },
+{ 156 , true },
+{ 157 , true },
+{ 194 , true },
+{ 195 , true },
+{ 187 , true },
+{ 188 , true },
+{ 189 , true },
+{ 190 , true },
+{ 191 , true },
+{ 192 , true },
+{ 197 , false },
+{ 219 , true },
+{ 220 , true },
+{ 221 , true },
+{ 222 , true },
+{ 223 , true },
+{ 184 , true },
+{ 236 , true },
+{ 197 , false },
+{ 198 , false },
+{ 199 , false },
+{ 200 , false },
+{ 201 , false },
+{ 202 , false },
+{ 203 , false },
+{ 204 , false },
+{ 205 , false },
+{ 206 , false },
+{ 207 , true },
+{ 209 , false },
+{ 211 , true },
+{ 212 , true },
+{ 213 , true },
+{ 214 , true },
+{ 215 , true },
+{ 216 , true },
+{ 170 , false },
+{ 171 , false },
+{ 180 , false },
+{ 173 , false },
+{ 174 , false },
+{ 175 , false },
+{ 177 , false },
+{ 172 , false },
+{ 176 , false },
+{ 179 , false },
+{ 240 , true },
+{ 241 , true },
+{ 242 , true },
+{ 279 , true },
+{ 280 , true },
+{ 272 , true },
+{ 273 , true },
+{ 274 , true },
+{ 275 , true },
+{ 276 , true },
+{ 277 , true },
+{ 282 , false },
+{ 304 , true },
+{ 305 , true },
+{ 306 , true },
+{ 307 , true },
+{ 308 , true },
+{ 269 , true },
+{ 321 , true },
+{ 282 , false },
+{ 283 , false },
+{ 284 , false },
+{ 285 , false },
+{ 286 , false },
+{ 287 , false },
+{ 288 , false },
+{ 289 , false },
+{ 290 , false },
+{ 291 , false },
+{ 292 , true },
+{ 294 , false },
+{ 296 , true },
+{ 297 , true },
+{ 298 , true },
+{ 299 , true },
+{ 300 , true },
+{ 301 , true },
+{ 255 , false },
+{ 256 , false },
+{ 265 , false },
+{ 258 , false },
+{ 259 , false },
+{ 260 , false },
+{ 262 , false },
+{ 257 , false },
+{ 261 , false },
+{ 264 , false },
+{ 325 , true },
+{ 326 , true },
+{ 327 , true }
+});
+
+RVec<float> PdfWeight_variations(rvec_f PdfWeight, float Generator_weight, int Sample){
+    
+    RVec<float> result(3);
+    
+    float pdf_totalUp = 1.;
+    float pdf_totalDown = 1.;
+    float pdf_totalSF = 1.;
+    
+    if (PdfWeight.size() > 0){
+    
+        //for(int i = 0; i < PdfWeight.size(); i++) w_PDF_all[ipdf] = LHEitem(pdfw)
+
+        float mean_pdf = 0.;
+        float rms = 0.;
+        pdf_totalSF = PdfWeight[0];
+
+        bool isPDFHessian = IsPdfHessian[Sample];
+
+        if(isPDFHessian) mean_pdf = PdfWeight[0];
+
+        else{ 
+            for (int j = 0; j < PdfWeight.size(); j++) mean_pdf += PdfWeight[j];
+            mean_pdf = mean_pdf / PdfWeight.size();
+        }
+
+        for (int j = 0; j < PdfWeight.size(); j++) rms = rms + pow(PdfWeight[j]-mean_pdf, 2);
+        if (!isPDFHessian) rms = rms / (PdfWeight.size() - 1.);
+
+        pdf_totalUp = mean_pdf + rms;
+        pdf_totalDown = mean_pdf - rms;
+
+        if (Generator_weight < 0.) pdf_totalSF = pdf_totalSF * -1.;
+
+    }
+    
+    result[0] = pdf_totalSF;
+    result[1] = pdf_totalUp;
+    result[2] = pdf_totalDown;
+
+    return result;
+}
+
+RVec<float> QCDScale_variations(rvec_f LHEScaleWeight){
+    RVec<float> result(3); 
+    float lheSF = 1.;
+    float lheUp = 1.;
+    float lheDown = 1.;
+    
+    if(LHEScaleWeight.size() > 1){
+       lheDown = Min(LHEScaleWeight);
+       lheUp = Max(LHEScaleWeight);     
+       if (LHEScaleWeight.size() < 9) lheSF = 1.;
+       else lheSF = LHEScaleWeight[4]*1.;  
+    }
+    
+    result[0] = lheSF;
+    result[1] = lheUp;
+    result[2] = lheDown;
+    
+    return result;
+}
+
+RVec<float> PSWeight_variations(rvec_f PSWeight){
+    RVec<float> result(4);
+    
+    float isrmin = 1.;
+    float isrmax = 1.;
+    float fsrmin = 1.;
+    float fsrmax = 1.;
+    if (PSWeight.size() > 1){
+        isrmin = min(PSWeight[0], PSWeight[3]);
+        isrmax = max(PSWeight[0], PSWeight[3]);
+        fsrmin = min(PSWeight[1], PSWeight[3]);
+        fsrmax = max(PSWeight[1], PSWeight[3]);
+    }
+    else{
+        isrmin = PSWeight[0];
+        isrmax = PSWeight[0];
+        fsrmin = PSWeight[0];
+        fsrmax = PSWeight[0];
+    }
+    
+    result[0] = isrmin;
+    result[1] = isrmax;
+    result[2] = fsrmin;
+    result[3] = fsrmax;
+    
+    return result;
+}
+    
+
+#endif
