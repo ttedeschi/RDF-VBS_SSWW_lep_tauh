@@ -159,9 +159,9 @@ def stackplot(region, feature, final_state, folder, h, blinded = False, variatio
     #hdata.SetBinError(nbins, math.sqrt(pow(hdata.GetBinError(nbins),2) + pow(hdata.GetBinError(nbins+1),2)))
     
     if variation == "nominal":
-        hsig = h[region]['VBS_ssWW'][feature._name][final_state][variation]
+        hsig = h[region]['VBS_SSWW_SM'][feature._name][final_state][variation]
     else:
-        hsig = h[region]['VBS_ssWW'][feature._name][final_state][variation + ":" + var_type]
+        hsig = h[region]['VBS_SSWW_SM'][feature._name][final_state][variation + ":" + var_type]
     #nbins = hsig.GetNbinsX()
     #hsig.SetBinContent(1, hsig.GetBinContent(0) + hsig.GetBinContent(1))
     #hsig.SetBinError(1, math.sqrt(pow(hsig.GetBinError(0),2) + pow(hsig.GetBinError(1),2)))
@@ -191,14 +191,15 @@ def stackplot(region, feature, final_state, folder, h, blinded = False, variatio
     leg_stack = ROOT.TLegend(0.32,0.58,0.93,0.87)
 
     #colors = [(222, 90, 106), (155, 152, 204), (208, 240, 193), (122, 130, 106), (200, 131, 274), (218, 190, 193), (222, 10, 106), (122, 90, 106), (22,10,67), (102,100,67), (2,10,167), (22,10,67), (22,10,67), (32,121,100), (65,54,63), (132,121,100), (4,11,100), (100,1,10), (50,79,88)]
-    colors = {"Other": ROOT.kOrange-4, "tVX": ROOT.kCyan-7, "QCD_ssWW": ROOT.kPink+1, "Vgamma": ROOT.kSpring+7, "ZZ": ROOT.kViolet-9, "WZ": ROOT.kYellow-4, "VBS_ssWW": ROOT.kRed, "DY_jets": ROOT.kRed-9, "Wrong_Sign": ROOT.kGreen-10, "ttbar_DiLep": ROOT.kAzure-9, "Fakes": ROOT.kGray}
+    #colors = {"Other": ROOT.kOrange-4, "tVX": ROOT.kCyan-7, "QCD_ssWW": ROOT.kPink+1, "Vgamma": ROOT.kSpring+7, "ZZ": ROOT.kViolet-9, "WZ": ROOT.kYellow-4, "VBS_ssWW": ROOT.kRed, "DY_jets": ROOT.kRed-9, "Wrong_Sign": ROOT.kGreen-10, "ttbar_DiLep": ROOT.kAzure-9, "Fakes": ROOT.kGray}
+    colors = {"Triboson": ROOT.kOrange-4, "TVX": ROOT.kCyan-7, "QCD_ssWW": ROOT.kPink+1, "VG": ROOT.kSpring+7, "ZZtoLep": ROOT.kViolet-9, "WZ": ROOT.kYellow-4, "VBS_SSWW_SM": ROOT.kRed, "DYJetsToLL_FxFx": ROOT.kRed-9, "WrongSign": ROOT.kGreen-10, "TTTo2L2Nu": ROOT.kAzure-9, "Fake": ROOT.kGray}
 
     
     i = 0
     for v in h[region].keys():
-        if v == 'Data' or v == 'VBS_ssWW':
+        if v == 'Data' or v == 'VBS_SSWW_SM':
             continue
-        if v == 'Fakes':
+        if v == 'Fake':
             h_ = h[region][v][feature._name][final_state]
         else:
             if variation == "nominal":
@@ -300,11 +301,11 @@ def stackplot(region, feature, final_state, folder, h, blinded = False, variatio
 
     #hsig.Scale(1000)
     #print("VBS_ssWW")
-    hsig.SetLineColor(colors["VBS_ssWW"])
+    hsig.SetLineColor(colors["VBS_SSWW_SM"])
     hsig.SetLineWidth(2)
     hsig.Draw("hist same")
     #leg_stack.AddEntry(hsig.GetValue(), "VBS_ssWW", "l")
-    leg_stack.AddEntry(hsig, "VBS_ssWW", "l")
+    leg_stack.AddEntry(hsig, "VBS_SSWW_SM", "l")
 
     h_err = stack.GetStack().Last().Clone("h_err")
     h_err.SetLineWidth(100)
@@ -443,7 +444,7 @@ def stackplot_no_var(region, feature, final_state, folder, h, blinded = False):
     #hdata.SetBinContent(nbins, hdata.GetBinContent(nbins) + hdata.GetBinContent(nbins+1))
     #hdata.SetBinError(nbins, math.sqrt(pow(hdata.GetBinError(nbins),2) + pow(hdata.GetBinError(nbins+1),2)))
     
-    hsig = h[region]['VBS_ssWW'][feature._name][final_state]
+    hsig = h[region]['VBS_SSWW_SM'][feature._name][final_state]
     #nbins = hsig.GetNbinsX()
     #hsig.SetBinContent(1, hsig.GetBinContent(0) + hsig.GetBinContent(1))
     #hsig.SetBinError(1, math.sqrt(pow(hsig.GetBinError(0),2) + pow(hsig.GetBinError(1),2)))
@@ -473,14 +474,15 @@ def stackplot_no_var(region, feature, final_state, folder, h, blinded = False):
     leg_stack = ROOT.TLegend(0.32,0.58,0.93,0.87)
 
     #colors = [(222, 90, 106), (155, 152, 204), (208, 240, 193), (122, 130, 106), (200, 131, 274), (218, 190, 193), (222, 10, 106), (122, 90, 106), (22,10,67), (102,100,67), (2,10,167), (22,10,67), (22,10,67), (32,121,100), (65,54,63), (132,121,100), (4,11,100), (100,1,10), (50,79,88)]
-    colors = {"Other": ROOT.kOrange-4, "tVX": ROOT.kCyan-7, "QCD_ssWW": ROOT.kPink+1, "Vgamma": ROOT.kSpring+7, "ZZ": ROOT.kViolet-9, "WZ": ROOT.kYellow-4, "VBS_ssWW": ROOT.kRed, "DY_jets": ROOT.kRed-9, "Wrong_Sign": ROOT.kGreen-10, "ttbar_DiLep": ROOT.kAzure-9, "Fakes": ROOT.kGray}
-
+    #colors = {"Triboson": ROOT.kOrange-4, "tVX": ROOT.kCyan-7, "QCD_ssWW": ROOT.kPink+1, "Vgamma": ROOT.kSpring+7, "ZZ": ROOT.kViolet-9, "WZ": ROOT.kYellow-4, "VBS_ssWW": ROOT.kRed, "DY_jets": ROOT.kRed-9, "Wrong_Sign": ROOT.kGreen-10, "ttbar_DiLep": ROOT.kAzure-9, "Fakes": ROOT.kGray}
+    colors = {"Triboson": ROOT.kOrange-4, "TVX": ROOT.kCyan-7, "QCD_ssWW": ROOT.kPink+1, "VG": ROOT.kSpring+7, "ZZtoLep": ROOT.kViolet-9, "WZ": ROOT.kYellow-4, "VBS_SSWW_SM": ROOT.kRed, "DYJetsToLL_FxFx": ROOT.kRed-9, "WrongSign": ROOT.kGreen-10, "TTTo2L2Nu": ROOT.kAzure-9, "Fake": ROOT.kGray}
     
     i = 0
     
-    for v in ['ZZ', 'Other', 'tVX', 'Vgamma', 'WZ', 'Wrong_Sign', 'DY_jets', 'ttbar_DiLep', 'Fakes', 'Data']:
+    #for v in ['ZZ', 'Triboson', 'tVX', 'Vgamma', 'WZ', 'Wrong_Sign', 'DY_jets', 'ttbar_DiLep', 'Fakes', 'Data']:
+    for v in ['ZZtoLep', 'Triboson', 'TVX', 'VG', 'WZ', 'WrongSign', 'DYJetsToLL_FxFx', 'TTTo2L2Nu', 'Fake', 'Data']:
     #for v in h[region].keys():
-        if v == 'Data' or v == 'VBS_ssWW':
+        if v == 'Data' or v == 'VBS_SSWW_SM':
             continue
         h_ = h[region][v][feature._name][final_state]
         #nbins = h_.GetNbinsX()
@@ -576,10 +578,10 @@ def stackplot_no_var(region, feature, final_state, folder, h, blinded = False):
 
     #hsig.Scale(1000)
     #print("VBS_ssWW")
-    hsig.SetLineColor(colors["VBS_ssWW"])
+    hsig.SetLineColor(colors["VBS_SSWW_SM"])
     hsig.SetLineWidth(2)
     hsig.Draw("hist same")
-    leg_stack.AddEntry(hsig.GetValue(), "VBS_ssWW", "l")
+    leg_stack.AddEntry(hsig.GetValue(), "VBS_SSWW_SM", "l")
 
     h_err = stack.GetStack().Last().Clone("h_err")
     h_err.SetLineWidth(100)
