@@ -50,6 +50,8 @@ const float PT_CUT_LEP_VETO_MU=         10;
 const float ETA_CUT_LEP_VETO_MU=        2.4;
 
 const float DR_OVERLAP_CONE_TAU=        0.5;
+//const float DR_OVERLAP_CONE_TAU=        0.2;
+
 const float DR_OVERLAP_CONE_OTHER=      0.4;
 
 const float PT_CUT_JET= 30;
@@ -582,7 +584,7 @@ int DetermineGoodLepton(bool HLT_IsoMu27, bool HLT_Mu50, bool HLT_Ele35_WPTight_
 }
 
 
-RVec<int> SelectAndVetoTaus(rvec_f Tau_pt, rvec_f Tau_eta, rvec_f Tau_phi, RVec<UChar_t> &Tau_idDeepTau2017v2p1VSjet, RVec<UChar_t> &Tau_idDeepTau2017v2p1VSe, RVec<UChar_t> &Tau_idDeepTau2017v2p1VSmu, int GoodLeptonFamily, rvec_i Electron_idx, rvec_f Electron_eta, rvec_f Electron_phi, rvec_i Muon_idx, rvec_f Muon_eta, rvec_f Muon_phi, rvec_f Jet_eta, rvec_f Jet_phi, rvec_i VBSJet_idx, string Year, rvec_f TES, rvec_f FES)
+RVec<int> SelectAndVetoTaus(rvec_f Tau_pt, rvec_f Tau_eta, rvec_f Tau_phi, RVec<UChar_t> &Tau_idDeepTau2017v2p1VSjet, RVec<UChar_t> &Tau_idDeepTau2017v2p1VSe, RVec<UChar_t> &Tau_idDeepTau2017v2p1VSmu, int GoodLeptonFamily, rvec_i Electron_idx, rvec_f Electron_eta, rvec_f Electron_phi, rvec_i Muon_idx, rvec_f Muon_eta, rvec_f Muon_phi, rvec_f Jet_eta, rvec_f Jet_phi, rvec_i VBSJet_idx, string Year)
 {
     size_t ID_TAU_RECO_DEEPTAU_VSJET_VETO_ELE,  ID_TAU_RECO_DEEPTAU_VSJET_VETO_MU, ID_TAU_RECO_DEEPTAU_VSJET_LOOSE_ELE, ID_TAU_RECO_DEEPTAU_VSJET_LOOSE_MU;
     
@@ -624,8 +626,8 @@ RVec<int> SelectAndVetoTaus(rvec_f Tau_pt, rvec_f Tau_eta, rvec_f Tau_phi, RVec<
         
         if (GoodLeptonFamily == 0) {
             cutloose_vsjet = ID_TAU_RECO_DEEPTAU_VSJET_VETO_ELE;
-            if ((Tau_idDeepTau2017v2p1VSjet[i]>=cutloose_vsjet && Tau_idDeepTau2017v2p1VSe[i]>=ID_TAU_RECO_DEEPTAU_VSELE && Tau_idDeepTau2017v2p1VSmu[i]>=ID_TAU_RECO_DEEPTAU_VSMU) && deltaR(Tau_eta[i], Tau_phi[i], Electron_eta[Electron_idx[0]], Electron_phi[Electron_idx[0]])>DR_OVERLAP_CONE_TAU && deltaR(Tau_eta[i], Tau_phi[i], jet1eta, jet1phi)>isocone && deltaR(Tau_eta[i], Tau_phi[i], jet2eta, jet2phi)>isocone && Tau_pt[i] * TES[i] * FES[i] >=PT_CUT_TAU && abs(Tau_eta[i])<=ETA_CUT_TAU){
-//////////// DA MODIFICARE QUANDO ANDREA LO MODIFICA NON c'è il TES FES ovviamente !!!!!! ///////////////
+            //if ((Tau_idDeepTau2017v2p1VSjet[i]>=cutloose_vsjet && Tau_idDeepTau2017v2p1VSe[i]>=ID_TAU_RECO_DEEPTAU_VSELE && Tau_idDeepTau2017v2p1VSmu[i]>=ID_TAU_RECO_DEEPTAU_VSMU) && deltaR(Tau_eta[i], Tau_phi[i], Electron_eta[Electron_idx[0]], Electron_phi[Electron_idx[0]])>DR_OVERLAP_CONE_TAU && deltaR(Tau_eta[i], Tau_phi[i], jet1eta, jet1phi)>isocone && deltaR(Tau_eta[i], Tau_phi[i], jet2eta, jet2phi)>isocone && Tau_pt[i] * TES[i] * FES[i] >=PT_CUT_TAU && abs(Tau_eta[i])<=ETA_CUT_TAU){
+            if ((Tau_idDeepTau2017v2p1VSjet[i]>=cutloose_vsjet && Tau_idDeepTau2017v2p1VSe[i]>=ID_TAU_RECO_DEEPTAU_VSELE && Tau_idDeepTau2017v2p1VSmu[i]>=ID_TAU_RECO_DEEPTAU_VSMU) && deltaR(Tau_eta[i], Tau_phi[i], Electron_eta[Electron_idx[0]], Electron_phi[Electron_idx[0]])>DR_OVERLAP_CONE_TAU && deltaR(Tau_eta[i], Tau_phi[i], jet1eta, jet1phi)>isocone && deltaR(Tau_eta[i], Tau_phi[i], jet2eta, jet2phi)>isocone && Tau_pt[i] >=PT_CUT_TAU && abs(Tau_eta[i])<=ETA_CUT_TAU){
                 nTau++;
                 
                 if(Tau_idDeepTau2017v2p1VSjet[i]>=ID_TAU_RECO_DEEPTAU_VSJET){
@@ -647,7 +649,8 @@ RVec<int> SelectAndVetoTaus(rvec_f Tau_pt, rvec_f Tau_eta, rvec_f Tau_phi, RVec<
 
         else if (GoodLeptonFamily == 1) {
             cutloose_vsjet = ID_TAU_RECO_DEEPTAU_VSJET_VETO_MU;
-            if ((Tau_idDeepTau2017v2p1VSjet[i]>=cutloose_vsjet && Tau_idDeepTau2017v2p1VSe[i]>=ID_TAU_RECO_DEEPTAU_VSELE && Tau_idDeepTau2017v2p1VSmu[i]>=ID_TAU_RECO_DEEPTAU_VSMU) && deltaR(Tau_eta[i], Tau_phi[i], Muon_eta[Muon_idx[0]], Muon_phi[Muon_idx[0]])>DR_OVERLAP_CONE_TAU && deltaR(Tau_eta[i], Tau_phi[i], jet1eta, jet1phi)>isocone && deltaR(Tau_eta[i], Tau_phi[i], jet2eta, jet2phi)>isocone && Tau_pt[i] * TES[i] * FES[i] >=PT_CUT_TAU && abs(Tau_eta[i])<=ETA_CUT_TAU){
+            //if ((Tau_idDeepTau2017v2p1VSjet[i]>=cutloose_vsjet && Tau_idDeepTau2017v2p1VSe[i]>=ID_TAU_RECO_DEEPTAU_VSELE && Tau_idDeepTau2017v2p1VSmu[i]>=ID_TAU_RECO_DEEPTAU_VSMU) && deltaR(Tau_eta[i], Tau_phi[i], Muon_eta[Muon_idx[0]], Muon_phi[Muon_idx[0]])>DR_OVERLAP_CONE_TAU && deltaR(Tau_eta[i], Tau_phi[i], jet1eta, jet1phi)>isocone && deltaR(Tau_eta[i], Tau_phi[i], jet2eta, jet2phi)>isocone && Tau_pt[i] * TES[i] * FES[i] >=PT_CUT_TAU && abs(Tau_eta[i])<=ETA_CUT_TAU){
+            if ((Tau_idDeepTau2017v2p1VSjet[i]>=cutloose_vsjet && Tau_idDeepTau2017v2p1VSe[i]>=ID_TAU_RECO_DEEPTAU_VSELE && Tau_idDeepTau2017v2p1VSmu[i]>=ID_TAU_RECO_DEEPTAU_VSMU) && deltaR(Tau_eta[i], Tau_phi[i], Muon_eta[Muon_idx[0]], Muon_phi[Muon_idx[0]])>DR_OVERLAP_CONE_TAU && deltaR(Tau_eta[i], Tau_phi[i], jet1eta, jet1phi)>isocone && deltaR(Tau_eta[i], Tau_phi[i], jet2eta, jet2phi)>isocone && Tau_pt[i] >=PT_CUT_TAU && abs(Tau_eta[i])<=ETA_CUT_TAU){
                 nTau++;
                 if(Tau_idDeepTau2017v2p1VSjet[i]>=ID_TAU_RECO_DEEPTAU_VSJET){
                     idx[0] = i;
@@ -1974,9 +1977,10 @@ bool isMC(int SampleFlag){
 
 float getLumi(string Year, bool IsMC){
     if (IsMC == false) return 1.;
-    else if(Year == "UL2016" || Year == "UL2016APV") return -999;
+    else if(Year == "UL2016APV") return 36.33*0.5373;
+    else if(Year == "UL2016") return 36.33*4627;
     //else if (Year == 2017) return 41.48;
-    else if (Year == "UL2017") return 41.54;
+    else if (Year == "UL2017") return 41.48;
     else return 59.83;
 }
 
@@ -2452,6 +2456,6 @@ RVec<size_t> SelectVBSJets_tagger_mjj_absdeltaetajj_DNN(rvec_f pt, rvec_f eta, r
     idx.emplace_back(best_i2);
     return idx;
 }
-
+*/
 
 #endif
