@@ -198,6 +198,15 @@ bool MET_HLT_Filter_UL2017(string Year, Bool_t Flag_goodVertices, Bool_t Flag_HB
     return good_MET && good_HLT;
 }
 
+bool MET_HLT_Filter_UL2017_nodz(string Year, Bool_t Flag_goodVertices, Bool_t Flag_HBHENoiseFilter, Bool_t Flag_HBHENoiseIsoFilter, Bool_t Flag_EcalDeadCellTriggerPrimitiveFilter, Bool_t Flag_BadPFMuonFilter, Bool_t Flag_globalSuperTightHalo2016Filter, Bool_t HLT_IsoMu27, Bool_t HLT_Mu50, Bool_t HLT_OldMu100, Bool_t HLT_TkMu100,  Bool_t HLT_Ele35_WPTight_Gsf, Bool_t HLT_Ele32_WPTight_Gsf_L1DoubleEG, Bool_t HLT_Photon200, Bool_t Flag_ecalBadCalibFilter,  Bool_t L1_SingleIsoEG30er2p1, Bool_t L1_SingleIsoEG32, Bool_t L1_SingleEG40, Bool_t Flag_eeBadScFilter){
+    
+    bool good_MET = Flag_goodVertices && Flag_globalSuperTightHalo2016Filter && Flag_HBHENoiseFilter && Flag_HBHENoiseIsoFilter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_BadPFMuonFilter && Flag_eeBadScFilter && Flag_ecalBadCalibFilter;
+    
+    bool good_HLT = HLT_IsoMu27 || HLT_Mu50 || HLT_OldMu100 || HLT_TkMu100 || HLT_Ele35_WPTight_Gsf || (HLT_Ele32_WPTight_Gsf_L1DoubleEG && (L1_SingleIsoEG30er2p1 || L1_SingleIsoEG32 || L1_SingleEG40)) || HLT_Photon200;
+    
+    return good_MET && good_HLT;
+}
+
 
 /*
 float MET_HLT_Filter(string Year, Bool_t Flag_goodVertices, Bool_t Flag_HBHENoiseFilter, Bool_t Flag_HBHENoiseIsoFilter, Bool_t Flag_EcalDeadCellTriggerPrimitiveFilter, Bool_t Flag_BadPFMuonFilter, Bool_t Flag_globalSuperTightHalo2016Filter, Bool_t HLT_Ele27_WPTight_Gsf, Bool_t HLT_Ele32_WPTight_Gsf, Bool_t HLT_IsoMu24, Bool_t HLT_IsoMu27, Bool_t HLT_Mu50, Bool_t HLT_Ele35_WPTight_Gsf, Bool_t HLT_Ele32_WPTight_Gsf_L1DoubleEG, Bool_t HLT_Photon200){
@@ -749,9 +758,9 @@ RVec<float> PrefCorr(rvec_f Photon_pt, rvec_f Photon_eta, rvec_i Photon_jetIdx, 
 
             if(Jet_pt[i] >= JetMinPt && abs(Jet_eta[i]) <= JetMaxEta && abs(Jet_eta[i]) >= JetMinEta){
                 jetpf = jetpf * ( 1 - GetPrefireProbability(jet_map, Jet_eta[i], Jet_pt[i], JetMaxPt, s));
-                float phopf = EGvalue(Photon_pt, Photon_eta, Photon_jetIdx, Photon_electronIdx, Electron_pt, Electron_eta, Electron_jetIdx, Electron_photonIdx, i, s);
-                prefw = prefw * min(jetpf, phopf);
             }
+            float phopf = EGvalue(Photon_pt, Photon_eta, Photon_jetIdx, Photon_electronIdx, Electron_pt, Electron_eta, Electron_jetIdx, Electron_photonIdx, i, s);
+            prefw = prefw * min(jetpf, phopf);
         }
         //Then loop over all photons/electrons not associated to jets
         prefw = prefw * EGvalue(Photon_pt, Photon_eta, Photon_jetIdx, Photon_electronIdx, Electron_pt, Electron_eta, Electron_jetIdx, Electron_photonIdx, -1, s);

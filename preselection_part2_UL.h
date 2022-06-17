@@ -270,4 +270,10 @@ RVec<RVec<float>> btagSF(rvec_f Jet_pt, rvec_f Jet_eta, rvec_i Jet_hadronFlavour
     return result;
 }
 
+
+bool IsGolden(int Run, int LuminosityBlock){
+    if (find(golden_map[Run].begin(), golden_map[Run].end(), LuminosityBlock) == golden_map[Run].end()) return false;
+    else return true;
+}
+
 #endif
