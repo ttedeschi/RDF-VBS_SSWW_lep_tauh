@@ -18,6 +18,8 @@
 #include "TStyle.h"
 #include <map>
 
+#include "TDavixFile.h"
+
 using namespace ROOT::VecOps;
 using RNode = ROOT::RDF::RNode;
 using rvec_f = const RVec<float> &;
@@ -2118,6 +2120,8 @@ bool DataLeptonCheck(int SampleFlag, int GoodLeptonFamily, bool isMC){
 //    else:
 //        return False
 
+
+/*OLD -> ERRORS ?
 unordered_map<int,bool> IsPdfHessian({
  { 25 , true },
 { 26 , true },
@@ -2308,6 +2312,58 @@ unordered_map<int,bool> IsPdfHessian({
 { 326 , true },
 { 327 , true }
 });
+*/
+
+unordered_map<int,bool> IsPdfHessian({
+{ 194 , true},
+{ 195 , true},
+{ 187 , true},
+{ 188 , true},
+{ 189 , true},
+{ 190 , true},
+{ 191 , true},
+{ 192 , true},
+{ 219 , true},
+{ 220 , true},
+{ 221 , true},
+{ 222 , true},
+{ 223 , true},
+{ 184 , true},
+{ 233 , false},
+{ 236 , true},
+{ 197 , false},
+{ 198 , false},
+{ 199 , false},
+{ 200 , false},
+{ 201 , false},
+{ 202 , false},
+{ 203 , false},
+{ 204 , false},
+{ 205 , false},
+{ 206 , false},
+{ 207 , true},
+{ 208 , true},
+{ 209 , false},
+{ 211 , true},
+{ 212 , true},
+{ 213 , true},
+{ 214 , true},
+{ 215 , true},
+{ 216 , true},
+{ 170 , false},
+{ 171 , false},
+{ 180 , false},
+{ 173 , false},
+{ 174 , false},
+{ 175 , false},
+{ 177 , false},
+{ 172 , false},
+{ 176 , false},
+{ 179 , false},
+{ 240 , true},
+{ 241 , true},
+{ 242 , true}, 
+});
 
 RVec<float> PdfWeight_variations(rvec_f PdfWeight, float Generator_weight, int Sample){
     
@@ -2340,7 +2396,11 @@ RVec<float> PdfWeight_variations(rvec_f PdfWeight, float Generator_weight, int S
         pdf_totalUp = mean_pdf + rms;
         pdf_totalDown = mean_pdf - rms;
 
-        if (Generator_weight < 0.) pdf_totalSF = pdf_totalSF * -1.;
+        if (Generator_weight < 0.){
+            pdf_totalSF = pdf_totalSF * -1.;
+            pdf_totalUp = pdf_totalUp * -1.;
+            pdf_totalDown = pdf_totalDown * -1.;
+        }
 
     }
     

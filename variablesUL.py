@@ -35,7 +35,7 @@ variables["SR"] = []
 #variables["SR"].append(variable('SubLeadingjet_pt',  'Sublead jet p_{T} [GeV]', 5 , array("f", [0., 50., 100., 150., 250., 500.])))
 #variables["SR"].append(variable('Lepton_pt',  'Lepton p_{T} [GeV]', 9 , array("f", [0., 30., 45., 60., 80., 100., 125., 150, 200., 250.]) ))
 #variables["SR"].append(variable('SelectedTau_pt',  'Tau p_{T} [GeV]', 8 , array("f", [30., 45., 60., 80., 100., 125., 150, 200., 250.])))
-#variables["SR"].append(variable('SMbdt', 'SM BDT output',  5, array("f", [0., 0.2, 0.4, 0.6, 0.8, 1.])))
+variables["SR"].append(variable('SMbdt', 'SM BDT output',  5, array("f", [0., 0.2, 0.4, 0.6, 0.8, 1.])))
 variables["SR"].append(variable('mjj', 'Invarant mass JJ',  4, array("f", [500., 700., 1000., 1500., 2500.])))
 
 variables["fakes_CR"] = []
@@ -43,7 +43,7 @@ variables["fakes_CR"] = []
 #variables["CR_fakes"].append(variable('SubLeadingjet_pt',  'Sublead jet p_{T} [GeV]', 3 , array("f", [0., 50., 100., 200.])))
 #variables["CR_fakes"].append(variable('Lepton_pt',  'Lepton p_{T} [GeV]', 7 , array("f", [0., 30., 45., 60., 80., 100., 150, 250.]) ))
 #variables["CR_fakes"].append(variable('SelectedTau_pt',  'Tau p_{T} [GeV]', 4 , array("f", [30., 45., 60., 100., 200.])))
-#variables["CR_fakes"].append(variable('SMbdt', 'SM BDT output',  5, array("f", [0., 0.2, 0.4, 0.6, 0.8, 1.])))
+variables["fakes_CR"].append(variable('SMbdt', 'SM BDT output',  5, array("f", [0., 0.2, 0.4, 0.6, 0.8, 1.])))
 variables["fakes_CR"].append(variable('mjj', 'Invarant mass JJ',  6, array("f", [0., 300., 500., 700., 1000., 1500., 2000.])))
 
 #variables["CR_QCD"] = []
@@ -59,7 +59,7 @@ variables["ttbar_CR"] = []
 #variables["CR_ttbar"].append(variable('SubLeadingjet_pt',  'Sublead jet p_{T} [GeV]', 5 , array("f", [0., 50., 100., 150., 250., 500.])))
 #variables["CR_ttbar"].append(variable('Lepton_pt',  'Lepton p_{T} [GeV]', 9 , array("f", [0., 30., 45., 60., 80., 100., 125., 150, 200., 250.]) ))
 #variables["CR_ttbar"].append(variable('SelectedTau_pt',  'Tau p_{T} [GeV]', 8 , array("f", [30., 45., 60., 80., 100., 125., 150, 200., 250.])))
-#variables["CR_ttbar"].append(variable('SMbdt', 'SM BDT output',  5, array("f", [0., 0.2, 0.4, 0.6, 0.8, 1.])))
+variables["ttbar_CR"].append(variable('SMbdt', 'SM BDT output',  5, array("f", [0., 0.2, 0.4, 0.6, 0.8, 1.])))
 variables["ttbar_CR"].append(variable('mjj', 'Invarant mass JJ',  6, array("f", [0., 300., 500., 700., 1000., 1500., 2000.])))
 
 variables["OS_CR_bvetoL"] = []
@@ -67,7 +67,7 @@ variables["OS_CR_bvetoL"] = []
 #variables["CR_opposite_sign"].append(variable('SubLeadingjet_pt',  'Sublead jet p_{T} [GeV]', 5 , array("f", [0., 50., 100., 150., 250., 500.])))
 #variables["CR_opposite_sign"].append(variable('Lepton_pt',  'Lepton p_{T} [GeV]', 9 , array("f", [0., 30., 45., 60., 80., 100., 125., 150, 200., 250.]) ))
 #variables["CR_opposite_sign"].append(variable('SelectedTau_pt',  'Tau p_{T} [GeV]', 8 , array("f", [30., 45., 60., 80., 100., 125., 150, 200., 250.])))
-#variables["CR_opposite_sign"].append(variable('SMbdt', 'SM BDT output',  5, array("f", [0., 0.2, 0.4, 0.6, 0.8, 1.])))
+variables["OS_CR_bvetoL"].append(variable('SMbdt', 'SM BDT output',  5, array("f", [0., 0.2, 0.4, 0.6, 0.8, 1.])))
 variables["OS_CR_bvetoL"].append(variable('mjj', 'Invarant mass JJ',  6, array("f", [0., 300., 500., 700., 1000., 1500., 2000.])))
 
 #variables["CR_Zjets"] = []
